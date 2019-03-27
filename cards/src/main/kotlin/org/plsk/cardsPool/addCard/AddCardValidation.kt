@@ -1,0 +1,43 @@
+package org.plsk.cardsPool.addCard
+
+import org.plsk.cards.Card
+import org.plsk.cardsPool.CardsPoolRepository
+import org.plsk.cardsPool.CardsPool
+import org.plsk.core.clock.Clock
+import org.plsk.core.validation.Validation
+import java.util.*
+
+class AddCardValidation(val cardsPoolRepository: CardsPoolRepository, val clock: Clock) : Validation<AddCard, CardsPool> {
+
+    companion object {
+        // @todo find a better way to generate (real) deterministic id :-)
+        fun genereateId(label: String, cardsPool: CardsPool): UUID = UUID.nameUUIDFromBytes((label + cardsPool.id.toString()).toByteArray())
+    }
+
+
+    override fun validate(command: AddCard): CardsPool {
+        var errors = emptyList<AddCardError>()
+        val cardsPool = cardsPoolRepository.find(command.cardsPoolId)
+
+        // will be refactored using a `Either` data class
+        if (cardsPool == null) {
+            errors = errors.plus(CardsPoolNotFound(command.cardsPoolId))
+        } else if (cardsPool.cards.any{c -> c.label == command.label}) {
+            errors = errors.plus(LabelExists(command.label))
+        }
+
+        if (errors.isNotEmpty()) {
+            throw Exception(errors.map{it.toString()}.joinToString(", "))
+        }
+
+        return cardsPool!!.addCard(
+            Card(
+                genereateId(command.label, cardsPool),
+                command.label,
+                clock.now().timestamp()
+            ),
+            command.position
+        )
+    }
+
+}
