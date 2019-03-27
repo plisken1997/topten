@@ -2,6 +2,7 @@ package org.plsk.cardsPool.create
 
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.WordSpec
+import org.plsk.cardsPool.CardsPool
 import org.plsk.core.clock.FakeClock
 
 class CardsPoolValidationTest : WordSpec() {
@@ -15,10 +16,10 @@ class CardsPoolValidationTest : WordSpec() {
                 val cardsPool = cardsPoolValidator.validate(createCardPool)
 
                 val expected = CardsPool(
-                    CardsPoolValidation.genereateId(createCardPool.name, createCardPool.description),
-                    createCardPool.name,
-                    createCardPool.description,
-                    createdAt = clock.now().timestamp()
+                        CardsPoolValidation.genereateId(createCardPool.name, createCardPool.description),
+                        createCardPool.name,
+                        createCardPool.description,
+                        createdAt = clock.now().timestamp()
                 )
 
                 cardsPool shouldBe expected

@@ -1,5 +1,6 @@
 package org.plsk.cardsPool.create
 
+import org.plsk.cardsPool.CardsPool
 import org.plsk.core.clock.Clock
 import org.plsk.core.validation.Validation
 import java.util.*
@@ -7,7 +8,7 @@ import java.util.*
 class CardsPoolValidation(val clock: Clock) : Validation<CreateCardsPool, CardsPool> {
 
     companion object {
-        // @todo find a better way to generate deterministic id :-)
+        // @todo find a better way to generate (real) deterministic id :-)
         fun genereateId(name: String, description: String?): UUID = UUID.nameUUIDFromBytes((name + description.orEmpty()).toByteArray())
     }
 

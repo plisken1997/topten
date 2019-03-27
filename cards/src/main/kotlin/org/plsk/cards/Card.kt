@@ -1,5 +1,7 @@
 package org.plsk.cards
 
-data class Card(val name: String) {
-    override fun toString() = name
+import java.util.*
+
+data class Card(val id: UUID, val label: String, val createdAt: Long) {
+    override fun toString() = label
 }

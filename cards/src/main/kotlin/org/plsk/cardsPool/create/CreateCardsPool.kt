@@ -1,5 +1,6 @@
 package org.plsk.cardsPool.create
 
+import org.plsk.cardsPool.CardsPool
 import org.plsk.core.event.EventBus
 import org.plsk.core.command.CommandHandler
 import org.plsk.core.event.Event

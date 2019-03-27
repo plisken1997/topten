@@ -2,6 +2,7 @@ package org.plsk.cardsPool.create
 
 import io.kotlintest.matchers.collections.shouldContain
 import io.kotlintest.specs.WordSpec
+import org.plsk.cardsPool.CardsPool
 import org.plsk.core.clock.FakeClock
 import org.plsk.core.event.Event
 import org.plsk.core.event.EventBus
@@ -15,12 +16,12 @@ class CreateCardsPoolHandlerTest : WordSpec () {
             "publish the created cards pool" {
                 val createCardPool = CreateCardsPool("test-name", "description !")
                 val expectedCreatedCardPoolEvent = CardsPoolCreated(
-                    CardsPool(
-                    CardsPoolValidation.genereateId(createCardPool.name, createCardPool.description),
-                        createCardPool.name,
-                        createCardPool.description,
-                        createdAt = clock.now().timestamp()
-                    )
+                        CardsPool(
+                                CardsPoolValidation.genereateId(createCardPool.name, createCardPool.description),
+                                createCardPool.name,
+                                createCardPool.description,
+                                createdAt = clock.now().timestamp()
+                        )
                 )
 
                 createCardsPoolHandler.handle(createCardPool)
