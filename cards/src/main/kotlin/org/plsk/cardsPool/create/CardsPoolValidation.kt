@@ -10,11 +10,19 @@ class CardsPoolValidation(val clock: Clock) : Validation<CreateCardsPool, CardsP
     companion object {
         // @todo find a better way to generate (real) deterministic id :-)
         fun genereateId(name: String, description: String?): UUID = UUID.nameUUIDFromBytes((name + description.orEmpty()).toByteArray())
+
+        fun createdCardsPool(command: CreateCardsPool, clock: Clock): CardsPool =
+            CardsPool(
+                genereateId(command.name, command.description),
+                command.name,
+                command.description,
+                createdAt = clock.now().timestamp()
+            )
     }
 
     override fun validate(command: CreateCardsPool): CardsPool {
         // @todo validate data...
-        return CardsPool(genereateId(command.name, command.description), command.name, command.description, createdAt = clock.now().timestamp())
+        return createdCardsPool(command, clock)
     }
 
 }

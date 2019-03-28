@@ -16,12 +16,12 @@ class CreateCardsPoolHandlerTest : WordSpec () {
             "publish the created cards pool" {
                 val createCardPool = CreateCardsPool("test-name", "description !")
                 val expectedCreatedCardPoolEvent = CardsPoolCreated(
-                        CardsPool(
-                                CardsPoolValidation.genereateId(createCardPool.name, createCardPool.description),
-                                createCardPool.name,
-                                createCardPool.description,
-                                createdAt = clock.now().timestamp()
-                        )
+                    CardsPool(
+                        CardsPoolValidation.genereateId(createCardPool.name, createCardPool.description),
+                        createCardPool.name,
+                        createCardPool.description,
+                        createdAt = clock.now().timestamp()
+                    )
                 )
 
                 createCardsPoolHandler.handle(createCardPool)
@@ -35,7 +35,7 @@ class CreateCardsPoolHandlerTest : WordSpec () {
     val clock = FakeClock()
     val cardsPoolValidator = CardsPoolValidation(clock)
 
-    var events = listOf<CardsPoolCreated>()
+    var events = emptyList<CardsPoolCreated>()
 
     val eventBus: EventBus = object : EventBus {
         override fun publish(event: Event) = when (event) {
