@@ -12,6 +12,13 @@ class AddCardValidation(val cardsPoolRepository: CardsPoolRepository, val clock:
     companion object {
         // @todo find a better way to generate (real) deterministic id :-)
         fun genereateId(label: String, cardsPool: CardsPool): UUID = UUID.nameUUIDFromBytes((label + cardsPool.id.toString()).toByteArray())
+
+        fun createCard(command: AddCard, cardsPool: CardsPool, clock: Clock): Card =
+            Card(
+                genereateId(command.label, cardsPool),
+                command.label,
+                clock.now().timestamp()
+            )
     }
 
 
@@ -31,11 +38,7 @@ class AddCardValidation(val cardsPoolRepository: CardsPoolRepository, val clock:
         }
 
         return cardsPool!!.addCard(
-            Card(
-                genereateId(command.label, cardsPool),
-                command.label,
-                clock.now().timestamp()
-            ),
+            createCard(command, cardsPool, clock),
             command.position
         )
     }
