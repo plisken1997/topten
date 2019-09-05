@@ -1,13 +1,11 @@
 package org.plsk.web
 
-class App {
+import org.springframework.boot.SpringApplication
+import org.springframework.boot.autoconfigure.SpringBootApplication
 
-    val greeting: String
-        get() {
-            return "Hello world"
-        }
-}
+@SpringBootApplication
+class Application
 
 fun main(args: Array<String>) {
-    println(App().greeting)
+    SpringApplication.run(Application::class.java, *args)
 }

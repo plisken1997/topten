@@ -1,27 +1,23 @@
+buildscript {
+    ext.kotlin_version = '1.3.50' // Required for Kotlin integration
+    ext.spring_boot_version = '2.1.0.RELEASE'
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version" // Required for Kotlin integration
+        classpath "org.jetbrains.kotlin:kotlin-allopen:$kotlin_version" // See https://kotlinlang.org/docs/reference/compiler-plugins.html#spring-support
+        classpath "org.springframework.boot:spring-boot-gradle-plugin:$spring_boot_version"
+    }
+}
+
 plugins {
     // Apply the Kotlin JVM plugin to add support for Kotlin on the JVM.
-    id 'org.jetbrains.kotlin.jvm' version '1.3.20'
+    id 'org.jetbrains.kotlin.jvm' version '1.3.50'
 
     // Apply the application plugin to add support for building a CLI application.
     id 'application'
 }
-
-//repositories {
-//    // Use jcenter for resolving your dependencies.
-//    // You can declare any Maven/Ivy/file repository here.
-//    jcenter()
-//}
-//
-//dependencies {
-//    // Use the Kotlin JDK 8 standard library.
-//    implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8'
-//
-//    // Use the Kotlin test library.
-//    testImplementation 'org.jetbrains.kotlin:kotlin-test'
-//
-//    // Use the Kotlin JUnit integration.
-//    testImplementation 'org.jetbrains.kotlin:kotlin-test-junit'
-//}
 
 allprojects {
 
@@ -47,6 +43,7 @@ allprojects {
 
         testImplementation 'io.kotlintest:kotlintest-runner-junit5:3.3.0'
 
+        compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version" // Required for Kotlin integration
     }
 }
 
@@ -57,7 +54,26 @@ project(':cards') {
 }
 
 project(':web') {
+    // https://spring.io/guides/tutorials/spring-boot-kotlin/
+    apply plugin: "kotlin-spring" // https://kotlinlang.org/docs/reference/compiler-plugins.html#spring-support
+    apply plugin: 'org.springframework.boot'
+    apply plugin: 'io.spring.dependency-management'
+
     dependencies {
+        compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version" // Required for Kotlin integration
+        compile "org.springframework.boot:spring-boot-starter-web"
+        testCompile('org.springframework.boot:spring-boot-starter-test')
+
+        implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+        implementation("org.springframework.boot:spring-boot-starter-mustache")
+        implementation("org.springframework.boot:spring-boot-starter-web")
+        implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+        implementation("org.jetbrains.kotlin:kotlin-reflect")
+        implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+        runtimeOnly("com.h2database:h2:1.4.197") // Fixed version as a workaround for https://github.com/h2database/h2database/issues/1841
+        runtimeOnly("org.springframework.boot:spring-boot-devtools")
+        testImplementation("org.springframework.boot:spring-boot-starter-test")
+
         implementation project(':cards')
     }
 }

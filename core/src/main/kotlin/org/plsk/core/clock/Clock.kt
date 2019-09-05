@@ -11,5 +11,6 @@ interface Clock {
 }
 
 class FakeClock: Clock {
-    override fun now(): Datetime = Datetime(ZonedDateTime.parse("2013-12-27T15:35:00.000Z"))
+    val fakeNow = Datetime(ZonedDateTime.parse("2013-12-27T15:35:00.000Z"))
+    override fun now(): Datetime = fakeNow
 }
