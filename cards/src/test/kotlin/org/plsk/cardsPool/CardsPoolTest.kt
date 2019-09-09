@@ -4,6 +4,7 @@ import io.kotlintest.shouldBe
 import io.kotlintest.specs.WordSpec
 import org.plsk.cards.Card
 import org.plsk.core.clock.FakeClock
+import org.plsk.user.FakeUser
 import java.util.*
 
 class CardsPoolTest  : WordSpec() {
@@ -76,6 +77,7 @@ class CardsPoolTest  : WordSpec() {
 "test cards pool",
 "desc",
         cards,
-        clock.now().timestamp()
+        clock.now().timestamp(),
+        FakeUser
     )
 }

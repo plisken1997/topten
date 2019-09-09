@@ -10,6 +10,7 @@ import org.plsk.core.clock.Clock
 import org.plsk.core.clock.FakeClock
 import org.plsk.core.event.Event
 import org.plsk.core.event.EventBus
+import org.plsk.user.FakeUser
 import java.util.*
 
 class AddCardHandlerTest: WordSpec() {
@@ -52,7 +53,8 @@ class AddCardHandlerTest: WordSpec() {
             "test cards pool",
             "desc",
             listOf(card1),
-            clock.now().timestamp()
+            clock.now().timestamp(),
+            FakeUser
     )
 
     var events = emptyList<CardAddedEvent>()

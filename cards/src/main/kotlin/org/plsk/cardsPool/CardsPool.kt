@@ -1,6 +1,7 @@
 package org.plsk.cardsPool
 
 import org.plsk.cards.Card
+import org.plsk.user.User
 import java.util.*
 
 data class CardsPool(
@@ -8,7 +9,8 @@ data class CardsPool(
         val name: String,
         val description: String?,
         val cards: List<Card> = emptyList(),
-        val createdAt: Long) {
+        val createdAt: Long,
+        val createdBy: User) {
 
     fun addCard(card: Card, position: Int): CardsPool {
         if (cards.size <= position) {

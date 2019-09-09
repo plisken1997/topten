@@ -11,11 +11,12 @@ data class AddCard(val label: String, val position: Int, val cardsPoolId: UUID)
 
 data class CardAddedEvent(val cardsPool: CardsPool): Event
 
-class AddCardHandler(private val cardValidator: Validation<AddCard, CardsPool>, private val eventBus: EventBus): CommandHandler<AddCard> {
+class AddCardHandler(private val cardValidator: Validation<AddCard, CardsPool>, private val eventBus: EventBus): CommandHandler<AddCard, UUID> {
 
-    override fun handle(command: AddCard) {
+    override fun handle(command: AddCard): UUID {
         val cardsPool = cardValidator.validate(command)
         eventBus.publish(CardAddedEvent(cardsPool))
+        return cardsPool.id
     }
 
 }

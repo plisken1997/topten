@@ -8,6 +8,7 @@ import org.plsk.cardsPool.CardsPool
 import org.plsk.cardsPool.CardsPoolRepository
 import org.plsk.core.clock.Clock
 import org.plsk.core.clock.FakeClock
+import org.plsk.user.FakeUser
 import java.util.*
 
 class AddCardValidationTest: WordSpec() {
@@ -54,7 +55,8 @@ class AddCardValidationTest: WordSpec() {
                             "test cards pool",
                             "desc",
                             listOf(card1, card, card2, card3),
-                            clock.now().timestamp()
+                            clock.now().timestamp(),
+                            FakeUser
                     )
 
                     newCardsPool shouldBe expected
@@ -76,7 +78,8 @@ class AddCardValidationTest: WordSpec() {
             "test cards pool",
             "desc",
             listOf(card1, card2, card3),
-            clock.now().timestamp()
+            clock.now().timestamp(),
+            FakeUser
     )
 
     val cardsPoolRepository: CardsPoolRepository = object: CardsPoolRepository{

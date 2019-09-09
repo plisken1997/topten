@@ -1,5 +1,6 @@
 package org.plsk.core.clock
 
+import java.time.ZoneId
 import java.time.ZonedDateTime
 
 data class Datetime(val date: ZonedDateTime) {
@@ -13,4 +14,8 @@ interface Clock {
 class FakeClock: Clock {
     val fakeNow = Datetime(ZonedDateTime.parse("2013-12-27T15:35:00.000Z"))
     override fun now(): Datetime = fakeNow
+}
+
+object UTCDatetimeClock : Clock {
+    override fun now(): Datetime = Datetime(ZonedDateTime.now(ZoneId.of("UTC")))
 }
