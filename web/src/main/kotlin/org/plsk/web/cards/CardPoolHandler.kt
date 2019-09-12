@@ -19,43 +19,55 @@ import org.springframework.web.reactive.function.BodyInserters
 import org.springframework.web.reactive.function.server.ServerRequest
 import org.springframework.web.reactive.function.server.ServerResponse
 import reactor.core.publisher.Mono
+import java.net.InetAddress
+import java.util.*
 
 data class CreateCardsPoolPayload(val name: String, val description: String?) {
-    fun toCommand(user: User): CreateCardsPool = CreateCardsPool(name, description, user)
+  fun toCommand(user: User): CreateCardsPool = CreateCardsPool(name, description, user)
+
+  override fun toString() = """{"name": "$name", "description": "$description"}"""
 }
+
+data class CreateCardsPoolResult(val id: UUID)
 
 @Component
 class CardPoolHandler {
 
-    private val logger = LoggerFactory.getLogger("test")
+  private val logger = LoggerFactory.getLogger("test")
 
-    private val cardsPoolValidator: Validation<CreateCardsPool, CardsPool> =
-            CardsPoolValidation(
-                    UUIDGen(),
-                    UTCDatetimeClock
+  private val cardsPoolValidator: Validation<CreateCardsPool, CardsPool> =
+    CardsPoolValidation(
+      UUIDGen(),
+      UTCDatetimeClock
+    )
+
+  private val eventBus: EventBus = object : EventBus {
+    override fun publish(event: Event) = when (event) {
+      is CardsPoolCreated -> logger.info("store $event")
+      else -> Unit
+    }
+  }
+
+  private val createPoolHandler: CreateCardsPoolHandler = CreateCardsPoolHandler(cardsPoolValidator, eventBus)
+
+  fun createCardPool(request: ServerRequest): Mono<ServerResponse> =
+    request.bodyToMono(CreateCardsPoolPayload::class.java)
+      .flatMap { payload ->
+        val result = request.remoteAddress().map { addr ->
+          val created =
+            createPoolHandler.handle(
+              CreateCardsPoolPayload(
+                  payload.name,
+                  payload.description
+              ).toCommand(UnknownUser(extractRemoteAddress(addr.address)))
             )
-
-    private val eventBus: EventBus = object : EventBus {
-        override fun publish(event: Event) = when (event) {
-            is CardsPoolCreated -> logger.info("store $event")
-            else -> Unit
+          CreateCardsPoolResult(created)
         }
-    }
 
-    private val createPoolHandler: CreateCardsPoolHandler = CreateCardsPoolHandler(cardsPoolValidator, eventBus)
+        ServerResponse.ok()
+          .contentType(MediaType.APPLICATION_JSON)
+          .body(BodyInserters.fromObject(result))
+      }
 
-    fun createCardPool(request: ServerRequest): Mono<ServerResponse> {
-        return request.remoteAddress().map { addr ->
-            val created = createPoolHandler.handle(CreateCardsPoolPayload("title", "description...").toCommand(UnknownUser(addr.address.hostAddress)))
-            logger.info(created.toString())
-
-            ServerResponse.ok()
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(BodyInserters.fromObject(
-                    """{
-                    |"id": "${created}"
-                    |}""".trimMargin())
-                )
-        }.get()
-    }
+  private fun extractRemoteAddress(addr: InetAddress): String = addr.hostAddress
 }
