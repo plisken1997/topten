@@ -8,16 +8,28 @@ import org.springframework.web.reactive.function.server.*
 @Configuration
 class CardsPoolRouter {
 
-    @Bean
-    fun route(cardsPoolHandler: CardsPoolHandler): RouterFunction<ServerResponse> {
-        return RouterFunctions
-                .route(
-                        RequestPredicates.POST("/cardspool")
-                                .and(RequestPredicates.accept(MediaType.APPLICATION_JSON)),
-                        HandlerFunction<ServerResponse> {
-                            cardsPoolHandler.createCardPool(it)
-                        }
-                )
-    }
+  @Bean
+  fun createCardsPool(cardsPoolHandler: CardsPoolHandler): RouterFunction<ServerResponse> {
+    return RouterFunctions
+        .route(
+            RequestPredicates.POST("/cardspool")
+                .and(RequestPredicates.accept(MediaType.APPLICATION_JSON)),
+            HandlerFunction<ServerResponse> {
+              cardsPoolHandler.createCardPool(it)
+            }
+        )
+  }
+
+  @Bean
+  fun addCard(cardsPoolHandler: CardsPoolHandler): RouterFunction<ServerResponse> {
+    return RouterFunctions
+        .route(
+            RequestPredicates.POST("/cardspool/{cardpoolId:[\\w-]+}/")
+                .and(RequestPredicates.accept(MediaType.APPLICATION_JSON)),
+            HandlerFunction<ServerResponse> {
+              cardsPoolHandler.addCard(it)
+            }
+        )
+  }
 
 }

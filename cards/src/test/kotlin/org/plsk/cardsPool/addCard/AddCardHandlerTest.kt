@@ -22,7 +22,7 @@ class AddCardHandlerTest: WordSpec() {
             "adding a card with an unknown cards pool id" should {
 
                 "fail to validate" {
-                    val command = AddCard("test-card", 1, UUID.randomUUID())
+                    val command = AddCard("test-card", "desc", 1, UUID.randomUUID())
                     shouldThrowExactly<Exception>{
                         addCardHandler.handle(command)
                     }
@@ -32,7 +32,7 @@ class AddCardHandlerTest: WordSpec() {
             "adding a card with valid name and cards pool id" should {
 
                 "publish a `card added` event to the event bus" {
-                    val command = AddCard("test-card", 0, baseCardsPool.id)
+                    val command = AddCard("test-card", "desc", 0, baseCardsPool.id)
                     addCardHandler.handle(command)
 
                     val newCard = AddCardValidation.createCard(command, baseCardsPool, clock)

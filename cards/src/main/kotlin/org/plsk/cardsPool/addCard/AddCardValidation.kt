@@ -15,8 +15,8 @@ class AddCardValidation(val cardsPoolRepository: CardsPoolRepository, val clock:
 
         fun createCard(command: AddCard, cardsPool: CardsPool, clock: Clock): Card =
             Card(
-                genereateId(command.label, cardsPool),
-                command.label,
+                genereateId(command.title, cardsPool),
+                command.title,
                 clock.now().timestamp()
             )
     }
@@ -29,8 +29,8 @@ class AddCardValidation(val cardsPoolRepository: CardsPoolRepository, val clock:
         // will be refactored using a `Either` data class
         if (cardsPool == null) {
             errors = errors.plus(CardsPoolNotFound(command.cardsPoolId))
-        } else if (cardsPool.cards.any{c -> c.label == command.label}) {
-            errors = errors.plus(LabelExists(command.label))
+        } else if (cardsPool.cards.any{c -> c.label == command.title}) {
+            errors = errors.plus(LabelExists(command.title))
         }
 
         if (errors.isNotEmpty()) {

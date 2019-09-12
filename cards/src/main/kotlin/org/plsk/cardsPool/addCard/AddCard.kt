@@ -7,7 +7,7 @@ import org.plsk.core.event.EventBus
 import org.plsk.core.validation.Validation
 import java.util.*
 
-data class AddCard(val label: String, val position: Int, val cardsPoolId: UUID)
+data class AddCard(val title: String, val description: String?, val position: Int, val cardsPoolId: UUID)
 
 data class CardAddedEvent(val cardsPool: CardsPool): Event
 

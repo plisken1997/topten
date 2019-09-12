@@ -20,7 +20,7 @@ class AddCardValidationTest: WordSpec() {
             "validate an unknown cards pool" should {
 
                 "fail to validate" {
-                    val command = AddCard("insert-1", 1, UUID.nameUUIDFromBytes("test".toByteArray()))
+                    val command = AddCard("insert-1", "desc", 1, UUID.nameUUIDFromBytes("test".toByteArray()))
                     // @todo will be better tested after implemented the monadic effect on validation output
                     shouldThrowExactly<Exception>{
                         validation.validate(command)
@@ -31,7 +31,7 @@ class AddCardValidationTest: WordSpec() {
             "validate an existing label" should {
 
                 "fail to validate" {
-                    val command = AddCard("test-card 2", 1, baseCardsPool.id)
+                    val command = AddCard("test-card 2", "desc",1, baseCardsPool.id)
                     // @todo will be better tested after implemented the monadic effect on validation output
                     shouldThrowExactly<Exception>{
                         validation.validate(command)
@@ -43,7 +43,7 @@ class AddCardValidationTest: WordSpec() {
             "validate the card" should {
 
                 "add the card to the cards pool" {
-                    val command = AddCard("test-card", 1, baseCardsPool.id)
+                    val command = AddCard("test-card", "desc",1, baseCardsPool.id)
                     val newCardsPool = validation.validate(command)
                     val card = Card(
                         AddCardValidation.genereateId("test-card", baseCardsPool),

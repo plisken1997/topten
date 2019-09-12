@@ -1,6 +1,8 @@
 package org.plsk.web.config
 
 import org.plsk.cardsPool.create.CardsPoolCreated
+import org.plsk.core.clock.Clock
+import org.plsk.core.clock.UTCDatetimeClock
 import org.plsk.core.event.Event
 import org.plsk.core.event.EventBus
 import org.plsk.core.id.IdGen
@@ -15,6 +17,9 @@ class ServicesConfig {
 
   @Bean
   fun provideUUIDGen(): IdGen<UUID> = UUIDGen()
+
+  @Bean
+  fun provideClock(): Clock = UTCDatetimeClock
 
   @Bean
   fun eventBus(): EventBus = object : EventBus {
