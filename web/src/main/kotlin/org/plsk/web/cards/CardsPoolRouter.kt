@@ -9,13 +9,13 @@ import org.springframework.web.reactive.function.server.*
 class CardsPoolRouter {
 
     @Bean
-    fun route(cardPoolHandler: CardPoolHandler): RouterFunction<ServerResponse> {
+    fun route(cardsPoolHandler: CardsPoolHandler): RouterFunction<ServerResponse> {
         return RouterFunctions
                 .route(
                         RequestPredicates.POST("/cardspool")
                                 .and(RequestPredicates.accept(MediaType.APPLICATION_JSON)),
                         HandlerFunction<ServerResponse> {
-                            cardPoolHandler.createCardPool(it)
+                            cardsPoolHandler.createCardPool(it)
                         }
                 )
     }
