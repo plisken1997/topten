@@ -9,7 +9,7 @@ import java.util.*
 class CardsPoolValidation(val idGen: IdGen<UUID>, val clock: Clock) : Validation<CreateCardsPool, CardsPool> {
 
     companion object {
-        fun idParts(command: CreateCardsPool): String = command.name + command.description.orEmpty() + command.user.toString()
+        fun idParts(command: CreateCardsPool): String = command.name + command.description.orEmpty() + command.user.id
 
         fun createdCardsPool(id: UUID, command: CreateCardsPool, clock: Clock): CardsPool =
             CardsPool(

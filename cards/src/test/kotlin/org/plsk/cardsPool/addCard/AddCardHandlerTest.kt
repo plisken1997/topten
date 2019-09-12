@@ -1,6 +1,7 @@
 package org.plsk.cardsPool.addCard
 
 import io.kotlintest.matchers.collections.shouldContain
+import io.kotlintest.shouldBe
 import io.kotlintest.shouldThrowExactly
 import io.kotlintest.specs.WordSpec
 import org.plsk.cards.Card
@@ -10,6 +11,7 @@ import org.plsk.core.clock.Clock
 import org.plsk.core.clock.FakeClock
 import org.plsk.core.event.Event
 import org.plsk.core.event.EventBus
+import org.plsk.core.id.UUIDGen
 import org.plsk.user.FakeUser
 import java.util.*
 
@@ -33,10 +35,17 @@ class AddCardHandlerTest: WordSpec() {
 
                 "publish a `card added` event to the event bus" {
                     val command = AddCard("test-card", "desc", 0, baseCardsPool.id)
-                    addCardHandler.handle(command)
+                    val createdId = addCardHandler.handle(command)
 
-                    val newCard = AddCardValidation.createCard(command, baseCardsPool, clock)
-                    val expected = CardAddedEvent(baseCardsPool.copy(cards = listOf(newCard, card1)))
+                    val expectedId = idGen.fromString(command.title + baseCardsPool.id.toString())
+
+                    createdId shouldBe expectedId
+
+                    val newCard = AddCardValidation.createCard(command, clock, expectedId)
+                    val expected = CardAddedEvent(baseCardsPool.copy(
+                        cards = listOf(card1, newCard),
+                        stock = listOf(newCard.id, card1.id)
+                    ))
 
                     events shouldContain expected
                 }
@@ -54,10 +63,13 @@ class AddCardHandlerTest: WordSpec() {
             "desc",
             listOf(card1),
             clock.now().timestamp(),
-            FakeUser
+            FakeUser,
+            stock = listOf(card1.id)
     )
 
     var events = emptyList<CardAddedEvent>()
+
+    val idGen = UUIDGen()
 
     val addCardHandler = {
 
@@ -65,7 +77,7 @@ class AddCardHandlerTest: WordSpec() {
             override fun find(id: UUID): CardsPool? = if (id == baseCardsPool.id) baseCardsPool else null
         }
 
-        val validation = AddCardValidation(cardsPoolRepository, clock)
+        val validation = AddCardValidation(cardsPoolRepository, clock, idGen)
 
         val eventBus: EventBus = object : EventBus {
             override fun publish(event: Event) = when (event) {
@@ -74,6 +86,6 @@ class AddCardHandlerTest: WordSpec() {
             }
         }
 
-AddCardHandler(validation, eventBus)
+        AddCardHandler(validation, cardsPoolRepository, eventBus)
     }()
 }

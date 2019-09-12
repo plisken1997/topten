@@ -1,5 +1,6 @@
 package org.plsk.web.config
 
+import org.plsk.cards.Card
 import org.plsk.cardsPool.CardsPool
 import org.plsk.cardsPool.CardsPoolRepository
 import org.plsk.cardsPool.addCard.AddCard
@@ -45,10 +46,10 @@ class CardsPoolConfig {
   }
 
   @Bean
-  fun provideAddCardValidation(cardsPoolRepository: CardsPoolRepository, clock: Clock): Validation<AddCard, CardsPool> =
-      AddCardValidation(cardsPoolRepository, clock)
+  fun provideAddCardValidation(cardsPoolRepository: CardsPoolRepository, clock: Clock, idGen: IdGen<UUID>): Validation<AddCard, Card> =
+      AddCardValidation(cardsPoolRepository, clock, idGen)
 
   @Bean
-  fun provideAddCardHandler(validation: Validation<AddCard, CardsPool>, eventBus: EventBus): CommandHandler<AddCard, UUID> =
-      AddCardHandler(validation, eventBus)
+  fun provideAddCardHandler(validation: Validation<AddCard, Card>, cardsPoolRepository: CardsPoolRepository, eventBus: EventBus): CommandHandler<AddCard, UUID> =
+      AddCardHandler(validation, cardsPoolRepository, eventBus)
 }

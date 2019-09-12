@@ -4,27 +4,27 @@ import org.plsk.cards.Card
 import org.plsk.cardsPool.CardsPoolRepository
 import org.plsk.cardsPool.CardsPool
 import org.plsk.core.clock.Clock
+import org.plsk.core.id.IdGen
 import org.plsk.core.validation.Validation
 import java.util.*
 
-class AddCardValidation(val cardsPoolRepository: CardsPoolRepository, val clock: Clock) : Validation<AddCard, CardsPool> {
+class AddCardValidation(val cardsPoolRepository: CardsPoolRepository, val clock: Clock, val idGen: IdGen<UUID>) : Validation<AddCard, Card> {
+
+    fun genereateId(label: String, cardsPool: CardsPool): UUID = idGen.fromString(label + cardsPool.id.toString())
 
     companion object {
-        // @todo find a better way to generate (real) deterministic id :-)
-        fun genereateId(label: String, cardsPool: CardsPool): UUID = UUID.nameUUIDFromBytes((label + cardsPool.id.toString()).toByteArray())
 
-        fun createCard(command: AddCard, cardsPool: CardsPool, clock: Clock): Card =
+        fun createCard(command: AddCard, clock: Clock, id: UUID): Card =
             Card(
-                genereateId(command.title, cardsPool),
+                id,
                 command.title,
                 clock.now().timestamp()
             )
     }
 
-
-    override fun validate(command: AddCard): CardsPool {
+    override fun validate(command: AddCard): Card {
         var errors = emptyList<AddCardError>()
-        val cardsPool = cardsPoolRepository.find(command.cardsPoolId)
+        val cardsPool: CardsPool? = cardsPoolRepository.find(command.cardsPoolId)
 
         // will be refactored using a `Either` data class
         if (cardsPool == null) {
@@ -37,10 +37,7 @@ class AddCardValidation(val cardsPoolRepository: CardsPoolRepository, val clock:
             throw Exception(errors.map{it.toString()}.joinToString(", "))
         }
 
-        return cardsPool!!.addCard(
-            createCard(command, cardsPool, clock),
-            command.position
-        )
+        return createCard(command, clock, genereateId(command.title, cardsPool!!))
     }
 
 }

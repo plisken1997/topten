@@ -19,7 +19,7 @@ class CreateCardsPoolHandlerTest : WordSpec () {
 
             "publish the created cards pool" {
                 val createCardPool = CreateCardsPool("test-name", "description !", FakeUser)
-                val expectedId = UUID.fromString("604a6b1d-2315-3db5-8922-c53a3986c668")
+                val expectedId = UUID.fromString("9ff495f9-7e47-31fb-ab60-dc513af657d2")
 
                 val expectedCreatedCardPoolEvent = CardsPoolCreated(
                     CardsPool(

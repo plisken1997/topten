@@ -8,6 +8,7 @@ import org.plsk.cardsPool.CardsPool
 import org.plsk.cardsPool.CardsPoolRepository
 import org.plsk.core.clock.Clock
 import org.plsk.core.clock.FakeClock
+import org.plsk.core.id.UUIDGen
 import org.plsk.user.FakeUser
 import java.util.*
 
@@ -45,18 +46,10 @@ class AddCardValidationTest: WordSpec() {
                 "add the card to the cards pool" {
                     val command = AddCard("test-card", "desc",1, baseCardsPool.id)
                     val newCardsPool = validation.validate(command)
-                    val card = Card(
-                        AddCardValidation.genereateId("test-card", baseCardsPool),
+                    val expected = Card(
+                        idGen.fromString("test-card" + baseCardsPool.id.toString()),
                         "test-card",
                         clock.now().timestamp()
-                    )
-                    val expected = CardsPool(
-                            baseCardsPool.id,
-                            "test cards pool",
-                            "desc",
-                            listOf(card1, card, card2, card3),
-                            clock.now().timestamp(),
-                            FakeUser
                     )
 
                     newCardsPool shouldBe expected
@@ -68,6 +61,7 @@ class AddCardValidationTest: WordSpec() {
     }
 
     val clock: Clock = FakeClock()
+    val idGen = UUIDGen()
 
     val card1 = Card(UUID.randomUUID(), "test-card 1", clock.now().timestamp())
     val card2 = Card(UUID.randomUUID(), "test-card 2", clock.now().timestamp())
@@ -85,5 +79,5 @@ class AddCardValidationTest: WordSpec() {
     val cardsPoolRepository: CardsPoolRepository = object: CardsPoolRepository{
         override fun find(id: UUID): CardsPool? = if (id == baseCardsPool.id) baseCardsPool else null
     }
-    val validation = AddCardValidation(cardsPoolRepository, clock)
+    val validation = AddCardValidation(cardsPoolRepository, clock, idGen)
 }
