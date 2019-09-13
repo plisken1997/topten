@@ -24,6 +24,7 @@ data class CardsPool(
     )
   }
 
+  // /!\ warning /!\ this version should not be used to change the sort of a card already presents in the topCards list
   fun promote(cardId: UUID, position: Int): CardsPool {
     if (topCards.size <= position || position < 0) {
       return copy(topCards = topCards.plus(cardId))

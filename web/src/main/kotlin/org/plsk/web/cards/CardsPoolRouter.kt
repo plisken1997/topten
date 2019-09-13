@@ -24,10 +24,22 @@ class CardsPoolRouter {
   fun addCard(cardsPoolHandler: CardsPoolHandler): RouterFunction<ServerResponse> {
     return RouterFunctions
         .route(
-            RequestPredicates.POST("/cardspool/{cardpoolId:[\\w-]+}/")
+            RequestPredicates.POST("/cardspool/{cardpoolId:[\\w-]+}/addCard")
                 .and(RequestPredicates.accept(MediaType.APPLICATION_JSON)),
             HandlerFunction<ServerResponse> {
               cardsPoolHandler.addCard(it)
+            }
+        )
+  }
+
+  @Bean
+  fun prmoteCard(cardsPoolHandler: CardsPoolHandler): RouterFunction<ServerResponse> {
+    return RouterFunctions
+        .route(
+            RequestPredicates.POST("/cardspool/{cardpoolId:[\\w-]+}/promote")
+                .and(RequestPredicates.accept(MediaType.APPLICATION_JSON)),
+            HandlerFunction<ServerResponse> {
+              cardsPoolHandler.promoteCard(it)
             }
         )
   }
