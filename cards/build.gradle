@@ -1,0 +1,7 @@
+project(':cards') {
+  dependencies {
+    implementation project(':core')
+    implementation project(':user')
+    testImplementation project(':user')
+  }
+}

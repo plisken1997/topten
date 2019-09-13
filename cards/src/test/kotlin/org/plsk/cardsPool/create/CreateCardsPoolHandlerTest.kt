@@ -48,7 +48,7 @@ class CreateCardsPoolHandlerTest : WordSpec () {
     var events = emptyList<CardsPoolCreated>()
 
     val eventBus: EventBus = object : EventBus {
-        override fun publish(event: Event) = when (event) {
+        override fun dispatch(event: Event) = when (event) {
             is CardsPoolCreated -> events = events.plusElement(event)
             else -> Unit
         }

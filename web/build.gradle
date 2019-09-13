@@ -8,3 +8,40 @@ compileTestKotlin {
         jvmTarget = "1.8"
     }
 }
+
+// https://spring.io/guides/tutorials/spring-boot-kotlin/
+apply plugin: "kotlin-spring" // https://kotlinlang.org/docs/reference/compiler-plugins.html#spring-support
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+
+dependencies {
+  compile 'org.mongodb:mongodb-driver-reactivestreams:1.12.0'
+  compile 'org.litote.kmongo:kmongo-rxjava2:3.11.0'
+
+  //compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version" // Required for Kotlin integration
+  //compile "org.springframework.boot:spring-boot-starter-web"
+  compile "org.springframework.boot:spring-boot-starter-webflux"
+  //implementation("org.springframework.boot:spring-boot-starter-webflux")
+
+  testCompile('org.springframework.boot:spring-boot-starter-test')
+
+  //implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+  //implementation("org.springframework.boot:spring-boot-starter-mustache")
+  //implementation("org.springframework.boot:spring-boot-starter-web")
+
+  implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+
+  implementation("org.jetbrains.kotlin:kotlin-reflect")
+  implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+
+  //runtimeOnly("com.h2database:h2:1.4.197") // Fixed version as a workaround for https://github.com/h2database/h2database/issues/1841
+  runtimeOnly("org.springframework.boot:spring-boot-devtools")
+
+  testImplementation("org.springframework.boot:spring-boot-starter-test")
+  testImplementation("io.projectreactor:reactor-test")
+
+  implementation project(':core')
+  implementation project(':user')
+  implementation project(':cards')
+  implementation project(':mongo')
+}

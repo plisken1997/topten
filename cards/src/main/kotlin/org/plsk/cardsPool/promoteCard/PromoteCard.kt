@@ -20,7 +20,7 @@ class PromoteCardHander(
     val validated = validation.validate(command)
     val promotedCardsPool = validated.cardsPool.promote(command.cardId, command.position)
 
-    eventBus.publish(CardPromoted(command.cardId, command.position, promotedCardsPool))
+    eventBus.dispatch(CardPromoted(command.cardId, command.position, promotedCardsPool))
 
     return promotedCardsPool.topCards
   }

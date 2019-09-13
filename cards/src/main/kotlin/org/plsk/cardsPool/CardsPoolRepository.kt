@@ -1,9 +1,12 @@
 package org.plsk.cardsPool
 
+import org.plsk.core.dao.DataReader
+import org.plsk.core.dao.DataWriter
 import java.util.*
 
-interface CardsPoolRepository {
+sealed class WriteResult
 
-    fun find(id: UUID): CardsPool?
+data class WriteSuccess(val id: UUID): WriteResult()
+data class WriteFailure(val error: Throwable): WriteResult()
 
-}
+interface CardsPoolRepository: DataReader<CardsPool, UUID>, DataWriter<CardsPool, WriteResult>

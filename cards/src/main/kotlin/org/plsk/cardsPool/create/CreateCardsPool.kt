@@ -18,7 +18,7 @@ class CreateCardsPoolHandler(
 
     override fun handle(command: CreateCardsPool): UUID {
         val cardsPool = cardsPoolValidator.validate(command)
-        eventBus.publish(CardsPoolCreated(cardsPool))
+        eventBus.dispatch(CardsPoolCreated(cardsPool))
         return cardsPool.id
     }
 

@@ -30,7 +30,7 @@ class AddCardHandler(
             card,
             command.position
         )
-        eventBus.publish(CardAddedEvent(updatedCardsPool))
+        eventBus.dispatch(CardAddedEvent(updatedCardsPool))
         card.id
       }.getOrElse{
         throw Exception("could not find cardsPool")
