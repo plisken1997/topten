@@ -3,6 +3,7 @@ package org.plsk.cardsPool
 import org.plsk.cardsPool.addCard.CardAddedEvent
 import org.plsk.cardsPool.create.CardsPoolCreated
 import org.plsk.cardsPool.promoteCard.CardPromoted
+import org.plsk.cardsPool.removeCard.CardRemoved
 import org.plsk.core.dao.DataWriter
 import org.plsk.core.event.Event
 import org.plsk.core.event.EventHandler
@@ -23,6 +24,11 @@ class CardsPoolEventHandler(private val writer: DataWriter<CardsPool, WriteResul
         writer.update(event.cardPool)
         event
       }
+      is CardRemoved -> {
+        writer.update(event.cardsPool)
+        event
+      }
       else -> event
     }
+
 }

@@ -34,4 +34,16 @@ data class CardsPool(
     )
   }
 
+  fun remove(cardId: UUID): CardsPool =
+      copy(
+          id,
+          name,
+          description,
+          cards.filter { it.id != cardId },
+          createdAt,
+          createdBy,
+          stock.filter { it != cardId },
+          topCards.filter { it != cardId }
+      )
+
 }

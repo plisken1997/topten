@@ -9,7 +9,19 @@ class CardsPoolEventHandlerTest: WordSpec() {
 
     "cards pool event handler" should {
 
-      "todo" {
+      "create a cards pool when the event is a CardsPoolCreated" {
+        fail("todo")
+      }
+
+      "update a cards pool when the event is a CardAddedEvent" {
+        fail("todo")
+      }
+
+      "update a cards pool when the event is a CardPromoted" {
+        fail("todo")
+      }
+
+      "update a cards pool when the event is a CardsRemoved" {
         fail("todo")
       }
 

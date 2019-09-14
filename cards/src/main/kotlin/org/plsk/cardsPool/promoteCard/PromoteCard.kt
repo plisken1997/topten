@@ -11,7 +11,7 @@ data class PromoteCard(val cardId: UUID, val position: Int, val cardsPoolId: UUI
 
 data class CardPromoted(val cardId: UUID, val position: Int, val cardPool: CardsPool): Event
 
-class PromoteCardHander(
+class PromoteCardHandler(
     private val validation: Validation<PromoteCard, PromoteCardValidated>,
     private val eventBus: EventBus
 ): CommandHandler<PromoteCard, List<UUID>> {

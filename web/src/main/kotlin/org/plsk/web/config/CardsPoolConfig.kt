@@ -11,9 +11,13 @@ import org.plsk.cardsPool.create.CardsPoolValidation
 import org.plsk.cardsPool.create.CreateCardsPool
 import org.plsk.cardsPool.create.CreateCardsPoolHandler
 import org.plsk.cardsPool.promoteCard.PromoteCard
-import org.plsk.cardsPool.promoteCard.PromoteCardHander
+import org.plsk.cardsPool.promoteCard.PromoteCardHandler
 import org.plsk.cardsPool.promoteCard.PromoteCardValidated
 import org.plsk.cardsPool.promoteCard.PromoteCardValidation
+import org.plsk.cardsPool.removeCard.RemoveCard
+import org.plsk.cardsPool.removeCard.RemoveCardHandler
+import org.plsk.cardsPool.removeCard.RemoveCardValidated
+import org.plsk.cardsPool.removeCard.RemoveCardValidation
 import org.plsk.core.clock.Clock
 import org.plsk.core.clock.UTCDatetimeClock
 import org.plsk.core.command.CommandHandler
@@ -56,5 +60,13 @@ class CardsPoolConfig {
 
   @Bean
   fun providePromoteCardHander(validation: Validation<PromoteCard, PromoteCardValidated>, eventBus: EventBus): CommandHandler<PromoteCard, List<UUID>> =
-      PromoteCardHander(validation, eventBus)
+      PromoteCardHandler(validation, eventBus)
+
+  @Bean
+  fun provideRemoveCardValidation(cardsPoolRepository: CardsPoolRepository): Validation<RemoveCard, RemoveCardValidated> =
+      RemoveCardValidation(cardsPoolRepository)
+
+  @Bean
+  fun provideRemoveCard(validation: Validation<RemoveCard, RemoveCardValidated>, eventBus: EventBus): CommandHandler<RemoveCard, Unit> =
+      RemoveCardHandler(validation, eventBus)
 }

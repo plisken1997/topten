@@ -1,7 +1,6 @@
-package org.plsk.cardsPool.promoteCard
+package org.plsk.cardsPool.removeCard
 
 import io.kotlintest.matchers.collections.shouldContain
-import io.kotlintest.shouldBe
 import io.kotlintest.specs.WordSpec
 import org.plsk.cards.Card
 import org.plsk.cardsPool.CardsPool
@@ -14,20 +13,29 @@ import org.plsk.core.validation.Validation
 import org.plsk.user.FakeUser
 import java.util.*
 
-class PromoteCardTest: WordSpec() {
+class RemoveCardHandlerTest: WordSpec()  {
 
   init {
 
-    "promote card" should {
+    "remove card" should {
 
-      "promote a card to a fixed position" {
-        val command = PromoteCard(card3.id, 1, baseCardsPool.id)
-        val promotedCardsPool = baseCardsPool.promote(command.cardId, command.position)
+      "remove a card from a cards pool" {
+        val command = RemoveCard(card1.id, baseCardsPool.id)
+        val removedCardsPool =
+          CardsPool(
+              baseCardsPool.id,
+            "test cards pool",
+            "desc",
+            listOf(card2, card3),
+            clock.now().timestamp(),
+            FakeUser,
+            listOf(card2.id, card3.id),
+            listOf(card2.id)
+          )
 
-        val topCards = promoteHandler.handle(command)
+        removeHandler.handle(command)
 
-        events shouldContain CardPromoted(command.cardId, command.position, promotedCardsPool)
-        topCards shouldBe listOf(card1.id, card3.id, card2.id)
+        events shouldContain CardRemoved(removedCardsPool, command.cardId)
       }
 
     }
@@ -69,15 +77,15 @@ class PromoteCardTest: WordSpec() {
     override fun find(id: UUID): CardsPool? = if (id == baseCardsPool.id) baseCardsPool else null
   }
 
-  val validation: Validation<PromoteCard, PromoteCardValidated> = PromoteCardValidation(cardsPoolRepository)
-  var events = emptyList<CardPromoted>()
+  val validation: Validation<RemoveCard, RemoveCardValidated> = RemoveCardValidation(cardsPoolRepository)
+  var events = emptyList<CardRemoved>()
 
   val eventBus: EventBus = object : EventBus {
     override fun dispatch(event: Event) = when (event) {
-      is CardPromoted -> events = events.plusElement(event)
+      is CardRemoved -> events = events.plusElement(event)
       else -> Unit
     }
   }
 
-  val promoteHandler = PromoteCardHandler(validation, eventBus)
+  val removeHandler = RemoveCardHandler(validation, eventBus)
 }

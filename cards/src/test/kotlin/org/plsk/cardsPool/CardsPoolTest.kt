@@ -90,6 +90,21 @@ class CardsPoolTest  : WordSpec() {
         promoted.topCards shouldBe listOf(card1.id, card4.id, card2.id, card3.id)
       }
 
+      "remove a card" {
+        val removed = baseCardsPool.remove(card1.id)
+        val expected =  CardsPool(
+            baseCardsPool.id,
+            "test cards pool",
+            "desc",
+            listOf(card2, card3, card4, card5),
+            clock.now().timestamp(),
+            FakeUser,
+            listOf(card2.id, card3.id, card4.id, card5.id),
+            listOf(card2.id, card3.id)
+        )
+        removed shouldBe expected
+      }
+
     }
   }
 
