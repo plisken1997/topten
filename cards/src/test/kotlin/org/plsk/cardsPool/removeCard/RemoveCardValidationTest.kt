@@ -47,7 +47,7 @@ class RemoveCardValidationTest: WordSpec() {
   val card1 = Card(UUID.randomUUID(), "test-card 1", clock.now().timestamp())
   val card2 = Card(UUID.randomUUID(), "test-card 2", clock.now().timestamp())
 
-  val cards = listOf<Card>(
+  val cards = setOf<Card>(
       card1,
       card2
   )
@@ -59,8 +59,8 @@ class RemoveCardValidationTest: WordSpec() {
       cards,
       clock.now().timestamp(),
       FakeUser,
-      listOf(card1.id, card2.id),
-      listOf(card2.id)
+      setOf(card1.id, card2.id),
+      setOf(card2.id)
   )
 
   val cardsPoolRepository: CardsPoolRepository = object: CardsPoolRepository {

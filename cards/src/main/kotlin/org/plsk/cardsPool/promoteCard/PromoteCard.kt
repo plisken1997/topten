@@ -7,21 +7,42 @@ import org.plsk.core.event.EventBus
 import org.plsk.core.validation.Validation
 import java.util.*
 
-data class PromoteCard(val cardId: UUID, val position: Int, val cardsPoolId: UUID)
+interface PromoteType{
+  val cardId: UUID
+  val cardsPoolId: UUID
+}
 
-data class CardPromoted(val cardId: UUID, val position: Int, val cardPool: CardsPool): Event
+data class PromoteCard(override val cardId: UUID, val position: Int, override val cardsPoolId: UUID): PromoteType
+data class UnpromoteCard(override val cardId: UUID, override val cardsPoolId: UUID): PromoteType
+
+sealed class PromotedEvent: Event {
+  abstract val cardsPool: CardsPool
+}
+
+data class CardPromoted(val cardId: UUID, val position: Int, override val cardsPool: CardsPool): PromotedEvent()
+data class CardUnpromoted(val cardId: UUID, override val cardsPool: CardsPool): PromotedEvent()
 
 class PromoteCardHandler(
-    private val validation: Validation<PromoteCard, PromoteCardValidated>,
+    private val validation: Validation<PromoteType, PromoteCardValidated>,
     private val eventBus: EventBus
-): CommandHandler<PromoteCard, List<UUID>> {
+): CommandHandler<PromoteType, Set<UUID>> {
 
-  override fun handle(command: PromoteCard): List<UUID> {
+  override fun handle(command: PromoteType): Set<UUID> {
     val validated = validation.validate(command)
-    val promotedCardsPool = validated.cardsPool.promote(command.cardId, command.position)
 
-    eventBus.dispatch(CardPromoted(command.cardId, command.position, promotedCardsPool))
+    val promoteEvent = when(command) {
+      is PromoteCard -> {
+        val updatedCardsPool = validated.cardsPool.promote(command.cardId, command.position)
+        CardPromoted(command.cardId, command.position, updatedCardsPool)
+      }
+      is UnpromoteCard -> {
+        val updatedCardsPool = validated.cardsPool.unpromote(command.cardId)
+        CardUnpromoted(command.cardId, updatedCardsPool)
+      }
+      else -> throw Exception("invalid PromoteType")
+    }
+    eventBus.dispatch(promoteEvent)
 
-    return promotedCardsPool.topCards
+    return promoteEvent.cardsPool.topCards
   }
 }

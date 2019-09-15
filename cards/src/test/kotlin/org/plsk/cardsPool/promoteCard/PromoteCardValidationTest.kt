@@ -34,7 +34,7 @@ class PromoteCardValidationTest: WordSpec() {
 
       "return the parent cards pool when the command is valid" {
         val command = PromoteCard(card1.id, 1, baseCardsPool.id)
-        validation.validate(command) shouldBe PromoteCardValidated(command.cardId, command.position, baseCardsPool)
+        validation.validate(command) shouldBe PromoteCardValidated(command.cardId, baseCardsPool)
       }
 
     }
@@ -46,7 +46,7 @@ class PromoteCardValidationTest: WordSpec() {
   val card1 = Card(UUID.randomUUID(), "test-card 1", clock.now().timestamp())
   val card2 = Card(UUID.randomUUID(), "test-card 2", clock.now().timestamp())
 
-  val cards = listOf<Card>(
+  val cards = setOf<Card>(
       card1,
       card2
   )
@@ -58,8 +58,8 @@ class PromoteCardValidationTest: WordSpec() {
       cards,
       clock.now().timestamp(),
       FakeUser,
-      listOf(card1.id, card2.id),
-      listOf(card2.id)
+      setOf(card1.id, card2.id),
+      setOf(card2.id)
   )
 
   val cardsPoolRepository: CardsPoolRepository = object: CardsPoolRepository {
@@ -74,6 +74,6 @@ class PromoteCardValidationTest: WordSpec() {
     override fun find(id: UUID): CardsPool? = if (id == baseCardsPool.id) baseCardsPool else null
   }
 
-  val validation: Validation<PromoteCard, PromoteCardValidated> = PromoteCardValidation(cardsPoolRepository)
+  val validation: Validation<PromoteType, PromoteCardValidated> = PromoteCardValidation(cardsPoolRepository)
 
 }

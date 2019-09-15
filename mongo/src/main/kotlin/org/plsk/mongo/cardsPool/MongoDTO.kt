@@ -24,11 +24,11 @@ data class MongoCardsPool(
           UUID.fromString(id),
           name,
           description,
-          cards.map{ it.toModel() },
+          cards.map{ it.toModel() }.toSet(),
           createdAt,
           UnknownUser(createdBy),
-          stock.map{ UUID.fromString(it)},
-          topCards.map{ UUID.fromString(it)}
+          stock.map{ UUID.fromString(it)}.toSet(),
+          topCards.map{ UUID.fromString(it)}.toSet()
       )
 }
 

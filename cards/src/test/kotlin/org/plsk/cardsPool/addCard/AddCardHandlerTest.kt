@@ -44,8 +44,8 @@ class AddCardHandlerTest: WordSpec() {
 
                     val newCard = AddCardValidation.createCard(command, clock, expectedId)
                     val expected = CardAddedEvent(baseCardsPool.copy(
-                        cards = listOf(card1, newCard),
-                        stock = listOf(newCard.id, card1.id)
+                        cards = setOf(card1, newCard),
+                        stock = setOf(newCard.id, card1.id)
                     ))
 
                     events shouldContain expected
@@ -62,10 +62,10 @@ class AddCardHandlerTest: WordSpec() {
             UUID.randomUUID(),
             "test cards pool",
             "desc",
-            listOf(card1),
+            setOf(card1),
             clock.now().timestamp(),
             FakeUser,
-            stock = listOf(card1.id)
+            stock = setOf(card1.id)
     )
 
     var events = emptyList<CardAddedEvent>()

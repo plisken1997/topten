@@ -26,11 +26,11 @@ class RemoveCardHandlerTest: WordSpec()  {
               baseCardsPool.id,
             "test cards pool",
             "desc",
-            listOf(card2, card3),
+            setOf(card2, card3),
             clock.now().timestamp(),
             FakeUser,
-            listOf(card2.id, card3.id),
-            listOf(card2.id)
+            setOf(card2.id, card3.id),
+            setOf(card2.id)
           )
 
         removeHandler.handle(command)
@@ -48,7 +48,7 @@ class RemoveCardHandlerTest: WordSpec()  {
   val card2 = Card(UUID.randomUUID(), "test-card 2", clock.now().timestamp())
   val card3 = Card(UUID.randomUUID(), "test-card 3", clock.now().timestamp())
 
-  val cards = listOf<Card>(
+  val cards = setOf<Card>(
       card1,
       card2,
       card3
@@ -61,8 +61,8 @@ class RemoveCardHandlerTest: WordSpec()  {
       cards,
       clock.now().timestamp(),
       FakeUser,
-      listOf(card1.id, card2.id, card3.id),
-      listOf(card1.id, card2.id)
+      setOf(card1.id, card2.id, card3.id),
+      setOf(card1.id, card2.id)
   )
 
   val cardsPoolRepository: CardsPoolRepository = object: CardsPoolRepository {

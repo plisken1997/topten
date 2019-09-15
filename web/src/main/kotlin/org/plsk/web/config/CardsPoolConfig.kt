@@ -10,10 +10,7 @@ import org.plsk.cardsPool.addCard.AddCardValidation
 import org.plsk.cardsPool.create.CardsPoolValidation
 import org.plsk.cardsPool.create.CreateCardsPool
 import org.plsk.cardsPool.create.CreateCardsPoolHandler
-import org.plsk.cardsPool.promoteCard.PromoteCard
-import org.plsk.cardsPool.promoteCard.PromoteCardHandler
-import org.plsk.cardsPool.promoteCard.PromoteCardValidated
-import org.plsk.cardsPool.promoteCard.PromoteCardValidation
+import org.plsk.cardsPool.promoteCard.*
 import org.plsk.cardsPool.removeCard.RemoveCard
 import org.plsk.cardsPool.removeCard.RemoveCardHandler
 import org.plsk.cardsPool.removeCard.RemoveCardValidated
@@ -55,11 +52,11 @@ class CardsPoolConfig {
       AddCardHandler(validation, cardsPoolRepository, eventBus)
 
   @Bean
-  fun providePromoteCardValidation(cardsPoolRepository: CardsPoolRepository): Validation<PromoteCard, PromoteCardValidated> =
+  fun providePromoteCardValidation(cardsPoolRepository: CardsPoolRepository): Validation<PromoteType, PromoteCardValidated> =
       PromoteCardValidation(cardsPoolRepository)
 
   @Bean
-  fun providePromoteCardHander(validation: Validation<PromoteCard, PromoteCardValidated>, eventBus: EventBus): CommandHandler<PromoteCard, List<UUID>> =
+  fun providePromoteCardHander(validation: Validation<PromoteType, PromoteCardValidated>, eventBus: EventBus): CommandHandler<PromoteType, Set<UUID>> =
       PromoteCardHandler(validation, eventBus)
 
   @Bean

@@ -15,7 +15,7 @@ class CardsPoolTest  : WordSpec() {
 
       "add a new card at the end of the list" {
         val inserted = baseCardsPool.addCard(card, 10)
-        inserted.cards shouldBe listOf<Card>(
+        inserted.cards shouldBe setOf<Card>(
             card1,
             card2,
             card3,
@@ -24,10 +24,7 @@ class CardsPoolTest  : WordSpec() {
             card
         )
 
-        inserted.stock shouldBe listOf(
-            card1.id,
-            card2.id,
-            card3.id,
+        inserted.stock shouldBe setOf(
             card4.id,
             card5.id,
             card.id
@@ -36,7 +33,7 @@ class CardsPoolTest  : WordSpec() {
 
       "add a new card at the beginning of the list" {
         val inserted = baseCardsPool.addCard(card, 0)
-        inserted.cards shouldBe listOf<Card>(
+        inserted.cards shouldBe setOf<Card>(
             card1,
             card2,
             card3,
@@ -45,19 +42,16 @@ class CardsPoolTest  : WordSpec() {
             card
         )
 
-        inserted.stock shouldBe listOf(
+        inserted.stock shouldBe setOf(
             card.id,
-            card1.id,
-            card2.id,
-            card3.id,
             card4.id,
             card5.id
         )
       }
 
       "add a new card in the middle of the list" {
-        val inserted = baseCardsPool.addCard(card, 3)
-        inserted.cards shouldBe listOf<Card>(
+        val inserted = baseCardsPool.addCard(card, 1)
+        inserted.cards shouldBe setOf<Card>(
             card1,
             card2,
             card3,
@@ -65,29 +59,36 @@ class CardsPoolTest  : WordSpec() {
             card5,
             card
         )
-        inserted.stock shouldBe listOf(
-            card1.id,
-            card2.id,
-            card3.id,
-            card.id,
+        inserted.stock shouldBe setOf(
             card4.id,
+            card.id,
             card5.id
         )
       }
 
       "promote a card to the end of the top cards list" {
         val promoted = baseCardsPool.promote(card4.id, 3)
-        promoted.topCards shouldBe listOf(card1.id, card2.id, card3.id, card4.id)
+        promoted.topCards shouldBe setOf(card1.id, card2.id, card3.id, card4.id)
       }
 
       "promote a card to the beginning of the top cards list" {
         val promoted = baseCardsPool.promote(card4.id, 0)
-        promoted.topCards shouldBe listOf(card4.id, card1.id, card2.id, card3.id)
+        promoted.topCards shouldBe setOf(card4.id, card1.id, card2.id, card3.id)
       }
 
       "promote a card as a second element of the top cards list" {
         val promoted = baseCardsPool.promote(card4.id, 1)
-        promoted.topCards shouldBe listOf(card1.id, card4.id, card2.id, card3.id)
+        val expected = CardsPool(
+            baseCardsPool.id,
+            "test cards pool",
+            "desc",
+            cards,
+            clock.now().timestamp(),
+            FakeUser,
+            setOf(card5.id),
+            setOf(card1.id, card4.id, card2.id, card3.id)
+        )
+        promoted shouldBe expected
       }
 
       "remove a card" {
@@ -96,11 +97,26 @@ class CardsPoolTest  : WordSpec() {
             baseCardsPool.id,
             "test cards pool",
             "desc",
-            listOf(card2, card3, card4, card5),
+            setOf(card2, card3, card4, card5),
             clock.now().timestamp(),
             FakeUser,
-            listOf(card2.id, card3.id, card4.id, card5.id),
-            listOf(card2.id, card3.id)
+            setOf(card4.id, card5.id),
+            setOf(card2.id, card3.id)
+        )
+        removed shouldBe expected
+      }
+
+      "unpromote a card" {
+        val removed = baseCardsPool.unpromote(card1.id)
+        val expected =  CardsPool(
+            baseCardsPool.id,
+            "test cards pool",
+            "desc",
+            cards,
+            clock.now().timestamp(),
+            FakeUser,
+            setOf(card1.id, card4.id, card5.id),
+            setOf(card2.id, card3.id)
         )
         removed shouldBe expected
       }
@@ -118,7 +134,7 @@ class CardsPoolTest  : WordSpec() {
   val card4 = Card(UUID.randomUUID(), "test-card 4", clock.now().timestamp())
   val card5 = Card(UUID.randomUUID(), "test-card 5", clock.now().timestamp())
 
-  val cards = listOf<Card>(
+  val cards = setOf<Card>(
       card1,
       card2,
       card3,
@@ -133,7 +149,7 @@ class CardsPoolTest  : WordSpec() {
       cards,
       clock.now().timestamp(),
       FakeUser,
-      listOf(card1.id, card2.id, card3.id, card4.id, card5.id),
-      listOf(card1.id, card2.id, card3.id)
+      setOf(card4.id, card5.id),
+      setOf(card1.id, card2.id, card3.id)
   )
 }
