@@ -26,40 +26,42 @@ data class CardsPool(
 
   // /!\ warning /!\ this version should not be used to change the sort of a card already presents in the topCards list
   fun promote(cardId: UUID, position: Int): CardsPool {
+    val cleanedTopCards = topCards.filter { it != cardId }
+
     if (topCards.size <= position || position < 0) {
       return copy(
-        topCards = topCards.plus(cardId),
-          stock = stock.filter{ it != cardId }.toSet()
+        topCards = cleanedTopCards.plus(cardId).toSet(),
+        stock = stock.filter{ it != cardId }.toSet()
       )
     }
     return copy(
-        topCards = topCards.take(position).toSet().plus(cardId).plus(topCards.drop(position)),
+        topCards = cleanedTopCards.take(position).toSet().plus(cardId).plus(cleanedTopCards.drop(position)),
         stock = stock.filter{ it != cardId }.toSet()
     )
   }
 
   fun unpromote(cardId: UUID): CardsPool =
       copy(
-          id,
-          name,
-          description,
-          cards,
-          createdAt,
-          createdBy,
-          stock.plus(cardId),
-          topCards.filter { it != cardId }.toSet()
+          stock = stock.plus(cardId),
+          topCards = topCards.filter { it != cardId }.toSet()
       )
+
+  fun moveCard(cardId: UUID, position: Int): CardsPool {
+    if (!topCards.contains(cardId)) {
+      // code smell ! validation must be performed outside of this function
+      return this
+    }
+    val cleanedTopCards = topCards.filter { it != cardId }
+    return copy(
+      topCards = cleanedTopCards.take(position).plus(cardId).plus(cleanedTopCards.drop(position)).toSet()
+    )
+  }
 
   fun remove(cardId: UUID): CardsPool =
       copy(
-          id,
-          name,
-          description,
-          cards.filter { it.id != cardId }.toSet(),
-          createdAt,
-          createdBy,
-          stock.filter { it != cardId }.toSet(),
-          topCards.filter { it != cardId }.toSet()
+          cards = cards.filter { it.id != cardId }.toSet(),
+          stock = stock.filter { it != cardId }.toSet(),
+          topCards = topCards.filter { it != cardId }.toSet()
       )
 
 }

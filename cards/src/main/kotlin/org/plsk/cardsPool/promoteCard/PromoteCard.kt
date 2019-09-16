@@ -13,6 +13,7 @@ interface PromoteType{
 }
 
 data class PromoteCard(override val cardId: UUID, val position: Int, override val cardsPoolId: UUID): PromoteType
+data class UpdateCardPosition(override val cardId: UUID, val position: Int, override val cardsPoolId: UUID): PromoteType
 data class UnpromoteCard(override val cardId: UUID, override val cardsPoolId: UUID): PromoteType
 
 sealed class PromotedEvent: Event {
@@ -21,6 +22,7 @@ sealed class PromotedEvent: Event {
 
 data class CardPromoted(val cardId: UUID, val position: Int, override val cardsPool: CardsPool): PromotedEvent()
 data class CardUnpromoted(val cardId: UUID, override val cardsPool: CardsPool): PromotedEvent()
+data class CardPositionUpdated(val cardId: UUID, val position: Int,  override val cardsPool: CardsPool): PromotedEvent()
 
 class PromoteCardHandler(
     private val validation: Validation<PromoteType, PromoteCardValidated>,
@@ -38,6 +40,10 @@ class PromoteCardHandler(
       is UnpromoteCard -> {
         val updatedCardsPool = validated.cardsPool.unpromote(command.cardId)
         CardUnpromoted(command.cardId, updatedCardsPool)
+      }
+      is UpdateCardPosition -> {
+        val updatedCardsPool = validated.cardsPool.moveCard(command.cardId, command.position)
+        CardPositionUpdated(command.cardId, command.position, updatedCardsPool)
       }
       else -> throw Exception("invalid PromoteType")
     }

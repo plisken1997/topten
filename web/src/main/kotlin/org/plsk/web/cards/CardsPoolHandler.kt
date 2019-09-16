@@ -5,6 +5,7 @@ import org.plsk.cardsPool.create.CreateCardsPool
 import org.plsk.cardsPool.promoteCard.PromoteCard
 import org.plsk.cardsPool.promoteCard.PromoteType
 import org.plsk.cardsPool.promoteCard.UnpromoteCard
+import org.plsk.cardsPool.promoteCard.UpdateCardPosition
 import org.plsk.cardsPool.removeCard.RemoveCard
 import org.plsk.core.command.CommandHandler
 import org.plsk.user.UnknownUser
@@ -32,6 +33,10 @@ data class PromoteCardPayload(val cardId: UUID, val position: Int) {
   fun toCommand(cardsPoolId: UUID): PromoteCard = PromoteCard(cardId, position, cardsPoolId)
 }
 
+data class UpdateCardPositionPayload(val cardId: UUID, val position: Int) {
+  fun toCommand(cardsPoolId: UUID): UpdateCardPosition = UpdateCardPosition(cardId, position, cardsPoolId)
+}
+
 data class RemoveCardPayload(val cardId: String) {
   fun toCommand(cardsPoolId: UUID): RemoveCard = RemoveCard(UUID.fromString(cardId), cardsPoolId)
 }
@@ -44,7 +49,7 @@ data class UpdateTopPayload(val cardId: String, val position: Int?)
 
 data class CreateResourceResult(val id: UUID)
 
-data class PromoteResult(val promoted: Set<UUID>)
+data class TopCardsResult(val toCards: Set<UUID>)
 
 @Component
 class CardsPoolHandler(
@@ -96,7 +101,7 @@ class CardsPoolHandler(
 
             ServerResponse.ok()
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(BodyInserters.fromObject(PromoteResult(promoted)))
+                .body(BodyInserters.fromObject(TopCardsResult(promoted)))
           }
 
   fun deleteCard(request: ServerRequest): Mono<ServerResponse> =
@@ -106,9 +111,8 @@ class CardsPoolHandler(
 
             val removed = removeCard.handle(payload.toCommand(UUID.fromString(cardpoolId)))
 
-            ServerResponse.ok()
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(BodyInserters.fromObject("""{"warning": "response must be 204"}"""))
+            ServerResponse.noContent()
+                .build()
           }
 
   fun unPromoteCard(request: ServerRequest): Mono<ServerResponse> =
@@ -122,17 +126,19 @@ class CardsPoolHandler(
 
             ServerResponse.ok()
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(BodyInserters.fromObject(PromoteResult(promoted)))
+                .body(BodyInserters.fromObject(TopCardsResult(promoted)))
           }
 
   fun updateTop(request: ServerRequest): Mono<ServerResponse> =
-      request.bodyToMono(UpdateTopPayload::class.java)
+      request.bodyToMono(UpdateCardPositionPayload::class.java)
           .flatMap { payload ->
             val cardpoolId = request.pathVariable("cardpoolId")
 
+            val updated = promoteCardHander.handle(payload.toCommand(UUID.fromString(cardpoolId)))
+
             ServerResponse.ok()
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(BodyInserters.fromObject("""{"type": "update_top"}"""))
+                .body(BodyInserters.fromObject(TopCardsResult(updated)))
           }
 
   private fun extractRemoteAddress(addr: InetAddress): String = addr.hostAddress

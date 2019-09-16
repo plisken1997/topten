@@ -29,6 +29,10 @@ class CardsPoolEventHandlerTest: WordSpec() {
         fail("todo")
       }
 
+      "update a cards pool when the sort of the promoted cards change" {
+        fail("todo")
+      }
+
     }
 
   }

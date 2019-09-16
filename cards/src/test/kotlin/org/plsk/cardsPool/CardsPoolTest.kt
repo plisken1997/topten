@@ -1,5 +1,6 @@
 package org.plsk.cardsPool
 
+import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.WordSpec
 import org.plsk.cards.Card
@@ -68,12 +69,12 @@ class CardsPoolTest  : WordSpec() {
 
       "promote a card to the end of the top cards list" {
         val promoted = baseCardsPool.promote(card4.id, 3)
-        promoted.topCards shouldBe setOf(card1.id, card2.id, card3.id, card4.id)
+        promoted.topCards shouldContainExactly setOf(card1.id, card2.id, card3.id, card4.id)
       }
 
       "promote a card to the beginning of the top cards list" {
         val promoted = baseCardsPool.promote(card4.id, 0)
-        promoted.topCards shouldBe setOf(card4.id, card1.id, card2.id, card3.id)
+        promoted.topCards shouldContainExactly setOf(card4.id, card1.id, card2.id, card3.id)
       }
 
       "promote a card as a second element of the top cards list" {
@@ -89,6 +90,7 @@ class CardsPoolTest  : WordSpec() {
             setOf(card1.id, card4.id, card2.id, card3.id)
         )
         promoted shouldBe expected
+        promoted.topCards shouldContainExactly expected.topCards
       }
 
       "remove a card" {
@@ -119,6 +121,38 @@ class CardsPoolTest  : WordSpec() {
             setOf(card2.id, card3.id)
         )
         removed shouldBe expected
+      }
+
+      "move a card down" {
+        val moved = baseCardsPool.promote(card4.id, 3).promote(card5.id, 4).moveCard(card1.id, 2)
+        val expected =  CardsPool(
+            baseCardsPool.id,
+            "test cards pool",
+            "desc",
+            cards,
+            clock.now().timestamp(),
+            FakeUser,
+            emptySet(),
+            setOf(card2.id, card3.id, card1.id, card4.id, card5.id)
+        )
+        moved shouldBe expected
+        moved.topCards shouldContainExactly expected.topCards
+      }
+
+      "move a card up" {
+        val moved = baseCardsPool.promote(card4.id, 3).promote(card5.id, 4).moveCard(card4.id, 1)
+        val expected =  CardsPool(
+            baseCardsPool.id,
+            "test cards pool",
+            "desc",
+            cards,
+            clock.now().timestamp(),
+            FakeUser,
+            emptySet(),
+            setOf(card1.id, card4.id, card2.id, card3.id, card5.id)
+        )
+        moved shouldBe expected
+        moved.topCards shouldContainExactly expected.topCards
       }
 
     }
