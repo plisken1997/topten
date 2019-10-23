@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import Card from './Card'
 import {WithDroppable, WithDraggable} from './DNDBindings'
 import './Container.css'
@@ -12,6 +13,11 @@ const Highlighted = ({highlighted = [], placeholder}) => {
             {placeholder}
         </div>
     )
+}
+
+Highlighted.propTypes = {
+    highlighted: PropTypes.array.isRequired,
+    placeholder: PropTypes.element.isRequired
 }
 
 export default WithDroppable("droppable-Highlighted")(Highlighted)
