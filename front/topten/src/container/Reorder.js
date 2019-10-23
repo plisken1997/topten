@@ -13,50 +13,55 @@ const add = (list, item, endIndex) => {
     return result.slice(0, endIndex).concat([item]).concat(result.slice(endIndex))
 }
 
+const updateSame = (result, highlighted, cardsPool) => {
+    if (result.source.droppableId === "droppable-Highlighted") {                
+        return {
+            highlighted: reorder(
+                highlighted,
+                result.source.index,
+                result.destination.index
+                ),
+            cardsPool
+        }
+    }     
+    return {
+        cardsPool: reorder(
+            cardsPool,
+            result.source.index,
+            result.destination.index
+        ),
+        highlighted
+    }
+}
+
+const changeCol = (result, highlighted, cardsPool) => {
+    if (result.destination.droppableId === "droppable-Highlighted") {
+        const item = cardsPool.find(e => e.id === result.draggableId)
+        return {
+            highlighted: add(
+                highlighted,
+                item,
+                result.destination.index
+            ),
+            cardsPool: cardsPool.filter(e => e.id !== result.draggableId)
+        }
+    } 
+    const item = highlighted.find(e => e.id === result.draggableId)
+    return {
+        highlighted: highlighted.filter(e => e.id !== result.draggableId),
+        cardsPool: add(
+            cardsPool,
+            item,
+            result.destination.index
+        )
+    }
+}
+
 const update = (result, highlighted, cardsPool) => {
     if (result.source.droppableId === result.destination.droppableId) {
-        if (result.source.droppableId === "droppable-Highlighted") {                
-            return {
-                highlighted: reorder(
-                    highlighted,
-                    result.source.index,
-                    result.destination.index
-                    ),
-                cardsPool
-            }
-        } else {        
-            return {
-                cardsPool: reorder(
-                    cardsPool,
-                    result.source.index,
-                    result.destination.index
-                ),
-                highlighted
-            }
-        }
-    } else {
-        if (result.destination.droppableId === "droppable-Highlighted") {
-            const item = cardsPool.find(e => e.id === result.draggableId)
-            return {
-                highlighted: add(
-                    highlighted,
-                    item,
-                    result.destination.index
-                ),
-                cardsPool: cardsPool.filter(e => e.id !== result.draggableId)
-            }
-        } else {
-            const item = highlighted.find(e => e.id === result.draggableId)
-            return {
-                highlighted: highlighted.filter(e => e.id !== result.draggableId),
-                cardsPool: add(
-                    cardsPool,
-                    item,
-                    result.destination.index
-                )
-            }
-        }
-    }
+        return updateSame(result, highlighted, cardsPool)
+    } 
+    return changeCol(result, highlighted, cardsPool)    
 }
 
 export default update
