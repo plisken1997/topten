@@ -2,18 +2,10 @@ import * as actions from '../actions/toptenCards'
 
 const card = (id, title, desc) => ({id, title, desc})
 
-const cardsPool = [
-    card(1, "Casino", "I whish I could see this soon"), 
-    card(2, "Taxi driver", "time to see it again"), 
-    card(3, "Aviator", "I'll just need 3 hours free"), 
-    card(4, "The wall street wolf", "Saw it only 2 times, needs a third")
-]
-const highlighted = [
-    card(5, "The irishman", "the last Scorsese movie !"), 
-    card(6, "Goodfellas", "my favorite")
-]
-
 const newCard = {title: '', desc: ''}
+
+const cardsPool = []
+const highlighted = []
 
 const defaultState = {
   cardsPool,
@@ -31,6 +23,11 @@ const reduceTopTenCards = (state = defaultState, action) => {
     case actions.ADD_NEW_CARD:
       const addCard = card(genId(state.cardsPool, state.highlighted), action.payload.title, action.payload.desc)
       return {...state, newCard, cardsPool: state.cardsPool.concat([addCard])}
+    case actions.NEW_CARD_CHANGED:
+      return {...state, newCard: action.payload}
+    case actions.SKIP:
+      console.log("skip action", action)
+      return state
     default:
       return state
   }

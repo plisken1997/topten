@@ -20,10 +20,26 @@ const onDragEnd = (highlightedInput, cardsPoolInput, result) => {
   }
 
 export const ADD_NEW_CARD = 'ADD_NEW_CARD'
+export const SKIP = 'SKIP'
 
-const addCard = (newCard) => ({
-  type: ADD_NEW_CARD,
-  payload: newCard
-})
+const addCard = (newCard) => {
+  const isComplete = (newCard) => newCard.title.trim().length > 0
+  if (!isComplete(newCard)) {
+    return {type: SKIP}
+  }
+  return {
+    type: ADD_NEW_CARD,
+    payload: newCard
+  }
+}
 
-export { onDragEnd, addCard };
+export const NEW_CARD_CHANGED = 'NEW_CARD_CHANGED'
+
+const newCardChange = (field, obj, e) => {
+  return {
+    type: NEW_CARD_CHANGED,
+    payload: {...obj, [field]: e.target.value}
+  }
+}
+
+export { onDragEnd, addCard, newCardChange }

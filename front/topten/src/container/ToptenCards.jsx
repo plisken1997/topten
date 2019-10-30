@@ -4,7 +4,7 @@ import Highlighted from './Highlighted'
 import CardsPool from './CardsPool'
 import { DragDropContext } from 'react-beautiful-dnd'
 import './Container.css'
-import {onDragEnd, addCard} from '../actions/toptenCards'
+import {onDragEnd, addCard, newCardChange} from '../actions/toptenCards'
 import Button from './AddButton'
 import AddCard from './AddCard'
 
@@ -20,7 +20,7 @@ class ToptenCards extends React.Component{
     }
 
     render() {
-        const {highlighted, cardsPool, onDragEnd, newCard, addCard} = this.props
+        const {highlighted, cardsPool, onDragEnd, newCard, addCard, newCardChange} = this.props
         const {showAddCard} = this.state
         return (
             <DragDropContext onDragEnd={onDragEnd(highlighted, cardsPool)}>
@@ -28,7 +28,7 @@ class ToptenCards extends React.Component{
                 <Highlighted highlighted={highlighted}/>
                 <CardsPool cardsPool={cardsPool}/>
                 <Button onClick={this.displayAdd.bind(this)}/>
-                {showAddCard && <AddCard card={newCard} addCard={addCard(newCard)}/>}
+                {showAddCard && <AddCard card={newCard} addCard={addCard(newCard)} handleChange={newCardChange(newCard)}/>}
             </div>
             </DragDropContext>
         )
@@ -43,7 +43,8 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
     onDragEnd: (highlightedInput, cardsPoolInput) => (result) => dispatch(onDragEnd(highlightedInput, cardsPoolInput, result)),
-    addCard: newCard => () => dispatch(addCard(newCard))
+    addCard: newCard => () => dispatch(addCard(newCard)),
+    newCardChange: obj => field => e => dispatch(newCardChange(field, obj, e))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(ToptenCards)

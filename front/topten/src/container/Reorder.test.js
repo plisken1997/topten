@@ -1,6 +1,4 @@
 import update from './Reorder'
-import { fail } from 'assert';
-import expectExport from 'expect';
 
 const card = (id, title, label) => ({id, title, label})
 

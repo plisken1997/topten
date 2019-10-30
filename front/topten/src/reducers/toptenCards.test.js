@@ -1,18 +1,6 @@
 import reduceTopTenCards from './toptenCards'
 import {ADD_NEW_CARD} from '../actions/toptenCards'
-
-const card = (id, title, desc) => ({id, title, desc})
-
-const cardsPool = [
-    card(1, "Casino", "I whish I could see this soon"), 
-    card(2, "Taxi driver", "time to see it again"), 
-    card(3, "Aviator", "I'll just need 3 hours free"), 
-    card(4, "The wall street wolf", "Saw it only 2 times, needs a third")
-]
-const highlighted = [
-    card(5, "The irishman", "the last Scorsese movie !"), 
-    card(6, "Goodfellas", "my favorite")
-]
+import {cardsPool, highlighted, card} from './fixtures/cardsPools'
 
 const newCard = {title: '', desc: ''}
 
