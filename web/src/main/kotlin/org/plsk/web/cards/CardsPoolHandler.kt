@@ -19,8 +19,8 @@ import reactor.core.publisher.Mono
 import java.net.InetAddress
 import java.util.*
 
-data class CreateCardsPoolPayload(val name: String, val description: String?) {
-  fun toCommand(user: User): CreateCardsPool = CreateCardsPool(name, description, user)
+data class CreateCardsPoolPayload(val name: String, val description: String?, val slots: Int?) {
+  fun toCommand(user: User): CreateCardsPool = CreateCardsPool(name, description, slots, user)
 
   override fun toString() = """{"name": "$name", "description": "$description"}"""
 }

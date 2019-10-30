@@ -15,7 +15,7 @@ class CardsPoolValidationTest : WordSpec() {
         "cards pool validation" should {
 
             "produce a CardsPool object when validation succeed" {
-                val createCardPool = CreateCardsPool("test-name", "description !", FakeUser)
+                val createCardPool = CreateCardsPool("test-name", "description !", 10, FakeUser)
                 val cardsPool = cardsPoolValidator.validate(createCardPool)
 
                 val expected = CardsPool(
