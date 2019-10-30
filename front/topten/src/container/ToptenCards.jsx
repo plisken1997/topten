@@ -3,8 +3,8 @@ import { connect } from 'react-redux'
 import Highlighted from './Highlighted'
 import CardsPool from './CardsPool'
 import { DragDropContext } from 'react-beautiful-dnd'
-import './Container.css'
-import {onDragEnd, addCard, newCardChange, unpromote} from '../actions/toptenCards'
+import './container.css'
+import {onDragEnd, addCard, newCardChange, unpromote, dropCard} from '../actions/toptenCards'
 import Button from './AddButton'
 import AddCard from './AddCard'
 
@@ -20,13 +20,13 @@ class ToptenCards extends React.Component{
     }
 
     render() {
-        const {highlighted, cardsPool, onDragEnd, newCard, addCard, newCardChange, unpromote} = this.props
+        const {highlighted, cardsPool, onDragEnd, newCard, addCard, newCardChange, unpromote, dropCard} = this.props
         const {showAddCard} = this.state
         return (
             <DragDropContext onDragEnd={onDragEnd(highlighted, cardsPool)}>
             <div className="cont-list">
                 <Highlighted highlighted={highlighted} unpromote={unpromote}/>
-                <CardsPool cardsPool={cardsPool}/>
+                <CardsPool cardsPool={cardsPool} dropCard={dropCard}/>
                 <Button onClick={this.displayAdd.bind(this)}/>
                 {showAddCard && <AddCard card={newCard} addCard={addCard(newCard)} handleChange={newCardChange(newCard)}/>}
             </div>
@@ -45,7 +45,8 @@ const mapDispatchToProps = dispatch => ({
     onDragEnd: (highlightedInput, cardsPoolInput) => (result) => dispatch(onDragEnd(highlightedInput, cardsPoolInput, result)),
     addCard: newCard => () => dispatch(addCard(newCard)),
     newCardChange: obj => field => e => dispatch(newCardChange(field, obj, e)),
-    unpromote: id => () => dispatch(unpromote(id))
+    unpromote: id => () => dispatch(unpromote(id)),
+    dropCard: id => () => dispatch(dropCard(id)),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(ToptenCards)

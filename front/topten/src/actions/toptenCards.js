@@ -53,4 +53,14 @@ const unpromote = id => {
   }
 }
 
-export { onDragEnd, addCard, newCardChange, unpromote }
+export const DROP_CARD = 'DROP_CARD'
+const dropCard =  id => {
+  return {
+    type: DROP_CARD,
+    payload: {
+      id
+    }
+  }
+}
+
+export { onDragEnd, addCard, newCardChange, unpromote, dropCard }

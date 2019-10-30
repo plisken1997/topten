@@ -30,6 +30,8 @@ const reduceTopTenCards = (state = defaultState, action) => {
       const newhighlighted = state.highlighted.filter(c => c.id !== action.payload.id)
       const newcardsPool = state.cardsPool.concat(state.highlighted.filter(c => c.id === action.payload.id))
       return {...state, highlighted: newhighlighted, cardsPool: newcardsPool}
+    case actions.DROP_CARD:
+        return {...state, cardsPool: state.cardsPool.filter(c => c.id !== action.payload.id)}
     case actions.SKIP:
       console.log("skip action", action)
       return state

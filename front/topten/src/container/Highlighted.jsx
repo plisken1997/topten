@@ -13,7 +13,7 @@ const Highlighted = ({highlighted = [], placeholder, unpromote}) => {
                 <div className="highlighted-item" key={k}>
                     <div className="highlighted-pos">{k+1}</div>
                     <DraggableCard index={k} key={k} {...c}/>
-                    <button className="highlighted-unpromote" onClick={unpromote(c.id)} value="X"/>
+                    <button className="highlighted-unpromote" onClick={unpromote(c.id)}>remove</button>
                 </div>
                 )
             )}
