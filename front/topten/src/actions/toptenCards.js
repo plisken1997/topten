@@ -4,20 +4,20 @@ export const ON_DRAG_END_EMPTY = 'ON_DRAG_END_EMPTY'
 export const ON_DRAG_END = 'ON_DRAG_END'
 
 const onDragEnd = (highlightedInput, cardsPoolInput, result) => {
-    if (!result.destination) {
-      return {
-        type: ON_DRAG_END_EMPTY
-      }
-    }
-    const {cardsPool, highlighted} = update(result, highlightedInput, cardsPoolInput)
+  if (!result.destination) {
     return {
-        type: ON_DRAG_END,
-        payload: {
-            cardsPool,
-            highlighted
-        }
+      type: ON_DRAG_END_EMPTY
     }
   }
+  const {cardsPool, highlighted} = update(result, highlightedInput, cardsPoolInput)
+  return {
+      type: ON_DRAG_END,
+      payload: {
+          cardsPool,
+          highlighted
+      }
+  }
+}
 
 export const ADD_NEW_CARD = 'ADD_NEW_CARD'
 export const SKIP = 'SKIP'
@@ -42,4 +42,15 @@ const newCardChange = (field, obj, e) => {
   }
 }
 
-export { onDragEnd, addCard, newCardChange }
+export const UNPROMOTE_CARD = 'UNPROMOTE_CARD'
+
+const unpromote = id => {
+  return {
+    type: UNPROMOTE_CARD,
+    payload: {
+      id
+    }
+  }
+}
+
+export { onDragEnd, addCard, newCardChange, unpromote }
