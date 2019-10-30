@@ -20,7 +20,7 @@ class ToptenCards extends React.Component{
     }
 
     render() {
-        const {highlighted, cardsPool, onDragEnd, newCard, addCard, newCardChange} = this.props
+        const {highlighted, cardsPool, onDragEnd, newCard, addCard, newCardChange, clear} = this.props
         const {showAddCard} = this.state
         return (
             <DragDropContext onDragEnd={onDragEnd(highlighted, cardsPool)}>

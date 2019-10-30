@@ -1,0 +1,16 @@
+.cont-highlighted {
+}
+
+.highlighted-item{
+    display: flex;
+}
+
+.highlighted-pos {
+    width: 10%;
+    margin-top: 20px;
+    height: 30px;
+}
+
+.cont-highlighted{
+    width: 70%;
+}
