@@ -1,0 +1,7 @@
+.add-button:hover {
+    cursor: pointer;
+}
+
+.add-button {
+    display: inline-block;
+}

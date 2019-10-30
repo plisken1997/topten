@@ -19,4 +19,11 @@ const onDragEnd = (highlightedInput, cardsPoolInput, result) => {
     }
   }
 
-export { onDragEnd };
+export const ADD_NEW_CARD = 'ADD_NEW_CARD'
+
+const addCard = (newCard) => ({
+  type: ADD_NEW_CARD,
+  payload: newCard
+})
+
+export { onDragEnd, addCard };

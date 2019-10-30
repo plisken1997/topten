@@ -21,10 +21,6 @@
     padding: 10px;
 }
 
-.cont-card:hover {
-    /*cursor: pointer;*/
-}
-
 .cont-card {
     padding: 5px;
     margin: 10px;
@@ -36,6 +32,6 @@
     display: block;
 }
 
-.card-label {
+.card-desc {
     display: block;
 }
