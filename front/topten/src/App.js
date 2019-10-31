@@ -13,6 +13,10 @@ function App() {
       <div className="App">
         <header className="App-header">
           topten
+          <div>
+            <button>cancel last</button>
+            <button>clear all</button>
+          </div>
         </header>
         <ToptenCards/>
       </div>
