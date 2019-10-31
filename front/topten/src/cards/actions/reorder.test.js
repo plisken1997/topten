@@ -1,4 +1,4 @@
-import update from './Reorder'
+import update from './reorder'
 
 const card = (id, title, label) => ({id, title, label})
 

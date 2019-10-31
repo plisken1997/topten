@@ -1,6 +1,6 @@
 import React from 'react';
 import './App.css';
-import ToptenCards from './container/ToptenCards';
+import ToptenCards from './cards/ToptenCards';
 import { Provider } from 'react-redux'
 import { createStore } from 'redux'
 import rootReducer from './reducers'

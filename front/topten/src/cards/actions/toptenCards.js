@@ -1,4 +1,4 @@
-import update from '../container/Reorder'
+import update from './reorder'
 
 export const ON_DRAG_END_EMPTY = 'ON_DRAG_END_EMPTY'
 export const ON_DRAG_END = 'ON_DRAG_END'

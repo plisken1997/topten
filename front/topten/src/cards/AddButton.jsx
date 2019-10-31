@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import './components.css'
+import './style/components.css'
 
 const Button = (props) => (
     <div className="add-button">
