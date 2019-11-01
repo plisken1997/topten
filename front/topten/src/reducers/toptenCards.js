@@ -11,7 +11,11 @@ const highlighted = []
 const defaultState = {
   cardsPool,
   highlighted,
-  newCard
+  newCard,
+  toptenConfig: {
+    name: 'test config',
+    slots: 30
+  }
 }
 
 const reduceTopTenCards = (state = defaultState, action) => {

@@ -1,6 +1,6 @@
 import * as actions from '../enterApp/actions/enterApp'
 
-const emptyToptenConfig = {name: "", slots: 10}
+const emptyToptenConfig = {name: '', desc: '', slots: 10}
 
 const defaultState = {
     toptenConfig: emptyToptenConfig,

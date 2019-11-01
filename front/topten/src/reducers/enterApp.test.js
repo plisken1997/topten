@@ -1,7 +1,7 @@
 import reducer from './enterApp'
 import * as actions from '../enterApp/actions/enterApp'
 
-const emptyToptenConfig = {name: "", slots: 10}
+const emptyToptenConfig = {name: "", desc: '', slots: 10}
 
 const defaultState = {
     toptenConfig: emptyToptenConfig,
@@ -11,7 +11,8 @@ const defaultState = {
 test('change the topten config name should update the remaining object', () => {
     const config = {
         name: "",
-        slots: 20
+        slots: 20, 
+        desc: ''
     }
     const event = {
         target: {
@@ -23,7 +24,8 @@ test('change the topten config name should update the remaining object', () => {
     const expectedState = {
         toptenConfig: {
             name: 'test topten config',
-            slots: 20
+            slots: 20,
+            desc: ''
         },
         toptens: []
     }
@@ -33,7 +35,8 @@ test('change the topten config name should update the remaining object', () => {
 test('add a valid topten config should add the config at the end of the list', () => {
     const config = {
         name: "test topten config",
-        slots: 20
+        slots: 20, 
+        desc: 'description...'
     }
     const action = actions.saveConfig(config)
     const newState = reducer(defaultState, action)

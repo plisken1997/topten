@@ -20,10 +20,6 @@ function App() {
         <div className="App">
           <header className="App-header">
             <Link to="/">topten</Link>
-            <div>
-              <button>cancel last</button>
-              <button>clear all</button>
-            </div>
           </header>
           <Switch>
             <Route path="/topten/:toptenId">

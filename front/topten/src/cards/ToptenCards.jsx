@@ -1,13 +1,14 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import Highlighted from './Highlighted'
 import CardsPool from './CardsPool'
 import { DragDropContext } from 'react-beautiful-dnd'
-import './style/container.css'
 import {onDragEnd, addCard, newCardChange, unpromote, dropCard} from './actions/toptenCards'
 import Button from './AddButton'
 import AddCard from './AddCard'
-//import { useParams } from "react-router-dom"
+import Header from './Header'
+import './style/container.css'
 
 class ToptenCards extends React.Component{
 
@@ -22,25 +23,39 @@ class ToptenCards extends React.Component{
     }
 
     render() {
-        const {highlighted, cardsPool, onDragEnd, newCard, addCard, newCardChange, unpromote, dropCard} = this.props
+        const {highlighted, cardsPool, onDragEnd, newCard, addCard, newCardChange, unpromote, dropCard, toptenConfig} = this.props
         const {showAddCard} = this.state
         return (
             <DragDropContext onDragEnd={onDragEnd(highlighted, cardsPool)}>
-            <div className="cont-list">
-                <Highlighted highlighted={highlighted} unpromote={unpromote}/>
-                <CardsPool cardsPool={cardsPool} dropCard={dropCard}/>
-                <Button onClick={this.displayAdd.bind(this)}/>
-                {showAddCard && <AddCard card={newCard} addCard={addCard(newCard)} handleChange={newCardChange(newCard)}/>}
-            </div>
+                <Header config={toptenConfig}/>
+                <div className="cont-list">
+                    <Highlighted highlighted={highlighted} unpromote={unpromote}/>
+                    <CardsPool cardsPool={cardsPool} dropCard={dropCard}/>
+                    <Button onClick={this.displayAdd.bind(this)}/>
+                    {showAddCard && <AddCard card={newCard} addCard={addCard(newCard)} handleChange={newCardChange(newCard)}/>}
+                </div>
             </DragDropContext>
         )
     }
 }
 
+ToptenCards.propTypes = {
+    cardsPool: PropTypes.array.isRequired,
+    highlighted: PropTypes.array.isRequired,
+    newCard: PropTypes.object.isRequired,
+    toptenConfig: PropTypes.object.isRequired,
+    onDragEnd: PropTypes.func.isRequired,
+    addCard: PropTypes.func.isRequired,
+    newCardChange: PropTypes.func.isRequired,
+    unpromote: PropTypes.func.isRequired,
+    dropCard: PropTypes.func.isRequired,
+}
+
 const mapStateToProps = state => ({
     cardsPool: state.toptenCards.cardsPool,
     highlighted: state.toptenCards.highlighted,
-    newCard: state.toptenCards.newCard
+    newCard: state.toptenCards.newCard,
+    toptenConfig: state.toptenCards.toptenConfig
 })
 
 const mapDispatchToProps = dispatch => ({
