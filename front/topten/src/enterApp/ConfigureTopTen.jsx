@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 
 const ConfigureTopTen = ({toptenConfig = {name: "", slots: 10}, handleChange, save, ...props}) => (
     <div>
+        <h2>Create a new topten list</h2>
         <form onSubmit={e => e.preventDefault()}>
             <input type="test" value={toptenConfig.name} placeholder="topten name" id="topten-config-name" onChange={handleChange("name")}/>
             <br />

@@ -4,7 +4,7 @@ import { Link } from "react-router-dom"
 
 const UserLists = ({toptens}) => (
     <div>
-        <h3>Pick an existing list</h3>
+        <h2>Pick an existing one</h2>
         <ul>
             {toptens.map((t, pos) => (
                 <li key={pos}>
