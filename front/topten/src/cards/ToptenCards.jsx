@@ -7,11 +7,13 @@ import './style/container.css'
 import {onDragEnd, addCard, newCardChange, unpromote, dropCard} from './actions/toptenCards'
 import Button from './AddButton'
 import AddCard from './AddCard'
+//import { useParams } from "react-router-dom"
 
 class ToptenCards extends React.Component{
 
     constructor() {
         super()
+        //console.log(`loading list ${useParams('toptenId')}`)
         this.state = {showAddCard: false}
     }
 

@@ -1,25 +1,40 @@
-import React from 'react';
-import './App.css';
-import ToptenCards from './cards/ToptenCards';
+import React from 'react'
+import './App.css'
+import Portail from './enterApp/Portail'
+import ToptenCards from './cards/ToptenCards'
 import { Provider } from 'react-redux'
 import { createStore } from 'redux'
 import rootReducer from './reducers'
-
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link
+} from "react-router-dom"
 const store = createStore(rootReducer)
 
 function App() {
   return (
     <Provider store={store}>
-      <div className="App">
-        <header className="App-header">
-          topten
-          <div>
-            <button>cancel last</button>
-            <button>clear all</button>
-          </div>
-        </header>
-        <ToptenCards/>
-      </div>
+      <Router>
+        <div className="App">
+          <header className="App-header">
+            <Link to="/">topten</Link>
+            <div>
+              <button>cancel last</button>
+              <button>clear all</button>
+            </div>
+          </header>
+          <Switch>
+            <Route path="/topten/:toptenId">
+              <ToptenCards/>
+            </Route>
+            <Route path="/">
+              <Portail/>
+            </Route>
+          </Switch>
+        </div>
+      </Router>
     </Provider>
   );
 }

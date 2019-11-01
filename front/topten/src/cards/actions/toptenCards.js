@@ -1,4 +1,5 @@
 import update from './reorder'
+import {updateValue} from '../../util/actions'
 
 export const ON_DRAG_END_EMPTY = 'ON_DRAG_END_EMPTY'
 export const ON_DRAG_END = 'ON_DRAG_END'
@@ -35,12 +36,7 @@ const addCard = (newCard) => {
 
 export const NEW_CARD_CHANGED = 'NEW_CARD_CHANGED'
 
-const newCardChange = (field, obj, e) => {
-  return {
-    type: NEW_CARD_CHANGED,
-    payload: {...obj, [field]: e.target.value}
-  }
-}
+const newCardChange = updateValue(NEW_CARD_CHANGED)
 
 export const UNPROMOTE_CARD = 'UNPROMOTE_CARD'
 
