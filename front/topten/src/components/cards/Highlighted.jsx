@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import Card from './Card'
-import {WithDroppable, WithDraggable} from '../hoc/DNDBindings'
+import {WithDroppable, WithDraggable} from '../../hoc/DNDBindings'
 import './style/highlighted.css'
 
 const DraggableCard = WithDraggable(Card)

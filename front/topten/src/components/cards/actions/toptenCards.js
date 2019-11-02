@@ -1,5 +1,5 @@
 import update from './reorder'
-import {updateValue} from '../../util/actions'
+import {updateValue} from '../../../util/actions'
 
 export const ON_DRAG_END_EMPTY = 'ON_DRAG_END_EMPTY'
 export const ON_DRAG_END = 'ON_DRAG_END'

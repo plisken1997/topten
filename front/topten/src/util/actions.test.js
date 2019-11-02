@@ -1,5 +1,4 @@
 import {updateValue} from './actions'
-import expectExport from 'expect'
 
 test("should update a givent object", () => {
     const actionType = "TEST_ACTION_TYPE"

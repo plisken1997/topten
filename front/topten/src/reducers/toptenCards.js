@@ -1,4 +1,4 @@
-import * as actions from '../cards/actions/toptenCards'
+import * as actions from '../components/cards/actions/toptenCards'
 //import {cardsPool, highlighted} from './fixtures/cardsPools'
 
 const card = (id, title, desc) => ({id, title, desc})

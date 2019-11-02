@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
-import ToptenCards from '../../cards/ToptenCards'
-import {onDragEnd, addCard, newCardChange, unpromote, dropCard} from '../../cards/actions/toptenCards'
+import ToptenCards from '../../components/cards/ToptenCards'
+import {onDragEnd, addCard, newCardChange, unpromote, dropCard} from '../../components/cards/actions/toptenCards'
 
 const mapStateToProps = state => ({
     cardsPool: state.toptenCards.cardsPool,

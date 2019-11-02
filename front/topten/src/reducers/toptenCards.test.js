@@ -1,5 +1,5 @@
 import reduceTopTenCards from './toptenCards'
-import * as actions from '../cards/actions/toptenCards'
+import * as actions from '../components/cards/actions/toptenCards'
 import {cardsPool, highlighted, card} from './fixtures/cardsPools'
 
 const newCard = {title: '', desc: ''}

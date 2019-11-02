@@ -1,4 +1,4 @@
-import {updateValue} from '../../util/actions'
+import {updateValue} from '../../../util/actions'
 
 export const CHANGE_TOPTEN_CONFIG = 'CHANGE_TOPTEN_CONFIG'
 export const toptenConfigChange = updateValue(CHANGE_TOPTEN_CONFIG)

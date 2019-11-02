@@ -1,5 +1,5 @@
 import reducer from './enterApp'
-import * as actions from '../enterApp/actions/enterApp'
+import * as actions from '../components/enterApp/actions/enterApp'
 
 const emptyToptenConfig = {name: "", desc: '', slots: 10}
 

@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
-import {toptenConfigChange, saveConfig} from '../../enterApp/actions/enterApp'
-import Portail from '../../enterApp/Portail'
+import {toptenConfigChange, saveConfig} from '../../components/enterApp/actions/enterApp'
+import Portail from '../../components/enterApp/Portail'
 
 const mapStateToProps = state => ({
     toptenConfig: state.enterApp.toptenConfig,
