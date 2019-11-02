@@ -8,6 +8,7 @@ data class CardsPool(
     val id: UUID,
     val name: String,
     val description: String?,
+    val slots: Int?,
     val cards: Set<Card> = emptySet(),
     val createdAt: Long,
     val createdBy: User,

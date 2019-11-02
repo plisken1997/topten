@@ -55,6 +55,7 @@ class PromoteCardValidationTest: WordSpec() {
       UUID.randomUUID(),
       "test cards pool",
       "desc",
+      10,
       cards,
       clock.now().timestamp(),
       FakeUser,

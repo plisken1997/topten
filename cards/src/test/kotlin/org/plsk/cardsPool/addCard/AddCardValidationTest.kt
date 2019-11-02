@@ -72,6 +72,7 @@ class AddCardValidationTest: WordSpec() {
             UUID.randomUUID(),
             "test cards pool",
             "desc",
+        10,
             setOf(card1, card2, card3),
             clock.now().timestamp(),
             FakeUser
