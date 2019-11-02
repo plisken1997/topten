@@ -1,9 +1,10 @@
 import React from 'react'
-import './App.css'
+import { createStore, applyMiddleware } from 'redux'
+import { Provider } from 'react-redux'
+import thunkMiddleware from 'redux-thunk'
+import { createLogger } from 'redux-logger'
 import Portail from './hoc/connected/Portail'
 import ToptenCards from './hoc/connected//ToptenCards'
-import { Provider } from 'react-redux'
-import { createStore } from 'redux'
 import rootReducer from './reducers'
 import {
   BrowserRouter as Router,
@@ -11,7 +12,10 @@ import {
   Route,
   Link
 } from "react-router-dom"
-const store = createStore(rootReducer)
+import './App.css'
+
+const loggerMiddleware = createLogger()
+const store = createStore(rootReducer, applyMiddleware(thunkMiddleware, loggerMiddleware))
 
 function App() {
   return (

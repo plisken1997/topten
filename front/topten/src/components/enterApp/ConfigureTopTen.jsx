@@ -7,7 +7,7 @@ const ConfigureTopTen = ({toptenConfig = {name: "", slots: 10}, handleChange, sa
         <form onSubmit={e => e.preventDefault()}>
             <input type="test" value={toptenConfig.name} placeholder="topten name" id="topten-config-name" onChange={handleChange("name")}/>
             <br />
-            <textarea value={toptenConfig.desc} placeholder="description" id="topten-config-desc" onChange={handleChange("desc")}/>
+            <textarea value={toptenConfig.description} placeholder="description" id="topten-config-desc" onChange={handleChange("description")}/>
             <br />
             <input type="number" step="1" value={toptenConfig.slots} placeholder="highlight slots" id="topten-config-slots" onChange={handleChange("slots")}/>
             <br />
