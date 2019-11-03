@@ -45,8 +45,7 @@ class CardsPoolRouter {
   fun removeCard(cardsPoolHandler: CardsPoolHandler): RouterFunction<ServerResponse> =
       RouterFunctions
           .route(
-              RequestPredicates.DELETE("/cardspool/{cardpoolId:[\\w-]+}/delete")
-                  .and(RequestPredicates.accept(MediaType.APPLICATION_JSON)),
+              RequestPredicates.DELETE("/cardspool/{cardpoolId:[\\w-]+}/delete/{cardId:[\\w-]+}"),
               HandlerFunction<ServerResponse> {
                 cardsPoolHandler.deleteCard(it)
               }

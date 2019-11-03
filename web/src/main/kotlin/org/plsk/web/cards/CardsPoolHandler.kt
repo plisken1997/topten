@@ -45,8 +45,6 @@ data class UnPromoteCardPayload(val cardId: String) {
   fun toCommand(cardsPoolId: UUID): UnpromoteCard = UnpromoteCard(UUID.fromString(cardId), cardsPoolId)
 }
 
-data class UpdateTopPayload(val cardId: String, val position: Int?)
-
 data class CreateResourceResult(val id: UUID)
 
 data class TopCardsResult(val toCards: Set<UUID>)
@@ -104,16 +102,16 @@ class CardsPoolHandler(
                 .body(BodyInserters.fromObject(TopCardsResult(promoted)))
           }
 
-  fun deleteCard(request: ServerRequest): Mono<ServerResponse> =
-      request.bodyToMono(RemoveCardPayload::class.java)
-          .flatMap { payload ->
-            val cardpoolId = request.pathVariable("cardpoolId")
+  fun deleteCard(request: ServerRequest): Mono<ServerResponse> {
+      val cardpoolId = request.pathVariable("cardpoolId")
+      val cardId = request.pathVariable("cardId")
+      val payload = RemoveCardPayload(cardId)
 
-            val removed = removeCard.handle(payload.toCommand(UUID.fromString(cardpoolId)))
+      val removed = removeCard.handle(payload.toCommand(UUID.fromString(cardpoolId)))
 
-            ServerResponse.noContent()
-                .build()
-          }
+      return ServerResponse.noContent()
+          .build()
+    }
 
   fun unPromoteCard(request: ServerRequest): Mono<ServerResponse> =
       request.bodyToMono(UnPromoteCardPayload::class.java)
