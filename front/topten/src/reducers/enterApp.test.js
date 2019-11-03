@@ -1,6 +1,6 @@
 import reducer from './enterApp'
 import * as actions from '../components/enterApp/actions/enterApp'
-import {post} from '../util/http/fakeHttp'
+import {httpPost} from '../util/http/fakeHttp'
 
 const emptyToptenConfig = {name: "", description: '', slots: 10}
 
@@ -44,7 +44,7 @@ test('add a valid topten config should add the config at the end of the list', (
         description: 'description...'
     }
     
-    actions.saveConfig(post({data: {id: '5c7eaa0c-35c4-4843-adc8-d759e9e6cc24'}}))(config)(identity)
+    actions.saveConfig(httpPost({data: {id: '5c7eaa0c-35c4-4843-adc8-d759e9e6cc24'}}))(config)(identity)
         .then(action => {
             const newState = reducer({...defaultState, configErrors: [{name: 'name must not be empty'}]}, action)
             const expectedState = {
@@ -63,7 +63,7 @@ test('store the topten config errors', () => {
         description: 'description...'
     }
     
-    actions.saveConfig(post({}))(config)(identity)
+    actions.saveConfig(httpPost({}))(config)(identity)
         .then(action => {
             const newState = reducer({...defaultState, toptenConfig: config}, action)
             const expectedState = {

@@ -1,8 +1,6 @@
 import * as actions from '../components/cards/actions/toptenCards'
 //import {cardsPool, highlighted} from './fixtures/cardsPools'
 
-const card = (id, title, description) => ({id, title, description})
-
 const newCard = {title: '', description: ''}
 
 const cardsPool = []

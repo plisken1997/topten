@@ -12,7 +12,7 @@ const ToptenCards = (props) => {
     const [addCardDisplayed, displayAddCardForm] = useState(false)
     const {highlighted, cardsPool, onDragEnd, newCard, addCard, newCardChange, unpromote, dropCard, toptenConfig} = props
     return (
-        <DragDropContext onDragEnd={onDragEnd(highlighted, cardsPool)}>
+        <DragDropContext onDragEnd={onDragEnd(highlighted, cardsPool, toptenConfig.id)}>
             <Header config={toptenConfig}/>
             <div className="cont-list">
                 <Highlighted highlighted={highlighted} unpromote={unpromote(toptenConfig.id)}/>

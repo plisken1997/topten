@@ -12,5 +12,11 @@ export default {
     },
     unpromote: {
         path: cardsPoolId => withHost(`cardspool/${cardsPoolId}/unPromote`)
+    },
+    promote: {
+        path: cardsPoolId => withHost(`cardspool/${cardsPoolId}/promote`)
+    },
+    updateTop: {
+        path: cardsPoolId => withHost(`cardspool/${cardsPoolId}/updateTop`)
     }
 }

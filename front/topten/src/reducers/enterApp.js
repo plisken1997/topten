@@ -4,7 +4,9 @@ const emptyToptenConfig = {name: '', description: '', slots: 10}
 
 const defaultState = {
     toptenConfig: emptyToptenConfig,
-    toptens: [],
+    toptens: [
+        {id: '6f4d1eee-e687-3ca8-944b-cd361ac5fb76', name: 'best games for ever', description: 'a laconic list of my favorite games ever', slots: 50}
+    ],
     configErrors: []
 }
 

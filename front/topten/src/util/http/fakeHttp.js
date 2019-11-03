@@ -1,4 +1,4 @@
-export const post = expected => (path, payload) => new Promise((resolve, reject) => {
+export const httpPost = expected => (path, payload) => new Promise((resolve, reject) => {
     resolve(expected)
 })
 

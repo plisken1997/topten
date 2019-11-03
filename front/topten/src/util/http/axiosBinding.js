@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-export const post = (path, payload, headers = {}) => 
+export const httpPost = (path, payload, headers = {}) => 
     axios.post(
         path, 
         payload, 
