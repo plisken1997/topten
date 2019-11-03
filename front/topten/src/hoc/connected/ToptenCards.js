@@ -1,13 +1,19 @@
 import { connect } from 'react-redux'
 import ToptenCards from '../../components/cards/ToptenCards'
 import {onDragEnd, addCard, newCardChange, unpromote, dropCard} from '../../components/cards/actions/toptenCards'
+import {getConfig} from '../../reducers/enterApp'
 
-const mapStateToProps = state => ({
-    cardsPool: state.toptenCards.cardsPool,
-    highlighted: state.toptenCards.highlighted,
-    newCard: state.toptenCards.newCard,
-    toptenConfig: state.toptenCards.toptenConfig
-})
+const mapStateToProps = (state, {routerParams = {}}) => {
+    const {params} = routerParams
+    const {toptenId} = params
+
+    return {
+        cardsPool: state.toptenCards.cardsPool,
+        highlighted: state.toptenCards.highlighted,
+        newCard: state.toptenCards.newCard,
+        toptenConfig: getConfig(state.enterApp.toptens, toptenId)
+    }
+}
 
 const mapDispatchToProps = dispatch => ({
     onDragEnd: (highlightedInput, cardsPoolInput) => (result) => dispatch(onDragEnd(highlightedInput, cardsPoolInput, result)),

@@ -24,4 +24,9 @@ const reduceEnterApp = (state = defaultState, action) => {
     }
 }
 
+export const getConfig = (toptens, configId) => {
+    const config = toptens.find(topten => topten.id === configId)
+    return config || {}
+}
+
 export default reduceEnterApp

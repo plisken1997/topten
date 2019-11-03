@@ -26,9 +26,7 @@ function App() {
             <Link to="/">topten</Link>
           </header>
           <Switch>
-            <Route path="/topten/:toptenId">
-              <ToptenCards/>
-            </Route>
+            <Route path="/topten/:toptenId" children={({match}) => <ToptenCards routerParams={match}/>}/>
             <Route path="/">
               <Portail/>
             </Route>

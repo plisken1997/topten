@@ -3,6 +3,6 @@ import toptenCards from './toptenCards'
 import enterApp from './enterApp'
 
 export default combineReducers({
-  toptenCards,
-  enterApp
+  enterApp,
+  toptenCards
 })
