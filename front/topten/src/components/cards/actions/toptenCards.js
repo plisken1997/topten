@@ -1,5 +1,6 @@
 import update from './reorder'
 import {updateValue} from '../../../util/actions'
+import config from '../../../config'
 
 export const ON_DRAG_END_EMPTY = 'ON_DRAG_END_EMPTY'
 export const ON_DRAG_END = 'ON_DRAG_END'
@@ -23,15 +24,19 @@ const onDragEnd = (highlightedInput, cardsPoolInput, result) => {
 export const ADD_NEW_CARD = 'ADD_NEW_CARD'
 export const SKIP = 'SKIP'
 
-const addCard = (newCard) => {
+const saveNewCard = (httpPost, newCard, cardsPoolId) => httpPost(config.toptenConfig.addCard.path(cardsPoolId), newCard)
+
+const addCard = (httpPost) => (newCard, cardsPoolId) => dispatch => {
   const isComplete = (newCard) => newCard.title.trim().length > 0
   if (!isComplete(newCard)) {
-    return {type: SKIP}
+    return dispatch({type: SKIP})
   }
-  return {
-    type: ADD_NEW_CARD,
-    payload: newCard
-  }
+  return saveNewCard(httpPost, newCard, cardsPoolId)
+    .then(({data}) => dispatch({
+        type: ADD_NEW_CARD,
+        payload: {...newCard, id: data.id}
+      })
+    )
 }
 
 export const NEW_CARD_CHANGED = 'NEW_CARD_CHANGED'
@@ -40,7 +45,7 @@ const newCardChange = updateValue(NEW_CARD_CHANGED)
 
 export const UNPROMOTE_CARD = 'UNPROMOTE_CARD'
 
-const unpromote = id => {
+const unpromote = (id, cardsPoolId) => {
   return {
     type: UNPROMOTE_CARD,
     payload: {
@@ -50,13 +55,16 @@ const unpromote = id => {
 }
 
 export const DROP_CARD = 'DROP_CARD'
-const dropCard =  id => {
-  return {
-    type: DROP_CARD,
-    payload: {
-      id
-    }
-  }
+const saveDropCard = (httpDelete, cardId, cardsPoolId) => httpDelete(config.toptenConfig.dropCard.path(cardsPoolId, cardId))
+const dropCard =  httpDelete => (cardId, cardsPoolId) => dispatch => {
+  return saveDropCard(httpDelete, cardId, cardsPoolId)
+    .then(() => dispatch({
+        type: DROP_CARD,
+        payload: {
+          id: cardId
+        }
+      })
+    )
 }
 
 export { onDragEnd, addCard, newCardChange, unpromote, dropCard }

@@ -2,7 +2,7 @@ import reduceTopTenCards from './toptenCards'
 import * as actions from '../components/cards/actions/toptenCards'
 import {cardsPool, highlighted, card} from './fixtures/cardsPools'
 
-const newCard = {title: '', desc: ''}
+const newCard = {title: '', description: ''}
 
 const defaultState = {
   cardsPool,
@@ -12,8 +12,9 @@ const defaultState = {
 
 test('should add the new card at the end of the cardspool list', () => {
     const payload = {
+        id: 7,
         title: 'test',
-        desc: 'description'
+        description: 'description'
     }
 
     const action = {
@@ -25,12 +26,12 @@ test('should add the new card at the end of the cardspool list', () => {
     const {cardsPool} = newState
     const lastCard = cardsPool[cardsPool.length -1]
     
-    expect(lastCard).toEqual(card(7, payload.title, payload.desc))
+    expect(lastCard).toEqual(card(7, payload.title, payload.description))
 
-    const nextState = reduceTopTenCards(newState, action)
+    const nextState = reduceTopTenCards(newState, {type: actions.ADD_NEW_CARD, payload: {...payload, id: 8}})
     const newCardsPool = nextState.cardsPool
     const newLastCard = newCardsPool[newCardsPool.length -1]
-    expect(newLastCard).toEqual(card(8, payload.title, payload.desc))
+    expect(newLastCard).toEqual(card(8, payload.title, payload.description))
 })
 
 

@@ -1,11 +1,11 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-const Card = ({id, title, desc}) => {
+const Card = ({id, title, description}) => {
     return (
         <div className="cont-card" id={`card-id-${id}`}>
             <span className="card-title">{title}</span>
-            <span className="card-desc">{desc}</span>
+            <span className="card-desc">{description}</span>
         </div>
     )
 }
@@ -13,7 +13,7 @@ const Card = ({id, title, desc}) => {
 Card.propTypes = {
     id: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired,
-    desc: PropTypes.string.isRequired
+    description: PropTypes.string.isRequired
 }
 
 export default Card

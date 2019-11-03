@@ -7,7 +7,7 @@ const AddCard = (props) => (
             <input type="text" placeholder="title" id="add-card-title" value={props.card.title} onChange={props.handleChange("title")}/>
         </span>
         <span className="card-desc">
-            <textarea placeholder="desc" id="add-card-desc" value={props.card.desc} onChange={props.handleChange("desc")}/>
+            <textarea placeholder="desc" id="add-card-desc" value={props.card.description} onChange={props.handleChange("description")}/>
         </span>
         <input type="submit" onClick={props.addCard} value="ok"/>
     </form>

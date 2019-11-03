@@ -15,10 +15,10 @@ const ToptenCards = (props) => {
         <DragDropContext onDragEnd={onDragEnd(highlighted, cardsPool)}>
             <Header config={toptenConfig}/>
             <div className="cont-list">
-                <Highlighted highlighted={highlighted} unpromote={unpromote}/>
-                <CardsPool cardsPool={cardsPool} dropCard={dropCard}/>
+                <Highlighted highlighted={highlighted} unpromote={unpromote(toptenConfig.id)}/>
+                <CardsPool cardsPool={cardsPool} dropCard={dropCard(toptenConfig.id)}/>
                 <Button onClick={displayAddCardForm}/>
-                {addCardDisplayed && <AddCard card={newCard} addCard={addCard(newCard)} handleChange={newCardChange(newCard)}/>}
+                {addCardDisplayed && <AddCard card={newCard} addCard={addCard(newCard, toptenConfig.id)} handleChange={newCardChange(newCard)}/>}
             </div>
         </DragDropContext>
     )

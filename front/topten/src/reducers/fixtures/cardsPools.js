@@ -1,4 +1,4 @@
-export const card = (id, title, desc) => ({id, title, desc})
+export const card = (id, title, description) => ({id, title, description})
 
 export const cardsPool = [
     card(1, "Casino", "I whish I could see this soon"), 

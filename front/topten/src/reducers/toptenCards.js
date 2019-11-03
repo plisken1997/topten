@@ -1,9 +1,9 @@
 import * as actions from '../components/cards/actions/toptenCards'
 //import {cardsPool, highlighted} from './fixtures/cardsPools'
 
-const card = (id, title, desc) => ({id, title, desc})
+const card = (id, title, description) => ({id, title, description})
 
-const newCard = {title: '', desc: ''}
+const newCard = {title: '', description: ''}
 
 const cardsPool = []
 const highlighted = []
@@ -22,8 +22,7 @@ const reduceTopTenCards = (state = defaultState, action) => {
       const {cardsPool, highlighted} = action.payload
       return {...state, cardsPool, highlighted}
     case actions.ADD_NEW_CARD:
-      const addCard = card(genId(state.cardsPool, state.highlighted), action.payload.title, action.payload.desc)
-      return {...state, newCard, cardsPool: state.cardsPool.concat([addCard])}
+      return {...state, newCard, cardsPool: state.cardsPool.concat([action.payload])}
     case actions.NEW_CARD_CHANGED:
       return {...state, newCard: action.payload}
     case actions.UNPROMOTE_CARD:
@@ -39,12 +38,5 @@ const reduceTopTenCards = (state = defaultState, action) => {
       return state
   }
 }
-  
-export const extractHighestId = (cardsPool, highlighted) => {
-  const start = cardsPool.length > 0 ? cardsPool[0].id : (highlighted.length > 0 ? highlighted[0] : 0)
-  return [...cardsPool, ...highlighted].reduce((highestID, c) => highestID < c.id ? c.id : highestID, start)
-}
-
-const genId = (cardsPool, highlighted) => extractHighestId(cardsPool, highlighted) + 1
 
 export default reduceTopTenCards

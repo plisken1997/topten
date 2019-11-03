@@ -9,3 +9,5 @@ export const post = (path, payload, headers = {}) =>
             ...headers
         }
     )
+
+export const httpDelete = (path, headers = {}) => axios.delete(path, {...headers})
