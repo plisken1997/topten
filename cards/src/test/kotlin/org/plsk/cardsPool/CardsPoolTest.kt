@@ -1,5 +1,6 @@
 package org.plsk.cardsPool
 
+import io.kotlintest.fail
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.WordSpec
@@ -158,6 +159,14 @@ class CardsPoolTest  : WordSpec() {
         )
         moved shouldBe expected
         moved.topCards shouldContainExactly expected.topCards
+      }
+
+      "yield the highlighted cards with the expected sort" {
+        fail("todo")
+      }
+
+      "yield the pools cards with the expected sort" {
+        fail("todo")
       }
 
     }

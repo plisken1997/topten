@@ -65,4 +65,7 @@ data class CardsPool(
           topCards = topCards.filter { it != cardId }.toSet()
       )
 
+  fun getHighlighted(): Set<Card> = cards.filter{ topCards.contains(it.id) }.toSet()
+
+  fun getPool(): Set<Card> = cards.filter{ stock.contains(it.id) }.toSet()
 }
