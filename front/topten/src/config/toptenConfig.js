@@ -18,5 +18,8 @@ export default {
     },
     updateTop: {
         path: cardsPoolId => withHost(`cardspool/${cardsPoolId}/updateTop`)
+    },
+    loadCards: {
+        path: cardsPoolId => withHost(`cardspool/${cardsPoolId}`)
     }
 }

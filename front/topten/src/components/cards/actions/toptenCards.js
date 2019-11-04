@@ -95,4 +95,16 @@ const dropCard =  httpDelete => (cardId, cardsPoolId) => dispatch => {
     )
 }
 
-export { onDragEnd, addCard, newCardChange, unpromote, dropCard }
+export const LOAD_CARDS_START = 'LOAD_CARDS_START'
+export const CARDS_LOADED = 'CARDS_LOADED'
+
+const loadCards = httpGet => cardsPoolId => dispatch => {
+  dispatch({type: LOAD_CARDS_START})
+  return httpGet(config.toptenConfig.loadCards.path(cardsPoolId))
+    .then(({data}) => dispatch({
+      type: CARDS_LOADED,
+      payload: data
+    }))
+}
+
+export { onDragEnd, addCard, newCardChange, unpromote, dropCard, loadCards }

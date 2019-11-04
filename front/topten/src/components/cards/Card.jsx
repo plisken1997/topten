@@ -5,7 +5,7 @@ const Card = ({id, title, description}) => {
     return (
         <div className="cont-card" id={`card-id-${id}`}>
             <span className="card-title">{title}</span>
-            <span className="card-desc">{description}</span>
+            {description && <span className="card-desc">{description}</span>}
         </div>
     )
 }

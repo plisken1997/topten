@@ -10,4 +10,6 @@ export const httpPost = (path, payload, headers = {}) =>
         }
     )
 
-export const httpDelete = (path, headers = {}) => axios.delete(path, {...headers})
+export const httpDelete = (path, headers = {}) => axios.delete(path, headers)
+
+export const httpGet = (path, headers = {}) => axios.get(path, headers)

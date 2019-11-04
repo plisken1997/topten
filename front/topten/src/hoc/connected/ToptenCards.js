@@ -1,8 +1,8 @@
 import { connect } from 'react-redux'
 import ToptenCards from '../../components/cards/ToptenCards'
-import {onDragEnd, addCard, newCardChange, unpromote, dropCard} from '../../components/cards/actions/toptenCards'
+import {onDragEnd, addCard, newCardChange, unpromote, dropCard, loadCards} from '../../components/cards/actions/toptenCards'
 import {getConfig} from '../../reducers/enterApp'
-import {httpPost, httpDelete} from '../../util/http/axiosBinding'
+import {httpPost, httpDelete, httpGet} from '../../util/http/axiosBinding'
 
 const mapStateToProps = (state, {routerParams = {}}) => {
     const {params} = routerParams
@@ -27,6 +27,7 @@ const mapDispatchToProps = dispatch => ({
     addCard: (newCard, cardsPoolId) => () => dispatch(saveAddCard(newCard, cardsPoolId)),
     unpromote: cardsPoolId => id => () => dispatch(saveUnpromote(id, cardsPoolId)),
     dropCard: cardsPoolId => id => () => dispatch(saveDropCard(id, cardsPoolId)),
+    loadCards: cardsPoolId => dispatch(loadCards(httpGet)(cardsPoolId))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(ToptenCards)
