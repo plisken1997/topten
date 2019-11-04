@@ -72,4 +72,14 @@ class CardsPoolRouter {
                 cardsPoolHandler.updateTop(it)
               }
           )
+
+  @Bean
+  fun getCards(cardsPoolHandler: CardsPoolHandler): RouterFunction<ServerResponse> =
+      RouterFunctions
+          .route(
+              RequestPredicates.GET("/cardspool/{cardpoolId:[\\w-]+}"),
+              HandlerFunction<ServerResponse> {
+                cardsPoolHandler.getCards(it)
+              }
+          )
 }

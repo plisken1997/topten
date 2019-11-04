@@ -1,7 +1,10 @@
 package org.plsk.web.cards
 
+import org.plsk.cards.Card
 import org.plsk.cardsPool.addCard.AddCard
 import org.plsk.cardsPool.create.CreateCardsPool
+import org.plsk.cardsPool.getCards.GetCardsQuery
+import org.plsk.cardsPool.getCards.GetCardsQueryHandler
 import org.plsk.cardsPool.promoteCard.PromoteCard
 import org.plsk.cardsPool.promoteCard.PromoteType
 import org.plsk.cardsPool.promoteCard.UnpromoteCard
@@ -49,12 +52,15 @@ data class CreateResourceResult(val id: UUID)
 
 data class TopCardsResult(val toCards: Set<UUID>)
 
+data class GetCards(val highlighted: Set<Card>, val cardsPool: Set<Card>)
+
 @Component
 class CardsPoolHandler(
     private val createPoolHandler: CommandHandler<CreateCardsPool, UUID>,
     private val addCardHandler: CommandHandler<AddCard, UUID>,
     private val promoteCardHander: CommandHandler<PromoteType, Set<UUID>>,
-    private val removeCard: CommandHandler<RemoveCard, Unit>
+    private val removeCard: CommandHandler<RemoveCard, Unit>,
+    private val getCardsHandler: GetCardsQueryHandler
 ) {
 
   fun createCardPool(request: ServerRequest): Mono<ServerResponse> =
@@ -138,6 +144,14 @@ class CardsPoolHandler(
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(BodyInserters.fromObject(TopCardsResult(updated)))
           }
+
+  fun getCards(request: ServerRequest): Mono<ServerResponse> {
+    val cardpoolId = request.pathVariable("cardpoolId")
+    val result = getCardsHandler.handle(GetCardsQuery(UUID.fromString(cardpoolId)))
+    return ServerResponse.ok()
+        .contentType(MediaType.APPLICATION_JSON)
+        .body(BodyInserters.fromObject(GetCards(result.content.highlighted, result.content.cardsPool)))
+  }
 
   private fun extractRemoteAddress(addr: InetAddress): String = addr.hostAddress
 }

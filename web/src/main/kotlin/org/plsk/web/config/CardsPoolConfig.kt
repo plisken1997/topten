@@ -10,6 +10,7 @@ import org.plsk.cardsPool.addCard.AddCardValidation
 import org.plsk.cardsPool.create.CardsPoolValidation
 import org.plsk.cardsPool.create.CreateCardsPool
 import org.plsk.cardsPool.create.CreateCardsPoolHandler
+import org.plsk.cardsPool.getCards.GetCardsQueryHandler
 import org.plsk.cardsPool.promoteCard.*
 import org.plsk.cardsPool.removeCard.RemoveCard
 import org.plsk.cardsPool.removeCard.RemoveCardHandler
@@ -66,4 +67,7 @@ class CardsPoolConfig {
   @Bean
   fun provideRemoveCard(validation: Validation<RemoveCard, RemoveCardValidated>, eventBus: EventBus): CommandHandler<RemoveCard, Unit> =
       RemoveCardHandler(validation, eventBus)
+
+  @Bean
+  fun provideGetCardsQueryHandler(cardsPoolRepository: CardsPoolRepository): GetCardsQueryHandler = GetCardsQueryHandler(cardsPoolRepository)
 }
