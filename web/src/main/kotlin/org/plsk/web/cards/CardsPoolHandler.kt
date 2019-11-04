@@ -1,8 +1,8 @@
 package org.plsk.web.cards
 
-import org.plsk.cards.Card
 import org.plsk.cardsPool.addCard.AddCard
 import org.plsk.cardsPool.create.CreateCardsPool
+import org.plsk.cardsPool.getCards.CardsPoolContent
 import org.plsk.cardsPool.getCards.GetCardsQuery
 import org.plsk.cardsPool.getCards.GetCardsQueryHandler
 import org.plsk.cardsPool.promoteCard.PromoteCard
@@ -52,7 +52,17 @@ data class CreateResourceResult(val id: UUID)
 
 data class TopCardsResult(val toCards: Set<UUID>)
 
-data class GetCards(val highlighted: Set<Card>, val cardsPool: Set<Card>)
+data class CardResult(val id: UUID, val title: String, val description: String?)
+
+data class GetCards(val highlighted: Set<CardResult>, val cardsPool: Set<CardResult>) {
+  companion object {
+    fun from(cardsPoolContent: CardsPoolContent): GetCards =
+        GetCards(
+            cardsPoolContent.highlighted.map{c -> CardResult(c.id, c.label, null)}.toSet(),
+            cardsPoolContent.cardsPool.map{c -> CardResult(c.id, c.label, null)}.toSet()
+        )
+  }
+}
 
 @Component
 class CardsPoolHandler(
@@ -150,7 +160,7 @@ class CardsPoolHandler(
     val result = getCardsHandler.handle(GetCardsQuery(UUID.fromString(cardpoolId)))
     return ServerResponse.ok()
         .contentType(MediaType.APPLICATION_JSON)
-        .body(BodyInserters.fromObject(GetCards(result.content.highlighted, result.content.cardsPool)))
+        .body(BodyInserters.fromObject(GetCards.from(result.content)))
   }
 
   private fun extractRemoteAddress(addr: InetAddress): String = addr.hostAddress
