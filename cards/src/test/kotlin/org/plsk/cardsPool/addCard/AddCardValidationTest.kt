@@ -50,6 +50,7 @@ class AddCardValidationTest: WordSpec() {
                     val expected = Card(
                         idGen.fromString("test-card" + baseCardsPool.id.toString()),
                         "test-card",
+                        "desc",
                         clock.now().timestamp()
                     )
 
@@ -64,16 +65,16 @@ class AddCardValidationTest: WordSpec() {
     val clock: Clock = FakeClock()
     val idGen = UUIDGen()
 
-    val card1 = Card(UUID.randomUUID(), "test-card 1", clock.now().timestamp())
-    val card2 = Card(UUID.randomUUID(), "test-card 2", clock.now().timestamp())
-    val card3 = Card(UUID.randomUUID(), "test-card 3", clock.now().timestamp())
+    val card1 = Card(UUID.randomUUID(), "test-card 1", "desc", clock.now().timestamp())
+    val card2 = Card(UUID.randomUUID(), "test-card 2", "desc", clock.now().timestamp())
+    val card3 = Card(UUID.randomUUID(), "test-card 3", "desc", clock.now().timestamp())
 
     val baseCardsPool = CardsPool(
             UUID.randomUUID(),
             "test cards pool",
             "desc",
         10,
-            setOf(card1, card2, card3),
+            mapOf(Pair(card1.id, card1), Pair(card2.id, card2), Pair(card3.id, card3)),
             clock.now().timestamp(),
             FakeUser
     )

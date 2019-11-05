@@ -1,6 +1,5 @@
 package org.plsk.cardsPool
 
-import io.kotlintest.fail
 import io.kotlintest.matchers.collections.shouldContainExactly
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.WordSpec
@@ -17,13 +16,13 @@ class CardsPoolTest  : WordSpec() {
 
       "add a new card at the end of the list" {
         val inserted = baseCardsPool.addCard(card, 10)
-        inserted.cards shouldBe setOf<Card>(
-            card1,
-            card2,
-            card3,
-            card4,
-            card5,
-            card
+        inserted.cards shouldBe mapOf(
+          Pair(card1.id, card1),
+          Pair(card2.id, card2),
+          Pair(card3.id, card3),
+          Pair(card4.id, card4),
+          Pair(card5.id, card5),
+          Pair(card.id, card)
         )
 
         inserted.stock shouldBe setOf(
@@ -35,13 +34,13 @@ class CardsPoolTest  : WordSpec() {
 
       "add a new card at the beginning of the list" {
         val inserted = baseCardsPool.addCard(card, 0)
-        inserted.cards shouldBe setOf<Card>(
-            card1,
-            card2,
-            card3,
-            card4,
-            card5,
-            card
+        inserted.cards shouldBe mapOf(
+            Pair(card1.id, card1),
+            Pair(card2.id, card2),
+            Pair(card3.id, card3),
+            Pair(card4.id, card4),
+            Pair(card5.id, card5),
+            Pair(card.id, card)
         )
 
         inserted.stock shouldBe setOf(
@@ -53,13 +52,13 @@ class CardsPoolTest  : WordSpec() {
 
       "add a new card in the middle of the list" {
         val inserted = baseCardsPool.addCard(card, 1)
-        inserted.cards shouldBe setOf<Card>(
-            card1,
-            card2,
-            card3,
-            card4,
-            card5,
-            card
+        inserted.cards shouldBe mapOf(
+          Pair(card1.id, card1),
+          Pair(card2.id, card2),
+          Pair(card3.id, card3),
+          Pair(card4.id, card4),
+          Pair(card5.id, card5),
+          Pair(card.id, card)
         )
         inserted.stock shouldBe setOf(
             card4.id,
@@ -102,7 +101,7 @@ class CardsPoolTest  : WordSpec() {
             "test cards pool",
             "desc",
             10,
-            setOf(card2, card3, card4, card5),
+            mapOf(Pair(card2.id, card2), Pair(card3.id, card3), Pair(card4.id, card4), Pair(card5.id, card5)),
             clock.now().timestamp(),
             FakeUser,
             setOf(card4.id, card5.id),
@@ -162,11 +161,17 @@ class CardsPoolTest  : WordSpec() {
       }
 
       "yield the highlighted cards with the expected sort" {
-        fail("todo")
+        val newOrderCardPool = baseCardsPool.copy(topCards = setOf(card3.id, card2.id, card1.id))
+        val highlighted = newOrderCardPool.getHighlighted()
+        val expected = setOf(card3, card2, card1)
+        highlighted shouldContainExactly expected
       }
 
       "yield the pools cards with the expected sort" {
-        fail("todo")
+        val newOrderCardPool = baseCardsPool.copy(stock = setOf(card1.id, card5.id, card4.id, card2.id))
+        val pool = newOrderCardPool.getPool()
+        val expected = setOf(card1, card5, card4, card2)
+        pool shouldContainExactly expected
       }
 
     }
@@ -174,20 +179,20 @@ class CardsPoolTest  : WordSpec() {
 
   val clock = FakeClock()
 
-  val card = Card(UUID.randomUUID(), "test-card", clock.now().timestamp())
+  val card = Card(UUID.randomUUID(), "test-card", "desc", clock.now().timestamp())
 
-  val card1 = Card(UUID.randomUUID(), "test-card 1", clock.now().timestamp())
-  val card2 = Card(UUID.randomUUID(), "test-card 2", clock.now().timestamp())
-  val card3 = Card(UUID.randomUUID(), "test-card 3", clock.now().timestamp())
-  val card4 = Card(UUID.randomUUID(), "test-card 4", clock.now().timestamp())
-  val card5 = Card(UUID.randomUUID(), "test-card 5", clock.now().timestamp())
+  val card1 = Card(UUID.randomUUID(), "test-card 1", "desc", clock.now().timestamp())
+  val card2 = Card(UUID.randomUUID(), "test-card 2", "desc", clock.now().timestamp())
+  val card3 = Card(UUID.randomUUID(), "test-card 3", "desc", clock.now().timestamp())
+  val card4 = Card(UUID.randomUUID(), "test-card 4", "desc", clock.now().timestamp())
+  val card5 = Card(UUID.randomUUID(), "test-card 5", "desc", clock.now().timestamp())
 
-  val cards = setOf<Card>(
-      card1,
-      card2,
-      card3,
-      card4,
-      card5
+  val cards = mapOf<UUID, Card>(
+    Pair(card1.id, card1),
+    Pair(card2.id, card2),
+    Pair(card3.id, card3),
+    Pair(card4.id, card4),
+    Pair(card5.id, card5)
   )
 
   val baseCardsPool = CardsPool(

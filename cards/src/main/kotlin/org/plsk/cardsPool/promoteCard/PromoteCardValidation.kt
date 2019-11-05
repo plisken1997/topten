@@ -1,6 +1,5 @@
 package org.plsk.cardsPool.promoteCard
 
-import arrow.data.extensions.set.foldable.exists
 import org.plsk.cardsPool.CardsPool
 import org.plsk.cardsPool.CardsPoolRepository
 import org.plsk.core.validation.Validation
@@ -20,7 +19,7 @@ class PromoteCardValidation(val cardsPoolRepository: CardsPoolRepository): Valid
 
     if(cardsPool == null) {
       throw CardsPoolNotFound("cards pool [${command.cardsPoolId}] not found")
-    } else if (!cardsPool.cards.exists { it.id == command.cardId }) {
+    } else if (!cardsPool.cards.containsKey(command.cardId)) {
       throw CardNotFound("card [${command.cardId}] not found")
     }
 

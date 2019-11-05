@@ -1,6 +1,5 @@
 package org.plsk.cardsPool.removeCard
 
-import arrow.data.extensions.set.foldable.exists
 import org.plsk.cardsPool.CardsPoolRepository
 import org.plsk.cardsPool.promoteCard.CardNotFound
 import org.plsk.cardsPool.promoteCard.CardsPoolNotFound
@@ -13,7 +12,7 @@ class RemoveCardValidation(val cardsPoolRepository: CardsPoolRepository): Valida
 
     if(cardsPool == null) {
       throw CardsPoolNotFound("cards pool [${command.cardsPoolId}] not found")
-    } else if (!cardsPool.cards.exists { it.id == command.cardId }) {
+    } else if (!cardsPool.cards.containsKey(command.cardId)) {
       throw CardNotFound("card [${command.cardId}] not found")
     }
 

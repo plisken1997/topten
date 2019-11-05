@@ -1,5 +1,7 @@
 package org.plsk.cardsPool
 
+import arrow.data.getOption
+import arrow.syntax.collections.flatten
 import org.plsk.cards.Card
 import org.plsk.user.User
 import java.util.*
@@ -9,7 +11,7 @@ data class CardsPool(
     val name: String,
     val description: String?,
     val slots: Int?,
-    val cards: Set<Card> = emptySet(),
+    val cards: Map<UUID, Card> = emptyMap(),
     val createdAt: Long,
     val createdBy: User,
     val stock: Set<UUID> = emptySet(),
@@ -17,10 +19,10 @@ data class CardsPool(
 
   fun addCard(card: Card, position: Int): CardsPool {
     if (cards.size <= position) {
-      return copy(cards = cards.plus(card), stock = stock.plus(card.id))
+      return copy(cards = cards.plus(Pair(card.id, card)), stock = stock.plus(card.id))
     }
     return copy(
-      cards = cards.plus(card),
+      cards = cards.plus(Pair(card.id, card)),
       stock = stock.take(position).toSet().plus(card.id).plus(stock.drop(position))
     )
   }
@@ -60,12 +62,12 @@ data class CardsPool(
 
   fun remove(cardId: UUID): CardsPool =
       copy(
-          cards = cards.filter { it.id != cardId }.toSet(),
+          cards = cards.filterKeys { it != cardId },
           stock = stock.filter { it != cardId }.toSet(),
           topCards = topCards.filter { it != cardId }.toSet()
       )
 
-  fun getHighlighted(): Set<Card> = cards.filter{ topCards.contains(it.id) }.toSet()
+  fun getHighlighted(): Set<Card> = topCards.map{ cards.getOption(it) }.flatten().toSet()
 
-  fun getPool(): Set<Card> = cards.filter{ stock.contains(it.id) }.toSet()
+  fun getPool(): Set<Card> = stock.map{ cards.getOption(it) }.flatten().toSet()
 }

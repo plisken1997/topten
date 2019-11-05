@@ -36,14 +36,14 @@ class PromoteCardTest: WordSpec() {
 
   val clock = FakeClock()
 
-  val card1 = Card(UUID.randomUUID(), "test-card 1", clock.now().timestamp())
-  val card2 = Card(UUID.randomUUID(), "test-card 2", clock.now().timestamp())
-  val card3 = Card(UUID.randomUUID(), "test-card 3", clock.now().timestamp())
+  val card1 = Card(UUID.randomUUID(), "test-card 1", "desc", clock.now().timestamp())
+  val card2 = Card(UUID.randomUUID(), "test-card 2", "desc", clock.now().timestamp())
+  val card3 = Card(UUID.randomUUID(), "test-card 3", "desc", clock.now().timestamp())
 
-  val cards = setOf<Card>(
-      card1,
-      card2,
-      card3
+  val cards = mapOf<UUID, Card>(
+    Pair(card1.id, card1),
+    Pair(card2.id, card2),
+    Pair(card3.id, card3)
   )
 
   val baseCardsPool = CardsPool(

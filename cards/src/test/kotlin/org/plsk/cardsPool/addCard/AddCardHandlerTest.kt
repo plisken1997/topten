@@ -44,7 +44,7 @@ class AddCardHandlerTest: WordSpec() {
 
                     val newCard = AddCardValidation.createCard(command, clock, expectedId)
                     val expected = CardAddedEvent(baseCardsPool.copy(
-                        cards = setOf(card1, newCard),
+                        cards = mapOf(Pair(card1.id, card1), Pair(newCard.id, newCard)),
                         stock = setOf(newCard.id, card1.id)
                     ))
 
@@ -56,14 +56,14 @@ class AddCardHandlerTest: WordSpec() {
     }
 
     val clock: Clock = FakeClock()
-    val card1 = Card(UUID.randomUUID(), "test-card 1", clock.now().timestamp())
+    val card1 = Card(UUID.randomUUID(), "test-card 1", "desc", clock.now().timestamp())
 
     val baseCardsPool = CardsPool(
             UUID.randomUUID(),
             "test cards pool",
             "desc",
         10,
-            setOf(card1),
+            mapOf(Pair(card1.id, card1)),
             clock.now().timestamp(),
             FakeUser,
             stock = setOf(card1.id)

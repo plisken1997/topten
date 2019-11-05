@@ -18,6 +18,7 @@ class AddCardValidation(val cardsPoolRepository: CardsPoolRepository, val clock:
             Card(
                 id,
                 command.title,
+                command.description,
                 clock.now().timestamp()
             )
     }
@@ -29,7 +30,7 @@ class AddCardValidation(val cardsPoolRepository: CardsPoolRepository, val clock:
         // will be refactored using a `Either` data class
         if (cardsPool == null) {
             errors = errors.plus(CardsPoolNotFound(command.cardsPoolId))
-        } else if (cardsPool.cards.any{c -> c.label == command.title}) {
+        } else if (cardsPool.cards.any{kv -> kv.value.label == command.title}) {
             errors = errors.plus(LabelExists(command.title))
         }
 
