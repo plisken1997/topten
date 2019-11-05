@@ -58,8 +58,8 @@ data class GetCards(val highlighted: Set<CardResult>, val cardsPool: Set<CardRes
   companion object {
     fun from(cardsPoolContent: CardsPoolContent): GetCards =
         GetCards(
-            cardsPoolContent.highlighted.map{c -> CardResult(c.id, c.label, null)}.toSet(),
-            cardsPoolContent.cardsPool.map{c -> CardResult(c.id, c.label, null)}.toSet()
+            cardsPoolContent.highlighted.map{c -> CardResult(c.id, c.label, c.description)}.toSet(),
+            cardsPoolContent.cardsPool.map{c -> CardResult(c.id, c.label, c.description)}.toSet()
         )
   }
 }
