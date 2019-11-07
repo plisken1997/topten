@@ -9,4 +9,4 @@
 
 rootProject.name = 'topten'
 
-include 'core', 'user', 'cards', 'mongo','web'
+include 'core', 'user', 'cards', 'mongo', 'security', 'web'
