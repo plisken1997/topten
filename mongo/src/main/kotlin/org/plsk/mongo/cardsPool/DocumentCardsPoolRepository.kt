@@ -9,9 +9,13 @@ import org.litote.kmongo.rxjava2.findOne
 import org.litote.kmongo.rxjava2.single
 import org.litote.kmongo.rxjava2.updateOne
 import org.plsk.cardsPool.*
+import org.plsk.core.dao.QueryFilter
 import org.plsk.mongo.MongoClient
 
 class DocumentCardsPoolRepository(db: MongoDatabase): CardsPoolRepository, MongoClient<MongoCardsPool> {
+  override fun findAll(filter: Iterable<QueryFilter>): List<CardsPool> {
+    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+  }
 
   override val coll: MongoCollection<MongoCardsPool> = db.getCollection<MongoCardsPool>()
 

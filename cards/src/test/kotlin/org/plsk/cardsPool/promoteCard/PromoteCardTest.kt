@@ -8,6 +8,7 @@ import org.plsk.cardsPool.CardsPool
 import org.plsk.cardsPool.CardsPoolRepository
 import org.plsk.cardsPool.WriteResult
 import org.plsk.core.clock.FakeClock
+import org.plsk.core.dao.QueryFilter
 import org.plsk.core.event.Event
 import org.plsk.core.event.EventBus
 import org.plsk.core.validation.Validation
@@ -59,6 +60,10 @@ class PromoteCardTest: WordSpec() {
   )
 
   val cardsPoolRepository: CardsPoolRepository = object: CardsPoolRepository {
+    override fun findAll(filter: Iterable<QueryFilter>): List<CardsPool> {
+      TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
     override fun update(data: CardsPool): WriteResult {
       TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
