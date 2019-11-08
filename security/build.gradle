@@ -1,4 +1,6 @@
 dependencies {
   implementation project(':core')
   implementation project(':user')
+  testImplementation project(':user')
+  testCompile project(':user')
 }

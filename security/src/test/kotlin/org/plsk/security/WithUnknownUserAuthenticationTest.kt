@@ -5,12 +5,16 @@ import arrow.core.Right
 import arrow.core.getOrElse
 import io.kotlintest.fail
 import io.kotlintest.shouldBe
+import io.kotlintest.shouldThrow
 import io.kotlintest.specs.WordSpec
 import org.plsk.core.command.CommandHandler
+import org.plsk.security.provider.AccessTokenError
+import org.plsk.security.provider.AccessTokenProvider
 import org.plsk.security.provider.AuthenticationProvider
-import org.plsk.user.AppUser
+import org.plsk.security.provider.WithTmpUserAuthenticationProvider
+import org.plsk.user.User
+import org.plsk.user.dao.UserQueryHandler
 import org.plsk.user.tmpUser.CreateTmpUser
-import java.util.*
 
 class WithUnknownUserAuthenticationTest: WordSpec() {
 
@@ -22,15 +26,15 @@ class WithUnknownUserAuthenticationTest: WordSpec() {
         val unknownAuth = UnknownUser("127.1")
         val session = withUnknownUserAuthentication.validate(unknownAuth)
         session.isRight() shouldBe true
-        session.getOrElse { throw Exception("unexpected")  } shouldBe Session(accessToken, AppUser(expectedId.toString(), ""))
+        session.getOrElse { throw Exception("unexpected")  } shouldBe Session(accessToken, DataReaderTestHelper.user)
       }
 
-      "fail to create a user when an unexpected CreateUser error occurs" {
-        fail("todo")
-      }
-
-      "fail to create a session when an unexpected AuthProvider error occurs" {
-        fail("todo")
+      "fail to create a session when the user is not found" {
+        val unknownAuth = UnknownUser("bad-ip")
+        val exception = shouldThrow<Exception> {
+          withUnknownUserAuthentication.validate(unknownAuth)
+        }
+        exception.message shouldBe "fail to create tmp user"
       }
 
     }
@@ -38,14 +42,21 @@ class WithUnknownUserAuthenticationTest: WordSpec() {
   }
 
   val accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
-  val expectedId = UUID.fromString("d5e6cdb4-8239-4060-9e40-39c12569a38c")
 
-  val createUser: CommandHandler<CreateTmpUser, UUID> = object : CommandHandler<CreateTmpUser, UUID> {
-    override fun handle(command: CreateTmpUser): UUID = expectedId
+  val createUser: CommandHandler<CreateTmpUser, User> = object : CommandHandler<CreateTmpUser, User> {
+    override fun handle(command: CreateTmpUser): User =
+      if (command.ip == "bad-ip") {
+        throw Exception("fail to create tmp user")
+      } else {
+        DataReaderTestHelper.user
+      }
   }
-  val authenticationProvider: AuthenticationProvider<AuthenticationFailure> = object : AuthenticationProvider<AuthenticationFailure>{
-    override fun authenticate(user: AuthUser): Either<AuthenticationFailure, Session> = Right(Session(accessToken, AppUser(expectedId.toString(), "")))
-  }
+  val authenticationProvider: AuthenticationProvider<AuthenticationFailure> = {
+    val accessTokenProvider: AccessTokenProvider = object: AccessTokenProvider{
+      override fun getAccessToken(user: User): Either<AccessTokenError, String> = Right(accessToken)
+    }
+    WithTmpUserAuthenticationProvider(UserQueryHandler(DataReaderTestHelper.userReader), accessTokenProvider)
+  }()
 
   val withUnknownUserAuthentication = WithUnknownUserAuthentication(createUser, authenticationProvider)
 }
