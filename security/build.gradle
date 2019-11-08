@@ -1,4 +1,9 @@
 dependencies {
+
+  compile 'io.jsonwebtoken:jjwt-api:0.10.7'
+  runtime 'io.jsonwebtoken:jjwt-impl:0.10.7',
+          'io.jsonwebtoken:jjwt-jackson:0.10.7'
+
   implementation project(':core')
   implementation project(':user')
   testImplementation project(':user')

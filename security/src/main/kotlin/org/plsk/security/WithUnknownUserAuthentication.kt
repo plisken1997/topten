@@ -5,7 +5,7 @@ import arrow.core.Left
 import arrow.core.Right
 import arrow.core.flatMap
 import org.plsk.core.command.CommandHandler
-import org.plsk.security.provider.AuthenticationProvider
+import org.plsk.security.session.SessionProvider
 import org.plsk.user.User
 import org.plsk.user.tmpUser.CreateTmpUser
 
@@ -18,20 +18,19 @@ data class UserNotFound(val authUser: AuthUser): AuthenticationFailure() {
 }
 
 data class GetAccessTokenError(override val error: String): AuthenticationFailure()
-
 data class NotImplemented(override val error: String): AuthenticationFailure()
 
 class WithUnknownUserAuthentication(
     private val createUser: CommandHandler<CreateTmpUser, User>,
-    private val authenticationProvider: AuthenticationProvider<AuthenticationFailure>
+    private val sessionProvider: SessionProvider<AuthenticationFailure>
 ): Authentication<AuthenticationFailure> {
 
-  override fun validate(token: AuthenticationRequest): Either<AuthenticationFailure, Session> =
+  override fun authenticate(token: AuthenticationRequest): Either<AuthenticationFailure, Session> =
     when (token) {
-      is UnknownUser ->
+      is UnknownUserRequest ->
         createTmpUser(token.token)
-            .flatMap{ r -> authenticationProvider.authenticate(r)}
-      is AccessToken -> Left(NotImplemented("access token validation is not supported yet"))
+            .flatMap{ sessionProvider.createSession(it) }
+      is AccessTokenRequest -> Left(NotImplemented("access token validation is not supported yet"))
     }
 
   private fun createTmpUser(ipAddress: String): Either<AuthenticationFailure, AuthUser> {

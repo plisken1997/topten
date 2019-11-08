@@ -7,6 +7,7 @@ import org.plsk.user.AppUser
 import org.plsk.user.User
 import java.util.*
 
+// @todo use org.plsk.user.DataReaderTestHelper from :user-test
 object DataReaderTestHelper {
 
   val user = AppUser("5bfa9d6b-04b2-4bce-9b5d-ad546ada55e1", "user-ok")

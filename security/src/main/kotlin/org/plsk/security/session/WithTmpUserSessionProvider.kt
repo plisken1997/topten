@@ -1,16 +1,17 @@
-package org.plsk.security.provider
+package org.plsk.security.session
 
 import arrow.core.Either
 import arrow.core.Left
 import org.plsk.security.*
+import org.plsk.security.accessToken.AccessTokenProvider
 import org.plsk.user.dao.IdentifyUser
 import org.plsk.user.dao.UserQueryHandler
 
-class WithTmpUserAuthenticationProvider(
+class WithTmpUserSessionProvider(
     private val userQueryHandler: UserQueryHandler,
-    private val accessTokenProvider: AccessTokenProvider): AuthenticationProvider<AuthenticationFailure> {
+    private val accessTokenProvider: AccessTokenProvider): SessionProvider<AuthenticationFailure> {
 
-  override fun authenticate(user: AuthUser): Either<AuthenticationFailure, Session> {
+  override fun createSession(user: AuthUser): Either<AuthenticationFailure, Session> {
     val users = userQueryHandler.handle(IdentifyUser(user.name, user.password, user.grants))
 
     return if (users.size != 1) {
