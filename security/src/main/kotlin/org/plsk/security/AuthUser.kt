@@ -1,5 +1,7 @@
 package org.plsk.security
 
+import org.plsk.user.User
+
 data class AuthUser(
     val id: String,
     val name: String,
@@ -7,6 +9,6 @@ data class AuthUser(
     val grants: List<String>
 ) {
   companion object{
-    fun TmpAuthUser(id: String): AuthUser = AuthUser(id, "", "", listOf("topten"))
+    fun TmpAuthUser(user: User): AuthUser = AuthUser(user.id, user.name, "", listOf("topten"))
   }
 }

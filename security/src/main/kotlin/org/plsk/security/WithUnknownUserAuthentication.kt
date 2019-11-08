@@ -6,8 +6,8 @@ import arrow.core.Right
 import arrow.core.flatMap
 import org.plsk.core.command.CommandHandler
 import org.plsk.security.provider.AuthenticationProvider
+import org.plsk.user.User
 import org.plsk.user.tmpUser.CreateTmpUser
-import java.util.*
 
 sealed class AuthenticationFailure {
   abstract val error: String
@@ -22,7 +22,7 @@ data class GetAccessTokenError(override val error: String): AuthenticationFailur
 data class NotImplemented(override val error: String): AuthenticationFailure()
 
 class WithUnknownUserAuthentication(
-    private val createUser: CommandHandler<CreateTmpUser, UUID>,
+    private val createUser: CommandHandler<CreateTmpUser, User>,
     private val authenticationProvider: AuthenticationProvider<AuthenticationFailure>
 ): Authentication<AuthenticationFailure> {
 
@@ -37,6 +37,6 @@ class WithUnknownUserAuthentication(
   private fun createTmpUser(ipAddress: String): Either<AuthenticationFailure, AuthUser> {
     val user = CreateTmpUser(ipAddress)
     val created = createUser.handle(user)
-    return Right(AuthUser.TmpAuthUser(created.toString()))
+    return Right(AuthUser.TmpAuthUser(created))
   }
 }
