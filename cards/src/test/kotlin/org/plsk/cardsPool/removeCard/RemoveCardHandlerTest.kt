@@ -33,7 +33,7 @@ class RemoveCardHandlerTest: WordSpec()  {
                 Pair(card3.id, card3)
             ),
             clock.now().timestamp(),
-            FakeUser,
+            FakeUser.id,
             setOf(card2.id, card3.id),
             setOf(card2.id)
           )
@@ -66,7 +66,7 @@ class RemoveCardHandlerTest: WordSpec()  {
       10,
       cards,
       clock.now().timestamp(),
-      FakeUser,
+      FakeUser.id,
       setOf(card1.id, card2.id, card3.id),
       setOf(card1.id, card2.id)
   )

@@ -66,7 +66,7 @@ class AddCardHandlerTest: WordSpec() {
         10,
             mapOf(Pair(card1.id, card1)),
             clock.now().timestamp(),
-            FakeUser,
+            FakeUser.id,
             stock = setOf(card1.id)
     )
 

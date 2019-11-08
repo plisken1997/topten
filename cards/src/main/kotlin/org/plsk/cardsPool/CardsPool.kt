@@ -3,7 +3,6 @@ package org.plsk.cardsPool
 import arrow.data.getOption
 import arrow.syntax.collections.flatten
 import org.plsk.cards.Card
-import org.plsk.user.User
 import java.util.*
 
 data class CardsPool(
@@ -13,7 +12,7 @@ data class CardsPool(
     val slots: Int?,
     val cards: Map<UUID, Card> = emptyMap(),
     val createdAt: Long,
-    val createdBy: User,
+    val createdBy: String,
     val stock: Set<UUID> = emptySet(),
     val topCards: Set<UUID> = emptySet()) {
 

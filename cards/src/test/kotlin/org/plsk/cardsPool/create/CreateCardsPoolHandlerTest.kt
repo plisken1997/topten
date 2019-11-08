@@ -28,7 +28,7 @@ class CreateCardsPoolHandlerTest : WordSpec () {
                         createCardPool.description,
                         10,
                         createdAt = clock.now().timestamp(),
-                        createdBy = FakeUser
+                        createdBy = FakeUser.id
                     )
                 )
 

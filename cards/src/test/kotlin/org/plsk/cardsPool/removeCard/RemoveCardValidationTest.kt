@@ -60,7 +60,7 @@ class RemoveCardValidationTest: WordSpec() {
       10,
       cards,
       clock.now().timestamp(),
-      FakeUser,
+      FakeUser.id,
       setOf(card1.id, card2.id),
       setOf(card2.id)
   )

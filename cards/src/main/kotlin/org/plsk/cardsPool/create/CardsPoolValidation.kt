@@ -18,7 +18,7 @@ class CardsPoolValidation(val idGen: IdGen<UUID>, val clock: Clock) : Validation
                 command.description,
                 command.slots,
                 createdAt = clock.now().timestamp(),
-                createdBy = command.user
+                createdBy = command.user.id
             )
     }
 

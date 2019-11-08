@@ -4,5 +4,6 @@ dependencies {
 
   implementation project(':core')
   implementation project(':user')
+  implementation project(':security')
   implementation project(':cards')
 }

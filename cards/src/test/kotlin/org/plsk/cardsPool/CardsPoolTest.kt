@@ -86,7 +86,7 @@ class CardsPoolTest  : WordSpec() {
             10,
             cards,
             clock.now().timestamp(),
-            FakeUser,
+            FakeUser.id,
             setOf(card5.id),
             setOf(card1.id, card4.id, card2.id, card3.id)
         )
@@ -103,7 +103,7 @@ class CardsPoolTest  : WordSpec() {
             10,
             mapOf(Pair(card2.id, card2), Pair(card3.id, card3), Pair(card4.id, card4), Pair(card5.id, card5)),
             clock.now().timestamp(),
-            FakeUser,
+            FakeUser.id,
             setOf(card4.id, card5.id),
             setOf(card2.id, card3.id)
         )
@@ -119,7 +119,7 @@ class CardsPoolTest  : WordSpec() {
             10,
             cards,
             clock.now().timestamp(),
-            FakeUser,
+            FakeUser.id,
             setOf(card1.id, card4.id, card5.id),
             setOf(card2.id, card3.id)
         )
@@ -135,7 +135,7 @@ class CardsPoolTest  : WordSpec() {
             10,
             cards,
             clock.now().timestamp(),
-            FakeUser,
+            FakeUser.id,
             emptySet(),
             setOf(card2.id, card3.id, card1.id, card4.id, card5.id)
         )
@@ -152,7 +152,7 @@ class CardsPoolTest  : WordSpec() {
             10,
             cards,
             clock.now().timestamp(),
-            FakeUser,
+            FakeUser.id,
             emptySet(),
             setOf(card1.id, card4.id, card2.id, card3.id, card5.id)
         )
@@ -202,7 +202,7 @@ class CardsPoolTest  : WordSpec() {
       10,
       cards,
       clock.now().timestamp(),
-      FakeUser,
+      FakeUser.id,
       setOf(card4.id, card5.id),
       setOf(card1.id, card2.id, card3.id)
   )

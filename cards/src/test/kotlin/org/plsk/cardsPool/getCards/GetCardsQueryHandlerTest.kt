@@ -53,24 +53,15 @@ class GetCardsQueryHandlerTest : WordSpec() {
       10,
       mapOf(Pair(card2.id, card2), Pair(card5.id, card5), Pair(card3.id, card3), Pair(card1.id, card1), Pair(card4.id, card4)),
       clock.now().timestamp(),
-      FakeUser,
+      FakeUser.id,
       stock = setOf(card1.id, card3.id),
       topCards = setOf(card4.id, card2.id, card5.id)
   )
 
   val cardsPoolRepository = object: CardsPoolRepository{
-    override fun findAll(filter: Iterable<QueryFilter>): List<CardsPool> {
-      TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun store(data: CardsPool): WriteResult {
-      TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun update(data: CardsPool): WriteResult {
-      TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
+    override fun findAll(filter: Iterable<QueryFilter>): List<CardsPool> = TODO("not implemented")
+    override fun store(data: CardsPool): WriteResult = TODO("not implemented")
+    override fun update(data: CardsPool): WriteResult = TODO("not implemented")
     override fun find(id: UUID): CardsPool? = if(id == cardsPoolId){ baseCardsPool } else null
   }
 

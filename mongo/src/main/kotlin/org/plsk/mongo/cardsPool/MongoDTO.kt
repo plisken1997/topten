@@ -2,7 +2,6 @@ package org.plsk.mongo.cardsPool
 
 import org.plsk.cards.Card
 import org.plsk.cardsPool.CardsPool
-import org.plsk.user.UnknownUser
 import java.util.*
 
 data class MongoCard(val id: String, val label: String, val description: String?, val createdAt: Long) {
@@ -28,7 +27,7 @@ data class MongoCardsPool(
           slots,
           cards.map{ card -> Pair(UUID.fromString(card.id), card.toModel()) }.toMap(),
           createdAt,
-          UnknownUser(createdBy),
+          createdBy,
           stock.map{ UUID.fromString(it)}.toSet(),
           topCards.map{ UUID.fromString(it)}.toSet()
       )
@@ -44,7 +43,7 @@ fun CardsPool.toDTO(): MongoCardsPool =
         this.slots,
         this.cards.map{ it.value.toDTO() },
         this.createdAt,
-        this.createdBy.id,
+        this.createdBy,
         this.stock.map { it.toString() },
         this.topCards.map { it.toString() }
     )

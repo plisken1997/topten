@@ -54,24 +54,15 @@ class PromoteCardTest: WordSpec() {
       10,
       cards,
       clock.now().timestamp(),
-      FakeUser,
+      FakeUser.id,
       setOf(card1.id, card2.id, card3.id),
       setOf(card1.id, card2.id)
   )
 
   val cardsPoolRepository: CardsPoolRepository = object: CardsPoolRepository {
-    override fun findAll(filter: Iterable<QueryFilter>): List<CardsPool> {
-      TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun update(data: CardsPool): WriteResult {
-      TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun store(data: CardsPool): WriteResult {
-      TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
+    override fun findAll(filter: Iterable<QueryFilter>): List<CardsPool> = TODO("not implemented")
+    override fun update(data: CardsPool): WriteResult = TODO("not implemented")
+    override fun store(data: CardsPool): WriteResult = TODO("not implemented")
     override fun find(id: UUID): CardsPool? = if (id == baseCardsPool.id) baseCardsPool else null
   }
 
