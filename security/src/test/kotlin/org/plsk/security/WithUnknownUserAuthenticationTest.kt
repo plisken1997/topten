@@ -7,14 +7,18 @@ import io.kotlintest.shouldBe
 import io.kotlintest.shouldThrow
 import io.kotlintest.specs.WordSpec
 import org.plsk.core.command.CommandHandler
+import org.plsk.core.dao.QueryFilter
+import org.plsk.core.id.UUIDGen
 import org.plsk.security.accessToken.AccessToken
 import org.plsk.security.accessToken.AccessTokenError
 import org.plsk.security.accessToken.AccessTokenProvider
+import org.plsk.security.accessToken.AccessTokenRepository
 import org.plsk.security.session.SessionProvider
 import org.plsk.security.session.WithTmpUserSessionProvider
 import org.plsk.user.User
 import org.plsk.user.dao.UserQueryHandler
 import org.plsk.user.tmpUser.CreateTmpUser
+import java.util.*
 
 class WithUnknownUserAuthenticationTest: WordSpec() {
 
@@ -24,9 +28,12 @@ class WithUnknownUserAuthenticationTest: WordSpec() {
 
       "create a tmp user session when the user is unknown" {
         val unknownAuth = UnknownUserRequest("127.1")
-        val session = withUnknownUserAuthentication.authenticate(unknownAuth)
-        session.isRight() shouldBe true
-        session.getOrElse { throw Exception("unexpected")  } shouldBe Session(accessToken, DataReaderTestHelper.user)
+        val sessionOr = withUnknownUserAuthentication.authenticate(unknownAuth)
+        sessionOr.isRight() shouldBe true
+        val session = sessionOr.getOrElse{ throw Exception("unexpected")  }
+
+        session shouldBe Session(accessToken, DataReaderTestHelper.user)
+        accessTokenStore.find{ it == session.accessToken }
       }
 
       "fail to create a session when the user is not found" {
@@ -51,11 +58,23 @@ class WithUnknownUserAuthenticationTest: WordSpec() {
         DataReaderTestHelper.user
       }
   }
+
+  var accessTokenStore: List<AccessToken> = listOf<AccessToken>()
+
   val sessionProvider: SessionProvider<AuthenticationFailure> = {
     val accessTokenProvider: AccessTokenProvider = object: AccessTokenProvider {
       override fun getAccessToken(user: User): Either<AccessTokenError, AccessToken> = Right(accessToken)
     }
-    WithTmpUserSessionProvider(UserQueryHandler(DataReaderTestHelper.userReader), accessTokenProvider)
+    val accessTokenRepository = object: AccessTokenRepository {
+      override fun find(id: UUID): AccessToken? = TODO("not implemented")
+      override fun findAll(filter: Iterable<QueryFilter>): List<AccessToken> = TODO("not implemented")
+      override fun update(data: AccessToken): UUID =  TODO("not implemented")
+      override fun store(data: AccessToken): UUID {
+        accessTokenStore = accessTokenStore + listOf(data)
+        return UUIDGen().fromString(data.token)
+      }
+    }
+    WithTmpUserSessionProvider(UserQueryHandler(DataReaderTestHelper.userReader), accessTokenProvider, accessTokenRepository)
   }()
 
   val withUnknownUserAuthentication = WithUnknownUserAuthentication(createUser, sessionProvider)

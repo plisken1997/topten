@@ -6,12 +6,16 @@ import arrow.core.Right
 import arrow.core.getOrElse
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.WordSpec
+import org.plsk.core.dao.QueryFilter
+import org.plsk.core.id.UUIDGen
 import org.plsk.security.*
 import org.plsk.security.accessToken.AccessToken
 import org.plsk.security.accessToken.AccessTokenError
 import org.plsk.security.accessToken.AccessTokenProvider
+import org.plsk.security.accessToken.AccessTokenRepository
 import org.plsk.user.User
 import org.plsk.user.dao.UserQueryHandler
+import java.util.*
 
 class WithTmpUserSessionProviderTest : WordSpec() {
 
@@ -42,6 +46,14 @@ class WithTmpUserSessionProviderTest : WordSpec() {
     val accessTokenProvider: AccessTokenProvider = object: AccessTokenProvider {
       override fun getAccessToken(user: User): Either<AccessTokenError, AccessToken> = Right(accessToken)
     }
-    WithTmpUserSessionProvider(UserQueryHandler(DataReaderTestHelper.userReader), accessTokenProvider)
+    val accessTokenRepository = object: AccessTokenRepository {
+      override fun find(id: UUID): AccessToken? = TODO("not implemented")
+      override fun findAll(filter: Iterable<QueryFilter>): List<AccessToken> = TODO("not implemented")
+      override fun update(data: AccessToken): UUID =  TODO("not implemented")
+      override fun store(data: AccessToken): UUID {
+        return UUIDGen().fromString(data.token)
+      }
+    }
+    WithTmpUserSessionProvider(UserQueryHandler(DataReaderTestHelper.userReader), accessTokenProvider, accessTokenRepository)
   }()
 }
