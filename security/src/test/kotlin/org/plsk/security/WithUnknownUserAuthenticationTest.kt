@@ -66,12 +66,12 @@ class WithUnknownUserAuthenticationTest: WordSpec() {
       override fun getAccessToken(user: User): Either<AccessTokenError, AccessToken> = Right(accessToken)
     }
     val accessTokenRepository = object: AccessTokenRepository {
-      override fun find(id: UUID): AccessToken? = TODO("not implemented")
+      override fun find(id: String): AccessToken? = TODO("not implemented")
       override fun findAll(filter: Iterable<QueryFilter>): List<AccessToken> = TODO("not implemented")
-      override fun update(data: AccessToken): UUID =  TODO("not implemented")
-      override fun store(data: AccessToken): UUID {
+      override fun update(data: AccessToken): String =  TODO("not implemented")
+      override fun store(data: AccessToken): String {
         accessTokenStore = accessTokenStore + listOf(data)
-        return UUIDGen().fromString(data.token)
+        return UUIDGen().fromString(data.token).toString()
       }
     }
     WithTmpUserSessionProvider(UserQueryHandler(DataReaderTestHelper.userReader), accessTokenProvider, accessTokenRepository)
