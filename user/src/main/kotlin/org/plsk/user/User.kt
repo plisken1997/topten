@@ -9,6 +9,13 @@ data class UnknownUser(override val id: String): User{
   override val name = "unknown"
 }
 
+data class TmpUser(
+  override val id: String,
+  override val name: String,
+  val ipAddress: String,
+  val password: String = "",
+  val grants: List<String> = listOf("topten")): User
+
 data class AppUser(override val id: String, override val name: String): User
 
 // @todo move to user-test
