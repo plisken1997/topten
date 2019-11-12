@@ -23,7 +23,7 @@ data class NotImplemented(override val error: String): AuthenticationFailure()
 class WithUnknownUserAuthentication(
     private val createUser: CommandHandler<CreateTmpUser, User>,
     private val sessionProvider: SessionProvider<AuthenticationFailure>
-): Authentication<AuthenticationFailure> {
+  ): Authentication<AuthenticationFailure> {
 
   override fun authenticate(token: AuthenticationRequest): Either<AuthenticationFailure, Session> =
     when (token) {

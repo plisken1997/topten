@@ -5,7 +5,6 @@ import org.plsk.core.dao.EqFilter
 import org.plsk.core.dao.QueryFilter
 import org.plsk.user.AppUser
 import org.plsk.user.User
-import java.util.*
 
 // @todo use org.plsk.user.DataReaderTestHelper from :user-test
 object DataReaderTestHelper {
@@ -13,7 +12,7 @@ object DataReaderTestHelper {
   val user = AppUser("5bfa9d6b-04b2-4bce-9b5d-ad546ada55e1", "user-ok")
   val user2 = AppUser("50b3e08c-0a36-421e-8a7e-3e5132b5fc5b", "user-2")
 
-  val userReader: DataReader<User, UUID> = object: DataReader<User, UUID> {
+  val userReader: DataReader<User, String> = object: DataReader<User, String> {
     override fun findAll(filter: Iterable<QueryFilter>): List<User> {
       val nameFilter: QueryFilter? = filter.find{ f -> f.name == "name"}
 
@@ -30,7 +29,7 @@ object DataReaderTestHelper {
       }
     }
 
-    override fun find(id: UUID): User? = TODO("not implemented")
+    override fun find(id: String): User? = TODO("not implemented")
   }
 
 }
