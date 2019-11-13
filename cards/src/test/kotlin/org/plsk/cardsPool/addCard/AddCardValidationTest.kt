@@ -7,7 +7,6 @@ import org.plsk.cards.Card
 import org.plsk.cardsPool.CardsPool
 import org.plsk.cardsPool.CardsPoolRepository
 import org.plsk.cardsPool.WriteResult
-import org.plsk.core.clock.Clock
 import org.plsk.core.clock.FakeClock
 import org.plsk.core.dao.QueryFilter
 import org.plsk.core.id.UUIDGen
@@ -52,7 +51,7 @@ class AddCardValidationTest: WordSpec() {
                         idGen.fromString("test-card" + baseCardsPool.id.toString()),
                         "test-card",
                         "desc",
-                        clock.now().timestamp()
+                        FakeClock.now().timestamp()
                     )
 
                     newCardsPool shouldBe expected
@@ -63,12 +62,11 @@ class AddCardValidationTest: WordSpec() {
 
     }
 
-    val clock: Clock = FakeClock()
     val idGen = UUIDGen()
 
-    val card1 = Card(UUID.randomUUID(), "test-card 1", "desc", clock.now().timestamp())
-    val card2 = Card(UUID.randomUUID(), "test-card 2", "desc", clock.now().timestamp())
-    val card3 = Card(UUID.randomUUID(), "test-card 3", "desc", clock.now().timestamp())
+    val card1 = Card(UUID.randomUUID(), "test-card 1", "desc", FakeClock.now().timestamp())
+    val card2 = Card(UUID.randomUUID(), "test-card 2", "desc", FakeClock.now().timestamp())
+    val card3 = Card(UUID.randomUUID(), "test-card 3", "desc", FakeClock.now().timestamp())
 
     val baseCardsPool = CardsPool(
             UUID.randomUUID(),
@@ -76,7 +74,7 @@ class AddCardValidationTest: WordSpec() {
             "desc",
         10,
             mapOf(Pair(card1.id, card1), Pair(card2.id, card2), Pair(card3.id, card3)),
-            clock.now().timestamp(),
+        FakeClock.now().timestamp(),
             FakeUser.id
     )
 
@@ -86,5 +84,5 @@ class AddCardValidationTest: WordSpec() {
       override fun store(data: CardsPool): WriteResult = TODO("not implemented")
       override fun find(id: UUID): CardsPool? = if (id == baseCardsPool.id) baseCardsPool else null
     }
-    val validation = AddCardValidation(cardsPoolRepository, clock, idGen)
+    val validation = AddCardValidation(cardsPoolRepository, FakeClock, idGen)
 }

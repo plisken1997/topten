@@ -42,10 +42,8 @@ class PromoteCardValidationTest: WordSpec() {
 
   }
 
-  val clock = FakeClock()
-
-  val card1 = Card(UUID.randomUUID(), "test-card 1", "desc", clock.now().timestamp())
-  val card2 = Card(UUID.randomUUID(), "test-card 2", "desc", clock.now().timestamp())
+  val card1 = Card(UUID.randomUUID(), "test-card 1", "desc", FakeClock.now().timestamp())
+  val card2 = Card(UUID.randomUUID(), "test-card 2", "desc", FakeClock.now().timestamp())
 
   val cards = mapOf(
       Pair(card1.id, card1),
@@ -58,7 +56,7 @@ class PromoteCardValidationTest: WordSpec() {
       "desc",
       10,
       cards,
-      clock.now().timestamp(),
+      FakeClock.now().timestamp(),
       FakeUser.id,
       setOf(card1.id, card2.id),
       setOf(card2.id)

@@ -85,7 +85,7 @@ class CardsPoolTest  : WordSpec() {
             "desc",
             10,
             cards,
-            clock.now().timestamp(),
+            FakeClock.now().timestamp(),
             FakeUser.id,
             setOf(card5.id),
             setOf(card1.id, card4.id, card2.id, card3.id)
@@ -102,7 +102,7 @@ class CardsPoolTest  : WordSpec() {
             "desc",
             10,
             mapOf(Pair(card2.id, card2), Pair(card3.id, card3), Pair(card4.id, card4), Pair(card5.id, card5)),
-            clock.now().timestamp(),
+            FakeClock.now().timestamp(),
             FakeUser.id,
             setOf(card4.id, card5.id),
             setOf(card2.id, card3.id)
@@ -118,7 +118,7 @@ class CardsPoolTest  : WordSpec() {
             "desc",
             10,
             cards,
-            clock.now().timestamp(),
+            FakeClock.now().timestamp(),
             FakeUser.id,
             setOf(card1.id, card4.id, card5.id),
             setOf(card2.id, card3.id)
@@ -134,7 +134,7 @@ class CardsPoolTest  : WordSpec() {
             "desc",
             10,
             cards,
-            clock.now().timestamp(),
+            FakeClock.now().timestamp(),
             FakeUser.id,
             emptySet(),
             setOf(card2.id, card3.id, card1.id, card4.id, card5.id)
@@ -151,7 +151,7 @@ class CardsPoolTest  : WordSpec() {
             "desc",
             10,
             cards,
-            clock.now().timestamp(),
+            FakeClock.now().timestamp(),
             FakeUser.id,
             emptySet(),
             setOf(card1.id, card4.id, card2.id, card3.id, card5.id)
@@ -177,15 +177,13 @@ class CardsPoolTest  : WordSpec() {
     }
   }
 
-  val clock = FakeClock()
+  val card = Card(UUID.randomUUID(), "test-card", "desc", FakeClock.now().timestamp())
 
-  val card = Card(UUID.randomUUID(), "test-card", "desc", clock.now().timestamp())
-
-  val card1 = Card(UUID.randomUUID(), "test-card 1", "desc", clock.now().timestamp())
-  val card2 = Card(UUID.randomUUID(), "test-card 2", "desc", clock.now().timestamp())
-  val card3 = Card(UUID.randomUUID(), "test-card 3", "desc", clock.now().timestamp())
-  val card4 = Card(UUID.randomUUID(), "test-card 4", "desc", clock.now().timestamp())
-  val card5 = Card(UUID.randomUUID(), "test-card 5", "desc", clock.now().timestamp())
+  val card1 = Card(UUID.randomUUID(), "test-card 1", "desc", FakeClock.now().timestamp())
+  val card2 = Card(UUID.randomUUID(), "test-card 2", "desc", FakeClock.now().timestamp())
+  val card3 = Card(UUID.randomUUID(), "test-card 3", "desc", FakeClock.now().timestamp())
+  val card4 = Card(UUID.randomUUID(), "test-card 4", "desc", FakeClock.now().timestamp())
+  val card5 = Card(UUID.randomUUID(), "test-card 5", "desc", FakeClock.now().timestamp())
 
   val cards = mapOf<UUID, Card>(
     Pair(card1.id, card1),
@@ -201,7 +199,7 @@ class CardsPoolTest  : WordSpec() {
       "desc",
       10,
       cards,
-      clock.now().timestamp(),
+      FakeClock.now().timestamp(),
       FakeUser.id,
       setOf(card4.id, card5.id),
       setOf(card1.id, card2.id, card3.id)

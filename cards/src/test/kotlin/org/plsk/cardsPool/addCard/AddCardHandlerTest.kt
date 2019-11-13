@@ -8,7 +8,6 @@ import org.plsk.cards.Card
 import org.plsk.cardsPool.CardsPool
 import org.plsk.cardsPool.CardsPoolRepository
 import org.plsk.cardsPool.WriteResult
-import org.plsk.core.clock.Clock
 import org.plsk.core.clock.FakeClock
 import org.plsk.core.dao.QueryFilter
 import org.plsk.core.event.Event
@@ -43,7 +42,7 @@ class AddCardHandlerTest: WordSpec() {
 
                     createdId shouldBe expectedId
 
-                    val newCard = AddCardValidation.createCard(command, clock, expectedId)
+                    val newCard = AddCardValidation.createCard(command, FakeClock, expectedId)
                     val expected = CardAddedEvent(baseCardsPool.copy(
                         cards = mapOf(Pair(card1.id, card1), Pair(newCard.id, newCard)),
                         stock = setOf(newCard.id, card1.id)
@@ -56,8 +55,7 @@ class AddCardHandlerTest: WordSpec() {
         }
     }
 
-    val clock: Clock = FakeClock()
-    val card1 = Card(UUID.randomUUID(), "test-card 1", "desc", clock.now().timestamp())
+    val card1 = Card(UUID.randomUUID(), "test-card 1", "desc", FakeClock.now().timestamp())
 
     val baseCardsPool = CardsPool(
             UUID.randomUUID(),
@@ -65,7 +63,7 @@ class AddCardHandlerTest: WordSpec() {
             "desc",
         10,
             mapOf(Pair(card1.id, card1)),
-            clock.now().timestamp(),
+        FakeClock.now().timestamp(),
             FakeUser.id,
             stock = setOf(card1.id)
     )
@@ -92,7 +90,7 @@ class AddCardHandlerTest: WordSpec() {
           override fun find(id: UUID): CardsPool? = if (id == baseCardsPool.id) baseCardsPool else null
         }
 
-        val validation = AddCardValidation(cardsPoolRepository, clock, idGen)
+        val validation = AddCardValidation(cardsPoolRepository, FakeClock, idGen)
 
         val eventBus: EventBus = object : EventBus {
             override fun dispatch(event: Event) = when (event) {

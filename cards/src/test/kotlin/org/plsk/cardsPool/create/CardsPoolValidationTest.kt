@@ -36,6 +36,6 @@ class CardsPoolValidationTest : WordSpec() {
 
     val expectedId = UUID.fromString("9ff495f9-7e47-31fb-ab60-dc513af657d2")
     val idGen = UUIDGen()
-    val clock = FakeClock()
+    val clock = FakeClock
     val cardsPoolValidator = CardsPoolValidation(idGen, clock)
 }

@@ -43,7 +43,7 @@ class CreateCardsPoolHandlerTest : WordSpec () {
     }
 
     val idGen = UUIDGen()
-    val clock = FakeClock()
+    val clock = FakeClock
     val cardsPoolValidator = CardsPoolValidation(idGen, clock)
 
     var events = emptyList<CardsPoolCreated>()
