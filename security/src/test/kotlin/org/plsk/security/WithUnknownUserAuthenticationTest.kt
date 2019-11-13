@@ -59,6 +59,7 @@ class WithUnknownUserAuthenticationTest: WordSpec() {
 
   val sessionProvider: SessionProvider<AuthenticationFailure> = {
     val accessTokenProvider: AccessTokenProvider = object: AccessTokenProvider {
+      override fun getUser(accessToken: AccessToken): Either<AccessTokenError, User> = TODO("not implemented")
       override fun generateToken(user: User): Either<AccessTokenError, AccessToken> = TODO("NOT IMPLEMENTED")
 
       override fun getAccessToken(user: User): Either<AccessTokenError, AccessToken> {

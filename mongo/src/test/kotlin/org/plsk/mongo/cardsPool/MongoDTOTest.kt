@@ -68,15 +68,13 @@ class MongoDTOTest: WordSpec() {
 
   }
 
-  val clock = FakeClock()
-
   val timestamp = ZonedDateTime.parse("2013-12-27T15:35:00.000Z").toEpochSecond()
 
-  val card1 = Card(UUID.randomUUID(), "test-card 1", "desc", clock.now().timestamp())
-  val card2 = Card(UUID.randomUUID(), "test-card 2", "desc", clock.now().timestamp())
-  val card3 = Card(UUID.randomUUID(), "test-card 3", "desc", clock.now().timestamp())
-  val card4 = Card(UUID.randomUUID(), "test-card 4", "desc", clock.now().timestamp())
-  val card5 = Card(UUID.randomUUID(), "test-card 5", "desc", clock.now().timestamp())
+  val card1 = Card(UUID.randomUUID(), "test-card 1", "desc", FakeClock.now().timestamp())
+  val card2 = Card(UUID.randomUUID(), "test-card 2", "desc", FakeClock.now().timestamp())
+  val card3 = Card(UUID.randomUUID(), "test-card 3", "desc", FakeClock.now().timestamp())
+  val card4 = Card(UUID.randomUUID(), "test-card 4", "desc", FakeClock.now().timestamp())
+  val card5 = Card(UUID.randomUUID(), "test-card 5", "desc", FakeClock.now().timestamp())
 
   val cards = mapOf<UUID, Card>(
       Pair(card1.id, card1),
@@ -92,7 +90,7 @@ class MongoDTOTest: WordSpec() {
       "desc",
       10,
       cards,
-      clock.now().timestamp(),
+      FakeClock.now().timestamp(),
       FakeUser.id,
       setOf(card4.id, card5.id),
       setOf(card1.id, card2.id, card3.id)

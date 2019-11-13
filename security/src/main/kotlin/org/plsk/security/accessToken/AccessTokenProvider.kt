@@ -12,4 +12,5 @@ data class AccessToken(val token: String)
 interface AccessTokenProvider {
   fun getAccessToken(user: User): Either<AccessTokenError, AccessToken>
   fun generateToken(user: User): Either<AccessTokenError, AccessToken>
+  fun getUser(accessToken: AccessToken): Either<AccessTokenError, User>
 }

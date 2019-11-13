@@ -1,7 +1,9 @@
 package org.plsk.web.config
 
 import com.mongodb.reactivestreams.client.MongoDatabase
+import org.plsk.core.clock.Clock
 import org.plsk.core.command.CommandHandler
+import org.plsk.core.dao.DataReader
 import org.plsk.mongo.security.DocumentAccessTokenRepository
 import org.plsk.security.Authentication
 import org.plsk.security.AuthenticationFailure
@@ -21,11 +23,10 @@ import org.springframework.context.annotation.Configuration
 class SecurityConfig {
 
   private val appId: String = "topten"
-  private val appSecret: String = "c8f8e18a-5625-4f6f-8549-c990d5c5847f"
 
   @Bean
-  fun provideAccessTokenProvider(accessTokenRepository: AccessTokenRepository): AccessTokenProvider =
-      JwtsTokenProvider(accessTokenRepository, appId, appSecret)
+  fun provideAccessTokenProvider(accessTokenRepository: AccessTokenRepository, clock: Clock, userReader: DataReader<User, String>): AccessTokenProvider =
+      JwtsTokenProvider(accessTokenRepository, userReader, clock, appId)
 
   @Bean
   fun provideAccessTokenRepository(db: MongoDatabase): AccessTokenRepository = DocumentAccessTokenRepository(db)

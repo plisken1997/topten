@@ -27,5 +27,8 @@ class WithTmpUserSessionProvider(
   }
 
   override fun validateSession(accessToken: AccessToken): Either<AuthenticationFailure, Session> =
-      Left(NotImplemented("validate token [${accessToken.token}]"))
+      accessTokenProvider.getUser(accessToken).bimap(
+          { GetAccessTokenError(accessToken.token) },
+          { user -> Session(accessToken, user) }
+      )
 }

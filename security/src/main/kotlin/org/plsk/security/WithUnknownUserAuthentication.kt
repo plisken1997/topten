@@ -18,7 +18,6 @@ data class UserNotFound(val authUser: AuthUser): AuthenticationFailure() {
 }
 
 data class GetAccessTokenError(override val error: String): AuthenticationFailure()
-data class NotImplemented(override val error: String): AuthenticationFailure()
 
 class WithUnknownUserAuthentication(
     private val createUser: CommandHandler<CreateTmpUser, User>,

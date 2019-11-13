@@ -39,7 +39,7 @@ class AuthenticateFilter(private val authentication: Authentication<Authenticati
       request.method?.matches("POST") ?: false || request.method?.matches("PUT") ?: false || request.method?.matches("PATH") ?: false
 
   private fun handleError(error: AuthenticationFailure){
-    logger.error(error.error)
+    logger.error("authenticate error : ${error.error}")
   }
 
   private fun handleSession(session: Session, request: ServerHttpRequest){
