@@ -6,16 +6,12 @@ import arrow.core.Right
 import arrow.core.getOrElse
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.WordSpec
-import org.plsk.core.dao.QueryFilter
-import org.plsk.core.id.UUIDGen
 import org.plsk.security.*
 import org.plsk.security.accessToken.AccessToken
 import org.plsk.security.accessToken.AccessTokenError
 import org.plsk.security.accessToken.AccessTokenProvider
-import org.plsk.security.accessToken.AccessTokenRepository
 import org.plsk.user.User
 import org.plsk.user.dao.UserQueryHandler
-import java.util.*
 
 class WithTmpUserSessionProviderTest : WordSpec() {
 
@@ -44,16 +40,10 @@ class WithTmpUserSessionProviderTest : WordSpec() {
 
   val sessionProvider: SessionProvider<AuthenticationFailure> = {
     val accessTokenProvider: AccessTokenProvider = object: AccessTokenProvider {
+      override fun generateToken(user: User): Either<AccessTokenError, AccessToken> = TODO("NOT IMPLEMENTED")
       override fun getAccessToken(user: User): Either<AccessTokenError, AccessToken> = Right(accessToken)
     }
-    val accessTokenRepository = object: AccessTokenRepository {
-      override fun find(id: String): AccessToken? = TODO("not implemented")
-      override fun findAll(filter: Iterable<QueryFilter>): List<AccessToken> = TODO("not implemented")
-      override fun update(data: AccessToken): String =  TODO("not implemented")
-      override fun store(data: AccessToken): String {
-        return UUIDGen().fromString(data.token).toString()
-      }
-    }
-    WithTmpUserSessionProvider(UserQueryHandler(DataReaderTestHelper.userReader), accessTokenProvider, accessTokenRepository)
+
+    WithTmpUserSessionProvider(UserQueryHandler(DataReaderTestHelper.userReader), accessTokenProvider)
   }()
 }

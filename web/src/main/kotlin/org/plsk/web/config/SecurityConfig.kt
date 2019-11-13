@@ -24,7 +24,8 @@ class SecurityConfig {
   private val appSecret: String = "c8f8e18a-5625-4f6f-8549-c990d5c5847f"
 
   @Bean
-  fun provideAccessTokenProvider(): AccessTokenProvider = JwtsTokenProvider(appId, appSecret)
+  fun provideAccessTokenProvider(accessTokenRepository: AccessTokenRepository): AccessTokenProvider =
+      JwtsTokenProvider(accessTokenRepository, appId, appSecret)
 
   @Bean
   fun provideAccessTokenRepository(db: MongoDatabase): AccessTokenRepository = DocumentAccessTokenRepository(db)
@@ -32,9 +33,8 @@ class SecurityConfig {
   @Bean
   fun provideSessionProvider(
       userQueryHandler: UserQueryHandler,
-      accessTokenProvider: AccessTokenProvider,
-      accessTokenRepository: AccessTokenRepository
-  ): SessionProvider<AuthenticationFailure> = WithTmpUserSessionProvider(userQueryHandler, accessTokenProvider, accessTokenRepository)
+      accessTokenProvider: AccessTokenProvider
+  ): SessionProvider<AuthenticationFailure> = WithTmpUserSessionProvider(userQueryHandler, accessTokenProvider)
 
   @Bean
   fun provideAuthentication(

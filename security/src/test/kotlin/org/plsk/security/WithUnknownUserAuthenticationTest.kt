@@ -7,18 +7,14 @@ import io.kotlintest.shouldBe
 import io.kotlintest.shouldThrow
 import io.kotlintest.specs.WordSpec
 import org.plsk.core.command.CommandHandler
-import org.plsk.core.dao.QueryFilter
-import org.plsk.core.id.UUIDGen
 import org.plsk.security.accessToken.AccessToken
 import org.plsk.security.accessToken.AccessTokenError
 import org.plsk.security.accessToken.AccessTokenProvider
-import org.plsk.security.accessToken.AccessTokenRepository
 import org.plsk.security.session.SessionProvider
 import org.plsk.security.session.WithTmpUserSessionProvider
 import org.plsk.user.User
 import org.plsk.user.dao.UserQueryHandler
 import org.plsk.user.tmpUser.CreateTmpUser
-import java.util.*
 
 class WithUnknownUserAuthenticationTest: WordSpec() {
 
@@ -63,18 +59,15 @@ class WithUnknownUserAuthenticationTest: WordSpec() {
 
   val sessionProvider: SessionProvider<AuthenticationFailure> = {
     val accessTokenProvider: AccessTokenProvider = object: AccessTokenProvider {
-      override fun getAccessToken(user: User): Either<AccessTokenError, AccessToken> = Right(accessToken)
-    }
-    val accessTokenRepository = object: AccessTokenRepository {
-      override fun find(id: String): AccessToken? = TODO("not implemented")
-      override fun findAll(filter: Iterable<QueryFilter>): List<AccessToken> = TODO("not implemented")
-      override fun update(data: AccessToken): String =  TODO("not implemented")
-      override fun store(data: AccessToken): String {
-        accessTokenStore = accessTokenStore + listOf(data)
-        return UUIDGen().fromString(data.token).toString()
+      override fun generateToken(user: User): Either<AccessTokenError, AccessToken> = TODO("NOT IMPLEMENTED")
+
+      override fun getAccessToken(user: User): Either<AccessTokenError, AccessToken> {
+        accessTokenStore = accessTokenStore + listOf(accessToken)
+        return Right(accessToken)
       }
     }
-    WithTmpUserSessionProvider(UserQueryHandler(DataReaderTestHelper.userReader), accessTokenProvider, accessTokenRepository)
+
+    WithTmpUserSessionProvider(UserQueryHandler(DataReaderTestHelper.userReader), accessTokenProvider)
   }()
 
   val withUnknownUserAuthentication = WithUnknownUserAuthentication(createUser, sessionProvider)

@@ -1,10 +1,10 @@
 package org.plsk.security
 
 import arrow.core.Either
-import arrow.core.Left
 import arrow.core.Right
 import arrow.core.flatMap
 import org.plsk.core.command.CommandHandler
+import org.plsk.security.accessToken.AccessToken
 import org.plsk.security.session.SessionProvider
 import org.plsk.user.User
 import org.plsk.user.tmpUser.CreateTmpUser
@@ -30,7 +30,7 @@ class WithUnknownUserAuthentication(
       is UnknownUserRequest ->
         createTmpUser(token.token)
             .flatMap{ sessionProvider.createSession(it) }
-      is AccessTokenRequest -> Left(NotImplemented("access token validation is not supported yet"))
+      is AccessTokenRequest -> sessionProvider.validateSession(AccessToken(token.token))
     }
 
   private fun createTmpUser(ipAddress: String): Either<AuthenticationFailure, AuthUser> {
