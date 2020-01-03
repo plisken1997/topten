@@ -1,6 +1,6 @@
 package org.plsk.cardsPool
 
-import arrow.data.getOption
+import arrow.core.getOption
 import arrow.syntax.collections.flatten
 import org.plsk.cards.Card
 import java.util.*

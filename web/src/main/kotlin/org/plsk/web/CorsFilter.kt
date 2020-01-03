@@ -30,6 +30,6 @@ class CorsFilter: WebFilter {
       return chain?.filter(ctx) ?: Mono.empty()
     }
 
-    return chain?.filter(ctx) ?: Mono.empty()
+    return Mono.empty()
   }
 }

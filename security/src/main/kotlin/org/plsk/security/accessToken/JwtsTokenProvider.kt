@@ -50,13 +50,18 @@ class JwtsTokenProvider(
 
     val key = Keys.secretKeyFor(SignatureAlgorithm.HS256)
 
-    return  Try {
+    val res: Either<Throwable, String> =  Either.Right(
         Jwts.builder()
             .setPayload(user.id)
             .setHeader(header)
             .signWith(key)
             .compact()
-      }.toEither { err -> GenerateJWTError(err.localizedMessage) }.map { AccessToken(it)}
+    )
+
+    return res.bimap(
+        {err -> GenerateJWTError(err.localizedMessage)},
+        {ok -> AccessToken(ok)}
+    )
   }
 
   override fun getUser(accessToken: AccessToken): Either<AccessTokenError, User> {
