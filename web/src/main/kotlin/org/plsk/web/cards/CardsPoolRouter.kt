@@ -14,9 +14,7 @@ class CardsPoolRouter {
         .route(
             RequestPredicates.POST("/cardspool")
                 .and(RequestPredicates.accept(MediaType.APPLICATION_JSON)),
-            HandlerFunction<ServerResponse> {
-              cardsPoolHandler.createCardPool(it)
-            }
+            HandlerFunction<ServerResponse>(cardsPoolHandler::createCardPool)
         )
 
   @Bean
@@ -25,9 +23,7 @@ class CardsPoolRouter {
         .route(
             RequestPredicates.POST("/cardspool/{cardpoolId:[\\w-]+}/addCard")
                 .and(RequestPredicates.accept(MediaType.APPLICATION_JSON)),
-            HandlerFunction<ServerResponse> {
-              cardsPoolHandler.addCard(it)
-            }
+            HandlerFunction<ServerResponse>(cardsPoolHandler::addCard)
         )
 
   @Bean
@@ -36,9 +32,7 @@ class CardsPoolRouter {
         .route(
             RequestPredicates.POST("/cardspool/{cardpoolId:[\\w-]+}/promote")
                 .and(RequestPredicates.accept(MediaType.APPLICATION_JSON)),
-            HandlerFunction<ServerResponse> {
-              cardsPoolHandler.promoteCard(it)
-            }
+            HandlerFunction<ServerResponse>(cardsPoolHandler::promoteCard)
         )
 
   @Bean
@@ -46,9 +40,7 @@ class CardsPoolRouter {
       RouterFunctions
           .route(
               RequestPredicates.DELETE("/cardspool/{cardpoolId:[\\w-]+}/delete/{cardId:[\\w-]+}"),
-              HandlerFunction<ServerResponse> {
-                cardsPoolHandler.deleteCard(it)
-              }
+              HandlerFunction<ServerResponse>(cardsPoolHandler::deleteCard)
           )
 
   @Bean
@@ -57,9 +49,7 @@ class CardsPoolRouter {
           .route(
               RequestPredicates.POST("/cardspool/{cardpoolId:[\\w-]+}/unPromote")
                   .and(RequestPredicates.accept(MediaType.APPLICATION_JSON)),
-              HandlerFunction<ServerResponse> {
-                cardsPoolHandler.unPromoteCard(it)
-              }
+              HandlerFunction<ServerResponse>(cardsPoolHandler::unPromoteCard)
           )
 
   @Bean
@@ -68,9 +58,7 @@ class CardsPoolRouter {
           .route(
               RequestPredicates.POST("/cardspool/{cardpoolId:[\\w-]+}/updateTop")
                   .and(RequestPredicates.accept(MediaType.APPLICATION_JSON)),
-              HandlerFunction<ServerResponse> {
-                cardsPoolHandler.updateTop(it)
-              }
+              HandlerFunction<ServerResponse>(cardsPoolHandler::updateTop)
           )
 
   @Bean
@@ -78,8 +66,6 @@ class CardsPoolRouter {
       RouterFunctions
           .route(
               RequestPredicates.GET("/cardspool/{cardpoolId:[\\w-]+}"),
-              HandlerFunction<ServerResponse> {
-                cardsPoolHandler.getCards(it)
-              }
+              HandlerFunction<ServerResponse>(cardsPoolHandler::getCards)
           )
 }
