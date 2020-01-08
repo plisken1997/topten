@@ -1,5 +1,8 @@
 package org.plsk.cardsPool
 
+import arrow.unsafe
+import arrow.fx.IO
+import arrow.fx.extensions.io.unsafeRun.runBlocking
 import org.plsk.cardsPool.addCard.CardAddedEvent
 import org.plsk.cardsPool.create.CardsPoolCreated
 import org.plsk.cardsPool.promoteCard.CardPositionUpdated
@@ -18,22 +21,28 @@ class CardsPoolEventHandler(private val writer: DataWriter<CardsPool, WriteResul
         event
       }
       is CardAddedEvent -> {
-        writer.update(event.cardsPool)
+        runBlocking(writer.updateAsync(event.cardsPool))
         event
       }
       is PromotedEvent -> {
-        writer.update(event.cardsPool)
+        runBlocking(writer.updateAsync(event.cardsPool))
         event
       }
       is CardRemoved -> {
-        writer.update(event.cardsPool)
+        runBlocking(writer.updateAsync(event.cardsPool))
         event
       }
       is CardPositionUpdated -> {
-        writer.update(event.cardsPool)
+        runBlocking(writer.updateAsync(event.cardsPool))
         event
       }
       else -> event
     }
+
+  fun <T>runBlocking(io: IO<T>): T = unsafe {
+    runBlocking {
+      io
+    }
+  }
 
 }

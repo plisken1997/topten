@@ -1,5 +1,7 @@
 package org.plsk.mongo.cardsPool
 
+import arrow.fx.IO
+import arrow.fx.extensions.fx
 import com.mongodb.reactivestreams.client.MongoCollection
 import com.mongodb.reactivestreams.client.MongoDatabase
 import java.util.*
@@ -19,6 +21,11 @@ class DocumentCardsPoolRepository(db: MongoDatabase): CardsPoolRepository, Mongo
 
   override val coll: MongoCollection<MongoCardsPool> = db.getCollection<MongoCardsPool>()
 
+  fun storeAsync(data: CardsPool): IO<WriteResult> =
+    IO.fx {
+      store(data)
+    }
+
   override fun store(data: CardsPool): WriteResult =
     coll.insertOne(data.toDTO()).single()
       .map{ WriteSuccess(data.id) }
@@ -33,6 +40,11 @@ class DocumentCardsPoolRepository(db: MongoDatabase): CardsPoolRepository, Mongo
     .map{ WriteSuccess(data.id) }
     //.onErrorReturn { error -> WriteFailure(error) }
     .blockingGet()
+
+  override fun updateAsync(data: CardsPool): IO<WriteResult> =
+    IO.effect {
+      update(data)
+    }
 
   override fun find(id: UUID): CardsPool? = coll.findOne(MongoCardsPool::id eq id.toString()).map{ it.toModel() }.blockingGet()
 }
