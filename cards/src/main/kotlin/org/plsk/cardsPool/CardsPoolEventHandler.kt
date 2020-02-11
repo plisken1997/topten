@@ -1,8 +1,6 @@
 package org.plsk.cardsPool
 
-import arrow.unsafe
 import arrow.fx.IO
-import arrow.fx.extensions.io.unsafeRun.runBlocking
 import org.plsk.cardsPool.addCard.CardAddedEvent
 import org.plsk.cardsPool.create.CardsPoolCreated
 import org.plsk.cardsPool.promoteCard.CardPositionUpdated
@@ -11,6 +9,7 @@ import org.plsk.cardsPool.removeCard.CardRemoved
 import org.plsk.core.dao.DataWriter
 import org.plsk.core.event.Event
 import org.plsk.core.event.EventHandler
+import kotlinx.coroutines.*
 
 class CardsPoolEventHandler(private val writer: DataWriter<CardsPool, WriteResult>): EventHandler {
 
@@ -25,7 +24,22 @@ class CardsPoolEventHandler(private val writer: DataWriter<CardsPool, WriteResul
         event
       }
       is PromotedEvent -> {
-        runBlocking(writer.updateAsync(event.cardsPool))
+
+        runBlocking(
+            IO.async<Unit> {
+              println("hello")
+              Thread.sleep(3000)
+              println("end hello")
+              Unit
+            }
+        )
+        runBlocking(writer.updateAsync(event.cardsPool).map {
+          r ->
+          println("coucou")
+          Thread.sleep(1000)
+          println("end coucou")
+          r
+        })
         event
       }
       is CardRemoved -> {
@@ -39,10 +53,8 @@ class CardsPoolEventHandler(private val writer: DataWriter<CardsPool, WriteResul
       else -> event
     }
 
-  fun <T>runBlocking(io: IO<T>): T = unsafe {
-    runBlocking {
-      io
-    }
+  fun <T>runBlocking(io: IO<T>): Job = GlobalScope.launch {
+    io.suspended()
   }
 
 }

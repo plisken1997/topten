@@ -14,37 +14,32 @@ import org.plsk.cardsPool.*
 import org.plsk.core.dao.QueryFilter
 import org.plsk.mongo.MongoClient
 
-class DocumentCardsPoolRepository(db: MongoDatabase): CardsPoolRepository, MongoClient<MongoCardsPool> {
+class DocumentCardsPoolRepository(db: MongoDatabase) : CardsPoolRepository, MongoClient<MongoCardsPool> {
   override fun findAll(filter: Iterable<QueryFilter>): List<CardsPool> {
     TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
   }
 
   override val coll: MongoCollection<MongoCardsPool> = db.getCollection<MongoCardsPool>()
 
-  fun storeAsync(data: CardsPool): IO<WriteResult> =
-    IO.fx {
-      store(data)
-    }
-
   override fun store(data: CardsPool): WriteResult =
-    coll.insertOne(data.toDTO()).single()
-      .map{ WriteSuccess(data.id) }
-      //.onErrorReturn { error -> WriteFailure(error) }
-      .blockingGet()
+      coll.insertOne(data.toDTO()).single()
+          .map { WriteSuccess(data.id) }
+          //.onErrorReturn { error -> WriteFailure(error) }
+          .blockingGet()
 
   override fun update(data: CardsPool): WriteResult =
-    coll.updateOne(
-      MongoCardsPool::id eq data.id.toString(),
-    data.toDTO()
-    )
-    .map{ WriteSuccess(data.id) }
-    //.onErrorReturn { error -> WriteFailure(error) }
-    .blockingGet()
+      coll.updateOne(
+          MongoCardsPool::id eq data.id.toString(),
+          data.toDTO()
+      )
+          .map { WriteSuccess(data.id) }
+          //.onErrorReturn { error -> WriteFailure(error) }
+          .blockingGet()
 
   override fun updateAsync(data: CardsPool): IO<WriteResult> =
-    IO.effect {
-      update(data)
-    }
+      IO.fx {
+        update(data)
+      }
 
-  override fun find(id: UUID): CardsPool? = coll.findOne(MongoCardsPool::id eq id.toString()).map{ it.toModel() }.blockingGet()
+  override fun find(id: UUID): CardsPool? = coll.findOne(MongoCardsPool::id eq id.toString()).map { it.toModel() }.blockingGet()
 }
