@@ -24,7 +24,7 @@ class WithUnknownUserAuthentication(
     private val sessionProvider: SessionProvider<AuthenticationFailure>
   ): Authentication<AuthenticationFailure> {
 
-  override fun authenticate(token: AuthenticationRequest): Either<AuthenticationFailure, Session> =
+  override suspend fun authenticate(token: AuthenticationRequest): Either<AuthenticationFailure, Session> =
     when (token) {
       is UnknownUserRequest ->
         createTmpUser(token.token)
@@ -32,7 +32,7 @@ class WithUnknownUserAuthentication(
       is AccessTokenRequest -> sessionProvider.validateSession(AccessToken(token.token))
     }
 
-  private fun createTmpUser(ipAddress: String): Either<AuthenticationFailure, AuthUser> {
+  private suspend fun createTmpUser(ipAddress: String): Either<AuthenticationFailure, AuthUser> {
     val user = CreateTmpUser(ipAddress)
     val created = createUser.handle(user)
     return Right(AuthUser.TmpAuthUser(created))

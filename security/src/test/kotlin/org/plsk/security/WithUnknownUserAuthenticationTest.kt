@@ -6,6 +6,7 @@ import arrow.core.getOrElse
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldThrow
 import io.kotlintest.specs.WordSpec
+import kotlinx.coroutines.runBlocking
 import org.plsk.core.command.CommandHandler
 import org.plsk.security.accessToken.AccessToken
 import org.plsk.security.accessToken.AccessTokenError
@@ -16,28 +17,32 @@ import org.plsk.user.User
 import org.plsk.user.dao.UserQueryHandler
 import org.plsk.user.tmpUser.CreateTmpUser
 
-class WithUnknownUserAuthenticationTest: WordSpec() {
+class WithUnknownUserAuthenticationTest : WordSpec() {
 
   init {
 
     "withUnknownUserAuthentication" should {
 
       "create a tmp user session when the user is unknown" {
-        val unknownAuth = UnknownUserRequest("127.1")
-        val sessionOr = withUnknownUserAuthentication.authenticate(unknownAuth)
-        sessionOr.isRight() shouldBe true
-        val session = sessionOr.getOrElse{ throw Exception("unexpected")  }
+        runBlocking {
+          val unknownAuth = UnknownUserRequest("127.1")
+          val sessionOr = withUnknownUserAuthentication.authenticate(unknownAuth)
+          sessionOr.isRight() shouldBe true
+          val session = sessionOr.getOrElse { throw Exception("unexpected") }
 
-        session shouldBe Session(accessToken, DataReaderTestHelper.user)
-        accessTokenStore.find{ it == session.accessToken }
+          session shouldBe Session(accessToken, DataReaderTestHelper.user)
+          accessTokenStore.find { it == session.accessToken }
+        }
       }
 
       "fail to create a session when the user is not found" {
-        val unknownAuth = UnknownUserRequest("bad-ip")
-        val exception = shouldThrow<Exception> {
-          withUnknownUserAuthentication.authenticate(unknownAuth)
+        runBlocking {
+          val unknownAuth = UnknownUserRequest("bad-ip")
+          val exception = shouldThrow<Exception> {
+            withUnknownUserAuthentication.authenticate(unknownAuth)
+          }
+          exception.message shouldBe "fail to create tmp user"
         }
-        exception.message shouldBe "fail to create tmp user"
       }
 
     }
@@ -47,18 +52,18 @@ class WithUnknownUserAuthenticationTest: WordSpec() {
   val accessToken = AccessToken("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c")
 
   val createUser: CommandHandler<CreateTmpUser, User> = object : CommandHandler<CreateTmpUser, User> {
-    override fun handle(command: CreateTmpUser): User =
-      if (command.ip == "bad-ip") {
-        throw Exception("fail to create tmp user")
-      } else {
-        DataReaderTestHelper.user
-      }
+    override suspend fun handle(command: CreateTmpUser): User =
+        if (command.ip == "bad-ip") {
+          throw Exception("fail to create tmp user")
+        } else {
+          DataReaderTestHelper.user
+        }
   }
 
   var accessTokenStore: List<AccessToken> = listOf<AccessToken>()
 
   val sessionProvider: SessionProvider<AuthenticationFailure> = {
-    val accessTokenProvider: AccessTokenProvider = object: AccessTokenProvider {
+    val accessTokenProvider: AccessTokenProvider = object : AccessTokenProvider {
       override fun getUser(accessToken: AccessToken): Either<AccessTokenError, User> = TODO("not implemented")
       override fun generateToken(user: User): Either<AccessTokenError, AccessToken> = TODO("NOT IMPLEMENTED")
 

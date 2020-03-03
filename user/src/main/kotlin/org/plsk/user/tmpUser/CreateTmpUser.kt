@@ -14,7 +14,7 @@ class CreateTmpUserHandler(
     private val uuidGen: IdGen<UUID>
 ): CommandHandler<CreateTmpUser, User> {
 
-  override fun handle(command: CreateTmpUser): User {
+  override suspend fun handle(command: CreateTmpUser): User {
     val id = uuidGen.random().toString()
     val user = TmpUser(id, uuidGen.fromString(id + command.ip).toString(), command.ip)
     dataWriter.store(user)

@@ -12,11 +12,11 @@ data class CreateCardsPool(val name: String, val description: String?, val slots
 
 data class CardsPoolCreated(val cardsPool: CardsPool): Event
 
-class CreateCardsPoolHandler(
+class CreateCardsPoolAction(
         private val cardsPoolValidator: Validation<CreateCardsPool, CardsPool>,
         private val eventBus: EventBus): CommandHandler<CreateCardsPool, UUID> {
 
-    override fun handle(command: CreateCardsPool): UUID {
+    override suspend fun handle(command: CreateCardsPool): UUID {
         val cardsPool = cardsPoolValidator.validate(command)
         eventBus.dispatch(CardsPoolCreated(cardsPool))
         return cardsPool.id

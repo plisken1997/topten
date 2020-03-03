@@ -2,6 +2,7 @@ package org.plsk.cardsPool.removeCard
 
 import io.kotlintest.matchers.collections.shouldContain
 import io.kotlintest.specs.WordSpec
+import kotlinx.coroutines.runBlocking
 import org.plsk.cards.Card
 import org.plsk.cardsPool.CardsPool
 import org.plsk.cardsPool.CardsPoolRepository
@@ -14,33 +15,35 @@ import org.plsk.core.validation.Validation
 import org.plsk.user.FakeUser
 import java.util.*
 
-class RemoveCardHandlerTest: WordSpec()  {
+class RemoveCardActionTest : WordSpec() {
 
   init {
 
     "remove card" should {
 
       "remove a card from a cards pool" {
-        val command = RemoveCard(card1.id, baseCardsPool.id)
-        val removedCardsPool =
-          CardsPool(
-              baseCardsPool.id,
-            "test cards pool",
-            "desc",
-              10,
-            mapOf(
-                Pair(card2.id, card2),
-                Pair(card3.id, card3)
-            ),
-            FakeClock.now().timestamp(),
-            FakeUser.id,
-            setOf(card2.id, card3.id),
-            setOf(card2.id)
-          )
+        runBlocking {
+          val command = RemoveCard(card1.id, baseCardsPool.id)
+          val removedCardsPool =
+              CardsPool(
+                  baseCardsPool.id,
+                  "test cards pool",
+                  "desc",
+                  10,
+                  mapOf(
+                      Pair(card2.id, card2),
+                      Pair(card3.id, card3)
+                  ),
+                  FakeClock.now().timestamp(),
+                  FakeUser.id,
+                  setOf(card2.id, card3.id),
+                  setOf(card2.id)
+              )
 
-        removeHandler.handle(command)
+          removeHandler.handle(command)
 
-        events shouldContain CardRemoved(removedCardsPool, command.cardId)
+          events shouldContain CardRemoved(removedCardsPool, command.cardId)
+        }
       }
 
     }
@@ -69,7 +72,7 @@ class RemoveCardHandlerTest: WordSpec()  {
       setOf(card1.id, card2.id)
   )
 
-  val cardsPoolRepository: CardsPoolRepository = object: CardsPoolRepository {
+  val cardsPoolRepository: CardsPoolRepository = object : CardsPoolRepository {
     override fun findAll(filter: Iterable<QueryFilter>): List<CardsPool> {
       TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
@@ -89,11 +92,11 @@ class RemoveCardHandlerTest: WordSpec()  {
   var events = emptyList<CardRemoved>()
 
   val eventBus: EventBus = object : EventBus {
-    override fun dispatch(event: Event) = when (event) {
+    override suspend fun dispatch(event: Event) = when (event) {
       is CardRemoved -> events = events.plusElement(event)
       else -> Unit
     }
   }
 
-  val removeHandler = RemoveCardHandler(validation, eventBus)
+  val removeHandler = RemoveCardAction(validation, eventBus)
 }

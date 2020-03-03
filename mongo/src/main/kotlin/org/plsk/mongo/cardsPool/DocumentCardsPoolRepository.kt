@@ -1,7 +1,5 @@
 package org.plsk.mongo.cardsPool
 
-import arrow.fx.IO
-import arrow.fx.extensions.fx
 import com.mongodb.reactivestreams.client.MongoCollection
 import com.mongodb.reactivestreams.client.MongoDatabase
 import java.util.*
@@ -13,6 +11,7 @@ import org.litote.kmongo.rxjava2.updateOne
 import org.plsk.cardsPool.*
 import org.plsk.core.dao.QueryFilter
 import org.plsk.mongo.MongoClient
+import kotlinx.coroutines.rx2.*
 
 class DocumentCardsPoolRepository(db: MongoDatabase) : CardsPoolRepository, MongoClient<MongoCardsPool> {
   override fun findAll(filter: Iterable<QueryFilter>): List<CardsPool> {
@@ -24,7 +23,6 @@ class DocumentCardsPoolRepository(db: MongoDatabase) : CardsPoolRepository, Mong
   override fun store(data: CardsPool): WriteResult =
       coll.insertOne(data.toDTO()).single()
           .map { WriteSuccess(data.id) }
-          //.onErrorReturn { error -> WriteFailure(error) }
           .blockingGet()
 
   override fun update(data: CardsPool): WriteResult =
@@ -33,13 +31,9 @@ class DocumentCardsPoolRepository(db: MongoDatabase) : CardsPoolRepository, Mong
           data.toDTO()
       )
           .map { WriteSuccess(data.id) }
-          //.onErrorReturn { error -> WriteFailure(error) }
           .blockingGet()
 
-  override fun updateAsync(data: CardsPool): IO<WriteResult> =
-      IO.fx {
-        update(data)
-      }
-
   override fun find(id: UUID): CardsPool? = coll.findOne(MongoCardsPool::id eq id.toString()).map { it.toModel() }.blockingGet()
+
+  suspend fun findAsync(id: UUID): CardsPool? = coll.findOne(MongoCardsPool::id eq id.toString()).map { it.toModel() }.await()
 }

@@ -9,6 +9,7 @@ import org.springframework.web.server.ServerWebExchange
 import org.springframework.web.server.WebFilter
 import org.springframework.web.server.WebFilterChain
 import reactor.core.publisher.Mono
+import kotlinx.coroutines.reactor.mono
 
 @Component
 class AuthenticateFilter(private val authentication: Authentication<AuthenticationFailure>): WebFilter {
@@ -19,30 +20,37 @@ class AuthenticateFilter(private val authentication: Authentication<Authenticati
     val request: ServerHttpRequest = exchange.request
 
     if (isWrite(request)) {
-      val authUser: AuthenticationRequest =
-          if (request.headers.containsKey("Authorization")) {
-            fromAccessToken(request.headers)
-          }
-          else UnknownUserRequest(request.getRemoteAddress()?.toString() ?: "")
-
-      authentication.authenticate(authUser)
-          .bimap(
-              this::handleError,
-              { session -> handleSession(session, request)}
-          )
+      return mono {
+        authentitcate(request)
+      }.flatMap {
+        chain.filter(exchange)
+      }
     }
 
     return chain.filter(exchange)
   }
 
+  private suspend fun authentitcate(request: ServerHttpRequest) {
+    val authUser: AuthenticationRequest =
+        if (request.headers.containsKey("Authorization")) {
+          fromAccessToken(request.headers)
+        }
+        else UnknownUserRequest(request.getRemoteAddress()?.toString() ?: "")
+
+    authentication.authenticate(authUser).bimap(
+        this::handleError,
+        { session -> initSession(session, request)}
+    )
+  }
+
   private fun isWrite(request: ServerHttpRequest): Boolean =
       request.method?.matches("POST") ?: false || request.method?.matches("PUT") ?: false || request.method?.matches("PATH") ?: false
 
-  private fun handleError(error: AuthenticationFailure){
+  private fun handleError(error: AuthenticationFailure) {
     logger.error("authenticate error : ${error.error}")
   }
 
-  private fun handleSession(session: Session, request: ServerHttpRequest){
+  private fun initSession(session: Session, request: ServerHttpRequest){
     logger.info("access token [${session.accessToken.token}]")
   }
 

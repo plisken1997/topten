@@ -7,5 +7,5 @@ import org.plsk.user.User
 data class Session(val accessToken: AccessToken, val user: User)
 
 interface Authentication<AuthenticationFailure> {
-  fun authenticate(token: AuthenticationRequest): Either<AuthenticationFailure, Session>
+  suspend fun authenticate(token: AuthenticationRequest): Either<AuthenticationFailure, Session>
 }

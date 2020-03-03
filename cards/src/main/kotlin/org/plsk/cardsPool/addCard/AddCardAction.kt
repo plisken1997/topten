@@ -15,26 +15,26 @@ data class AddCard(val title: String, val description: String?, val position: In
 
 data class CardAddedEvent(val cardsPool: CardsPool): Event
 
-class AddCardHandler(
+class AddCardAction(
     private val cardValidator: Validation<AddCard, Card>,
     private val cardsPoolRepository: CardsPoolRepository,
     private val eventBus: EventBus
 ): CommandHandler<AddCard, UUID> {
 
-  override fun handle(command: AddCard): UUID {
+  override suspend fun handle(command: AddCard): UUID {
     val card = cardValidator.validate(command)
 
-    return Option.fromNullable(cardsPoolRepository.find(command.cardsPoolId))
-      .map { cardsPool ->
-        val updatedCardsPool = cardsPool.addCard(
-            card,
-            command.position
-        )
-        eventBus.dispatch(CardAddedEvent(updatedCardsPool))
-        card.id
-      }.getOrElse{
-        throw Exception("could not find cardsPool")
-      }
+    val cardsPool = cardsPoolRepository.find(command.cardsPoolId)
+    if (cardsPool != null) {
+      val updatedCardsPool = cardsPool.addCard(
+          card,
+          command.position
+      )
+      eventBus.dispatch(CardAddedEvent(updatedCardsPool))
+      return card.id
+    } else {
+      throw Exception("could not find cardsPool")
+    }
   }
 
 }

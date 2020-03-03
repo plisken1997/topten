@@ -3,6 +3,7 @@ package org.plsk.cardsPool.promoteCard
 import io.kotlintest.matchers.collections.shouldContain
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.WordSpec
+import kotlinx.coroutines.runBlocking
 import org.plsk.cards.Card
 import org.plsk.cardsPool.CardsPool
 import org.plsk.cardsPool.CardsPoolRepository
@@ -22,6 +23,7 @@ class PromoteCardTest: WordSpec() {
     "promote card" should {
 
       "promote a card to a fixed position" {
+        runBlocking {
         val command = PromoteCard(card3.id, 1, baseCardsPool.id)
         val promotedCardsPool = baseCardsPool.promote(command.cardId, command.position)
 
@@ -29,6 +31,7 @@ class PromoteCardTest: WordSpec() {
 
         events shouldContain CardPromoted(command.cardId, command.position, promotedCardsPool)
         topCards shouldBe setOf(card1.id, card3.id, card2.id)
+      }
       }
 
     }
@@ -68,11 +71,11 @@ class PromoteCardTest: WordSpec() {
   var events = emptyList<CardPromoted>()
 
   val eventBus: EventBus = object : EventBus {
-    override fun dispatch(event: Event) = when (event) {
+    override suspend fun dispatch(event: Event) = when (event) {
       is CardPromoted -> events = events.plusElement(event)
       else -> Unit
     }
   }
 
-  val promoteHandler = PromoteCardHandler(validation, eventBus)
+  val promoteHandler = PromoteCardAction(validation, eventBus)
 }

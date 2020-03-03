@@ -1,5 +1,5 @@
 package org.plsk.core.event
 
 interface EventHandler {
-  fun handle(event: Event): Event
+  suspend fun handle(event: Event): Event
 }

@@ -24,12 +24,12 @@ data class CardPromoted(val cardId: UUID, val position: Int, override val cardsP
 data class CardUnpromoted(val cardId: UUID, override val cardsPool: CardsPool): PromotedEvent()
 data class CardPositionUpdated(val cardId: UUID, val position: Int,  override val cardsPool: CardsPool): PromotedEvent()
 
-class PromoteCardHandler(
+class PromoteCardAction(
     private val validation: Validation<PromoteType, PromoteCardValidated>,
     private val eventBus: EventBus
 ): CommandHandler<PromoteType, Set<UUID>> {
 
-  override fun handle(command: PromoteType): Set<UUID> {
+  override suspend fun handle(command: PromoteType): Set<UUID> {
     val validated = validation.validate(command)
 
     val promoteEvent = when(command) {

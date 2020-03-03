@@ -4,9 +4,9 @@ package org.plsk.core.event
 interface Event
 
 interface EventBus {
-  fun dispatch(event: Event)
+  suspend fun dispatch(event: Event): Unit
 }
 
 class SyncEventBus(private val handlers: List<EventHandler>): EventBus {
-  override fun dispatch(event: Event) = handlers.forEach { it.handle(event) }
+  override suspend fun dispatch(event: Event): Unit = handlers.forEach { it.handle(event) }
 }
