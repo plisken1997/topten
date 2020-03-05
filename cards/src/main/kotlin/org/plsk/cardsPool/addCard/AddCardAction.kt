@@ -1,7 +1,5 @@
 package org.plsk.cardsPool.addCard
 
-import arrow.core.Option
-import arrow.core.getOrElse
 import org.plsk.cards.Card
 import org.plsk.cardsPool.CardsPool
 import org.plsk.cardsPool.CardsPoolRepository

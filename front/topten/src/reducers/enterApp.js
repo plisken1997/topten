@@ -5,7 +5,8 @@ const emptyToptenConfig = {name: '', description: '', slots: 10}
 const defaultState = {
     toptenConfig: emptyToptenConfig,
     toptens: [
-        {id: '6f4d1eee-e687-3ca8-944b-cd361ac5fb76', name: 'best games for ever', description: 'a laconic list of my favorite games ever', slots: 50}
+        {id: '6f4d1eee-e687-3ca8-944b-cd361ac5fb76', name: 'best games for ever', description: 'a laconic list of my favorite games ever', slots: 50},
+        {id: '7a1ee414-9732-328c-8c98-a098c8facd6c', name: 'nba 100 greatest player', description: 'who are the 99 players following Charles Barkley ?', slots: 100}
     ],
     configErrors: []
 }
