@@ -17,6 +17,10 @@ data class UserNotFound(val authUser: AuthUser): AuthenticationFailure() {
   override val error = "cound not find user ${authUser.name}"
 }
 
+object AccessTokenNotFound: AuthenticationFailure() {
+  override val error = "could not find user session"
+}
+
 data class GetAccessTokenError(override val error: String): AuthenticationFailure()
 
 class WithUnknownUserAuthentication(

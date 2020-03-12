@@ -1,5 +1,7 @@
 package org.plsk.web
 
+import arrow.core.Either
+import arrow.core.Left
 import org.plsk.security.*
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpHeaders
@@ -23,6 +25,10 @@ class AuthenticateFilter(private val authentication: Authentication<Authenticati
       return mono {
         authentitcate(request)
       }.flatMap {
+        it.bimap(
+          this::handleError,
+          { initSession(it, exchange)}
+        )
         chain.filter(exchange)
       }
     }
@@ -30,28 +36,23 @@ class AuthenticateFilter(private val authentication: Authentication<Authenticati
     return chain.filter(exchange)
   }
 
-  private suspend fun authentitcate(request: ServerHttpRequest) {
-    val authUser: AuthenticationRequest =
-        if (request.headers.containsKey("Authorization")) {
-          fromAccessToken(request.headers)
-        }
-        else UnknownUserRequest(request.getRemoteAddress()?.toString() ?: "")
-
-    authentication.authenticate(authUser).bimap(
-        this::handleError,
-        { session -> initSession(session, request)}
-    )
-  }
+  private suspend fun authentitcate(request: ServerHttpRequest): Either<AuthenticationFailure, Session> =
+    if (request.headers.containsKey("Authorization")) {
+      authentication.authenticate(fromAccessToken(request.headers))
+    }
+    else Left(AccessTokenNotFound)
 
   private fun isWrite(request: ServerHttpRequest): Boolean =
       request.method?.matches("POST") ?: false || request.method?.matches("PUT") ?: false || request.method?.matches("PATH") ?: false
 
   private fun handleError(error: AuthenticationFailure) {
     logger.error("authenticate error : ${error.error}")
+    throw Exception(error.error)
   }
 
-  private fun initSession(session: Session, request: ServerHttpRequest){
+  private fun initSession(session: Session, exchange: ServerWebExchange){
     logger.info("access token [${session.accessToken.token}]")
+    exchange.response.headers.set("x-authorisation", session.accessToken.token)
   }
 
   private fun fromAccessToken(headers: HttpHeaders): AuthenticationRequest {

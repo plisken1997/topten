@@ -122,5 +122,6 @@ class CardsPoolHandler(
         .body(BodyInserters.fromObject(GetCards.from(result.content)))
   }
 
+  @Deprecated("an access token must be provided here")
   private fun extractRemoteAddress(addr: InetAddress): String = addr.hostAddress
 }
