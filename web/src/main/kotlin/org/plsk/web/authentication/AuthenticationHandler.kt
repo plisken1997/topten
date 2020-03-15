@@ -3,7 +3,7 @@ package org.plsk.web.authentication
 import arrow.core.getOrElse
 import org.plsk.security.Authentication
 import org.plsk.security.AuthenticationFailure
-import org.plsk.security.UnknownUserRequest
+import org.plsk.security.CreateGuestUserSession
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.BodyInserters
@@ -18,7 +18,7 @@ class AuthenticationHandler(private val authentication: Authentication<Authentic
 
   fun initGuestSession(request: ServerRequest): Mono<ServerResponse> =
       request.remoteAddress().map { addr ->
-        val authUser = UnknownUserRequest(extractRemoteAddress(addr.address))
+        val authUser = CreateGuestUserSession(extractRemoteAddress(addr.address))
         mono {
           val session = authentication.authenticate(authUser)
           session.getOrElse { throw Exception("could not create session") }

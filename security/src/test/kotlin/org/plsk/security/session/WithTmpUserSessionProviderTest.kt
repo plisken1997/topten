@@ -53,7 +53,7 @@ class WithTmpUserSessionProviderTest : WordSpec() {
 
   val sessionProvider: SessionProvider<AuthenticationFailure> = {
     val accessTokenProvider: AccessTokenProvider = object: AccessTokenProvider {
-      override fun getUser(accessToken: AccessToken): Either<AccessTokenError, User> =
+      override fun getUserFromSession(accessToken: AccessToken): Either<AccessTokenError, User> =
           Either.cond<AccessTokenError, User>(accessToken == testAccessToken, {user}, {TokenNotFound(accessToken)})
 
       override fun generateToken(user: User): Either<AccessTokenError, AccessToken> = TODO("not implemented")

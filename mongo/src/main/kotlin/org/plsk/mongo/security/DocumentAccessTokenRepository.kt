@@ -16,8 +16,8 @@ class DocumentAccessTokenRepository(db: MongoDatabase): AccessTokenRepository, M
 
   override val coll: MongoCollection<MongoAccessToken> = db.getCollection<MongoAccessToken>()
 
-  override fun findAll(filter: Iterable<QueryFilter>): List<UserAccessToken> = TODO("not implemented")
-  override fun update(data: UserAccessToken): String =  TODO("not implemented")
+  override fun findAll(filter: Iterable<QueryFilter>): List<UserAccessToken> = throw Exception("insuported operation")
+  override fun update(data: UserAccessToken): String =  throw Exception("insuported operation")
 
   override fun find(id: String): UserAccessToken? =
       coll.findOne(MongoAccessToken::token eq id).map{ it.toModel() }.blockingGet()

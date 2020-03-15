@@ -55,7 +55,7 @@ class AuthenticateFilter(private val authentication: Authentication<Authenticati
     exchange.response.headers.set("x-authorisation", session.accessToken.token)
   }
 
-  private fun fromAccessToken(headers: HttpHeaders): AuthenticationRequest {
+  private fun fromAccessToken(headers: HttpHeaders): AccessTokenRequest {
     val accessToken = headers.getFirst("Authorization")?.replaceFirst("Bearer", "")?.trim()
     if(accessToken == null) {
       throw Exception("could not extract access token")

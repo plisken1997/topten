@@ -25,7 +25,7 @@ class WithUnknownUserAuthenticationTest : WordSpec() {
 
       "create a tmp user session when the user is unknown" {
         runBlocking {
-          val unknownAuth = UnknownUserRequest("127.1")
+          val unknownAuth = CreateGuestUserSession("127.1")
           val sessionOr = withUnknownUserAuthentication.authenticate(unknownAuth)
           sessionOr.isRight() shouldBe true
           val session = sessionOr.getOrElse { throw Exception("unexpected") }
@@ -37,7 +37,7 @@ class WithUnknownUserAuthenticationTest : WordSpec() {
 
       "fail to create a session when the user is not found" {
         runBlocking {
-          val unknownAuth = UnknownUserRequest("bad-ip")
+          val unknownAuth = CreateGuestUserSession("bad-ip")
           val exception = shouldThrow<Exception> {
             withUnknownUserAuthentication.authenticate(unknownAuth)
           }
@@ -64,7 +64,7 @@ class WithUnknownUserAuthenticationTest : WordSpec() {
 
   val sessionProvider: SessionProvider<AuthenticationFailure> = {
     val accessTokenProvider: AccessTokenProvider = object : AccessTokenProvider {
-      override fun getUser(accessToken: AccessToken): Either<AccessTokenError, User> = TODO("not implemented")
+      override fun getUserFromSession(accessToken: AccessToken): Either<AccessTokenError, User> = TODO("not implemented")
       override fun generateToken(user: User): Either<AccessTokenError, AccessToken> = TODO("NOT IMPLEMENTED")
 
       override fun getAccessToken(user: User): Either<AccessTokenError, AccessToken> {

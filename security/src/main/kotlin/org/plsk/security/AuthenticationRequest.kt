@@ -4,5 +4,5 @@ sealed class AuthenticationRequest {
   abstract val token: String
 }
 
-data class UnknownUserRequest(override val token: String): AuthenticationRequest()
+data class CreateGuestUserSession(override val token: String): AuthenticationRequest()
 data class AccessTokenRequest(override val token: String): AuthenticationRequest()

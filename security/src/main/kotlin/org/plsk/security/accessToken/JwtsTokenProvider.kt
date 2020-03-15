@@ -1,7 +1,6 @@
 package org.plsk.security.accessToken
 
 import arrow.core.Either
-import arrow.core.Try
 import arrow.core.flatMap
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.SignatureAlgorithm
@@ -64,7 +63,7 @@ class JwtsTokenProvider(
     )
   }
 
-  override fun getUser(accessToken: AccessToken): Either<AccessTokenError, User> {
+  override fun getUserFromSession(accessToken: AccessToken): Either<AccessTokenError, User> {
     val token: UserAccessToken? = accessTokenRepository.find(accessToken.token)
 
     return Either.cond<AccessTokenError, UserAccessToken>(token != null, { token!!}, { TokenNotFound(accessToken)})
@@ -73,7 +72,7 @@ class JwtsTokenProvider(
           Either.cond<AccessTokenError, String>(userAccessToken.isValid(clock), { userAccessToken.userId }, { ExpiredToken(accessToken) })
               .flatMap {
                 userId ->
-                  val user = userReader.find(userId)
+                  val user: User? = userReader.find(userId)
                   Either.cond<AccessTokenError, User>(user != null, { user!! }, { UserNotFound(accessToken) })
               }
         }

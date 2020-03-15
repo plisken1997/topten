@@ -32,22 +32,22 @@ class JwtsTokenProviderTest: WordSpec() {
       }
 
       "find the access token owner" {
-        val userOr = jwtProvider.getUser(expectedToken)
+        val userOr = jwtProvider.getUserFromSession(expectedToken)
         userOr shouldBe Right(user)
       }
 
       "reject an expired access token" {
-        val userOr = jwtProvider.getUser(expiredToken)
+        val userOr = jwtProvider.getUserFromSession(expiredToken)
         userOr shouldBe Left(ExpiredToken(expiredToken))
       }
 
       "not find the access token" {
-        val userOr = jwtProvider.getUser(unknownToken)
+        val userOr = jwtProvider.getUserFromSession(unknownToken)
         userOr shouldBe Left(TokenNotFound(unknownToken))
       }
 
       "not find the access token owner" {
-        val userOr = jwtProvider.getUser(unknownUser)
+        val userOr = jwtProvider.getUserFromSession(unknownUser)
         userOr shouldBe Left(UserNotFound(unknownUser))
       }
     }

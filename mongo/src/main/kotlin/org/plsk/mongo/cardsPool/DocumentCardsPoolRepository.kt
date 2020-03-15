@@ -11,7 +11,6 @@ import org.litote.kmongo.rxjava2.updateOne
 import org.plsk.cardsPool.*
 import org.plsk.core.dao.QueryFilter
 import org.plsk.mongo.MongoClient
-import kotlinx.coroutines.rx2.*
 
 class DocumentCardsPoolRepository(db: MongoDatabase) : CardsPoolRepository, MongoClient<MongoCardsPool> {
   override fun findAll(filter: Iterable<QueryFilter>): List<CardsPool> {
@@ -35,5 +34,4 @@ class DocumentCardsPoolRepository(db: MongoDatabase) : CardsPoolRepository, Mong
 
   override fun find(id: UUID): CardsPool? = coll.findOne(MongoCardsPool::id eq id.toString()).map { it.toModel() }.blockingGet()
 
-  suspend fun findAsync(id: UUID): CardsPool? = coll.findOne(MongoCardsPool::id eq id.toString()).map { it.toModel() }.await()
 }

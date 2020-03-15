@@ -30,7 +30,7 @@ class WithUnknownUserAuthentication(
 
   override suspend fun authenticate(token: AuthenticationRequest): Either<AuthenticationFailure, Session> =
     when (token) {
-      is UnknownUserRequest ->
+      is CreateGuestUserSession ->
         createTmpUser(token.token)
             .flatMap{ sessionProvider.createSession(it) }
       is AccessTokenRequest -> sessionProvider.validateSession(AccessToken(token.token))

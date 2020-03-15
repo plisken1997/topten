@@ -20,15 +20,15 @@ class WithTmpUserSessionProvider(
     } else {
       val result = users.content.first()
       accessTokenProvider.getAccessToken((result)).bimap(
-          {err -> GetAccessTokenError(err.error) },
+          { err -> GetAccessTokenError(err.error) },
           { Session(it, result) }
       )
     }
   }
 
   override fun validateSession(accessToken: AccessToken): Either<AuthenticationFailure, Session> =
-      accessTokenProvider.getUser(accessToken).bimap(
-          { GetAccessTokenError(accessToken.token) },
+      accessTokenProvider.getUserFromSession(accessToken).bimap(
+          { GetAccessTokenError(it.error) },
           { user -> Session(accessToken, user) }
       )
 }
