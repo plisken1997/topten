@@ -21,5 +21,8 @@ export default {
     },
     loadCards: {
         path: cardsPoolId => withHost(`cardspool/${cardsPoolId}`)
-    }
+    },
+    initSession: {
+        path: () => withHost(`authentication/init-session`)
+    },
 }

@@ -1,12 +1,17 @@
 import axios from 'axios'
 
-export const httpPost = (path, payload, headers = {}) => 
+const getToken = () => localStorage.getItem('access_token')
+
+export const httpPost = (path, payload, headers = {}) =>
     axios.post(
         path, 
         payload, 
         {
-            'Content-Type': 'application/json', 
-            ...headers
+            headers: {
+                'Content-Type': 'application/json', 
+                'Authorization': `Bearer ${getToken()}`,
+                ...headers
+            }
         }
     )
 

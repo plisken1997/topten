@@ -7,10 +7,10 @@ const Header = ({config}) => (
             <h1>{config.name}</h1>
             {config.desc && <p>{config.desc}</p>}
         </div>
-        <div>
+        {/*<div>
             <button>cancel last</button>
             <button>clear all</button>
-        </div>
+        </div>*/}
     </section>
 )
 
