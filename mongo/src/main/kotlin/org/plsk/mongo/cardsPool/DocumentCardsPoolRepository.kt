@@ -2,22 +2,25 @@ package org.plsk.mongo.cardsPool
 
 import com.mongodb.reactivestreams.client.MongoCollection
 import com.mongodb.reactivestreams.client.MongoDatabase
+import org.bson.BsonDocument
 import java.util.*
 import org.litote.kmongo.*
 import org.litote.kmongo.reactivestreams.getCollection
 import org.litote.kmongo.rxjava2.findOne
 import org.litote.kmongo.rxjava2.single
+import org.litote.kmongo.rxjava2.toObservable
 import org.litote.kmongo.rxjava2.updateOne
 import org.plsk.cardsPool.*
 import org.plsk.core.dao.QueryFilter
 import org.plsk.mongo.MongoClient
+import org.plsk.mongo.util.toBson
 
 class DocumentCardsPoolRepository(db: MongoDatabase) : CardsPoolRepository, MongoClient<MongoCardsPool> {
-  override fun findAll(filter: Iterable<QueryFilter>): List<CardsPool> {
-    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-  }
 
   override val coll: MongoCollection<MongoCardsPool> = db.getCollection<MongoCardsPool>()
+
+  override fun findAll(filter: Iterable<QueryFilter>): List<CardsPool> =
+      coll.find(BsonDocument(filter.map{it.toBson()})).toObservable().map{ it.toModel() }.blockingIterable().toList()
 
   override fun store(data: CardsPool): WriteResult =
       coll.insertOne(data.toDTO()).single()

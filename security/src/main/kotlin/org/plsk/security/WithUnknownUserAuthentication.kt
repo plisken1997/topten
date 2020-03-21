@@ -1,8 +1,8 @@
 package org.plsk.security
 
 import arrow.core.Either
+import arrow.core.Left
 import arrow.core.Right
-import arrow.core.flatMap
 import org.plsk.core.command.CommandHandler
 import org.plsk.security.accessToken.AccessToken
 import org.plsk.security.session.SessionProvider
@@ -32,7 +32,10 @@ class WithUnknownUserAuthentication(
     when (token) {
       is CreateGuestUserSession ->
         createTmpUser(token.token)
-            .flatMap{ sessionProvider.createSession(it) }
+            .fold(
+              {err -> Left(err) },
+              { sessionProvider.createSession(it) }
+            )
       is AccessTokenRequest -> sessionProvider.validateSession(AccessToken(token.token))
     }
 

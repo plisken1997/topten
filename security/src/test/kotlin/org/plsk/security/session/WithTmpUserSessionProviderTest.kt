@@ -5,6 +5,7 @@ import arrow.core.Left
 import arrow.core.Right
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.WordSpec
+import kotlinx.coroutines.runBlocking
 import org.plsk.security.*
 import org.plsk.security.accessToken.AccessToken
 import org.plsk.security.accessToken.AccessTokenError
@@ -21,27 +22,35 @@ class WithTmpUserSessionProviderTest : WordSpec() {
     "authentication provider with tmp user" should {
 
       "create a session for an existing user" {
-        val authUserQuery = AuthUser("5bfa9d6b-04b2-4bce-9b5d-ad546ada55e1", "user-ok", "1234", emptyList())
-        val res = sessionProvider.createSession(authUserQuery)
+        runBlocking {
+          val authUserQuery = AuthUser("5bfa9d6b-04b2-4bce-9b5d-ad546ada55e1", "user-ok", "1234", emptyList())
+          val res = sessionProvider.createSession(authUserQuery)
 
-        res shouldBe Right(Session(testAccessToken, DataReaderTestHelper.user))
+          res shouldBe Right(Session(testAccessToken, DataReaderTestHelper.user))
+        }
       }
 
       "fail to create a session when the user does not exists" {
-        val authUserQuery = AuthUser("5bfa9d6b-04b2-4bce-9b5d-ad546ada55e1", "unknown-user", "1234", emptyList())
-        val res = sessionProvider.createSession(authUserQuery)
+        runBlocking {
+          val authUserQuery = AuthUser("5bfa9d6b-04b2-4bce-9b5d-ad546ada55e1", "unknown-user", "1234", emptyList())
+          val res = sessionProvider.createSession(authUserQuery)
 
-        res shouldBe Left(UserNotFound(authUserQuery))
+          res shouldBe Left(UserNotFound(authUserQuery))
+        }
       }
 
       "validate an existing session" {
-        val session = sessionProvider.validateSession(testAccessToken)
-        session shouldBe Right(Session(testAccessToken, DataReaderTestHelper.user))
+        runBlocking {
+          val session = sessionProvider.validateSession(testAccessToken)
+          session shouldBe Right(Session(testAccessToken, DataReaderTestHelper.user))
+        }
       }
 
       "fail to validate an existing session when the token is not found" {
-        val session = sessionProvider.validateSession(AccessToken("unknown-token"))
-        session shouldBe Left(GetAccessTokenError("unknown-token"))
+        runBlocking {
+          val session = sessionProvider.validateSession(AccessToken("unknown-token"))
+          session shouldBe Left(GetAccessTokenError("unknown-token"))
+        }
       }
     }
 
@@ -52,9 +61,9 @@ class WithTmpUserSessionProviderTest : WordSpec() {
   val user = AppUser("5bfa9d6b-04b2-4bce-9b5d-ad546ada55e1", "user-ok")
 
   val sessionProvider: SessionProvider<AuthenticationFailure> = {
-    val accessTokenProvider: AccessTokenProvider = object: AccessTokenProvider {
+    val accessTokenProvider: AccessTokenProvider = object : AccessTokenProvider {
       override fun getUserFromSession(accessToken: AccessToken): Either<AccessTokenError, User> =
-          Either.cond<AccessTokenError, User>(accessToken == testAccessToken, {user}, {TokenNotFound(accessToken)})
+          Either.cond<AccessTokenError, User>(accessToken == testAccessToken, { user }, { TokenNotFound(accessToken) })
 
       override fun generateToken(user: User): Either<AccessTokenError, AccessToken> = TODO("not implemented")
       override fun getAccessToken(user: User): Either<AccessTokenError, AccessToken> = Right(testAccessToken)

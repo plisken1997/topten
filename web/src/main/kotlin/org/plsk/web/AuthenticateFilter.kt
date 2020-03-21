@@ -12,6 +12,7 @@ import org.springframework.web.server.WebFilter
 import org.springframework.web.server.WebFilterChain
 import reactor.core.publisher.Mono
 import kotlinx.coroutines.reactor.mono
+import org.springframework.http.server.RequestPath
 
 @Component
 class AuthenticateFilter(private val authentication: Authentication<AuthenticationFailure>): WebFilter {
@@ -21,7 +22,7 @@ class AuthenticateFilter(private val authentication: Authentication<Authenticati
   override fun filter(exchange: ServerWebExchange, chain: WebFilterChain): Mono<Void> {
     val request: ServerHttpRequest = exchange.request
 
-    if (isWrite(request)) {
+    if (shouldAuthenticate(request)) {
       return mono {
         authentitcate(request)
       }.flatMap {
@@ -42,8 +43,7 @@ class AuthenticateFilter(private val authentication: Authentication<Authenticati
     }
     else Left(AccessTokenNotFound)
 
-  private fun isWrite(request: ServerHttpRequest): Boolean =
-      request.method?.matches("POST") ?: false || request.method?.matches("PUT") ?: false || request.method?.matches("PATH") ?: false
+  private fun shouldAuthenticate(request: ServerHttpRequest): Boolean = request.path.toString().contains("cardspool")
 
   private fun handleError(error: AuthenticationFailure) {
     logger.error("authenticate error : ${error.error}")
@@ -51,6 +51,7 @@ class AuthenticateFilter(private val authentication: Authentication<Authenticati
   }
 
   private fun initSession(session: Session, exchange: ServerWebExchange){
+    exchange.attributes.put("session", session)
     logger.info("access token [${session.accessToken.token}]")
     exchange.response.headers.set("x-authorisation", session.accessToken.token)
   }

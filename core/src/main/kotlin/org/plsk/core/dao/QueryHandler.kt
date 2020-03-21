@@ -8,5 +8,5 @@ data class QueryResult<DataType>(
 )
 
 interface QueryHandler<Q: Query, DataType> {
-  fun handle(query: Q): QueryResult<DataType>
+  suspend fun handle(query: Q): QueryResult<DataType>
 }

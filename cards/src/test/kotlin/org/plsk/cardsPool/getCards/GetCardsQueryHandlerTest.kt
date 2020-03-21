@@ -2,6 +2,7 @@ package org.plsk.cardsPool.getCards
 
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.WordSpec
+import kotlinx.coroutines.runBlocking
 import org.plsk.cards.Card
 import org.plsk.cardsPool.CardsPool
 import org.plsk.cardsPool.CardsPoolRepository
@@ -18,20 +19,25 @@ class GetCardsQueryHandlerTest : WordSpec() {
     "getcards query handler" should {
 
       "return an empty QueryResult when no cards pool is found" {
-        val res = getCardsQueryHandler.handle(GetCardsQuery(UUID.fromString("dd6cc82b-1f1a-458c-b285-44286c7093f9")))
-        res shouldBe QueryResult(0, CardsPoolContent(emptySet(), emptySet()))
+        runBlocking {
+          val res = getCardsQueryHandler.handle(GetCardsQuery(UUID.fromString("dd6cc82b-1f1a-458c-b285-44286c7093f9")))
+          res shouldBe QueryResult(0, CardsPoolContent(emptySet(), emptySet()))
+        }
       }
 
       "return highlighted and pools list with an ascending sort" {
-        val res = getCardsQueryHandler.handle(GetCardsQuery(cardsPoolId))
-        val expected = QueryResult(
-            5,
-            CardsPoolContent(
-              setOf(card4, card2, card5),
-              setOf(card1, card3)
-            )
-        )
-        res shouldBe expected
+        runBlocking {
+
+          val res = getCardsQueryHandler.handle(GetCardsQuery(cardsPoolId))
+          val expected = QueryResult(
+              5,
+              CardsPoolContent(
+                  setOf(card4, card2, card5),
+                  setOf(card1, card3)
+              )
+          )
+          res shouldBe expected
+        }
       }
 
     }
@@ -56,11 +62,13 @@ class GetCardsQueryHandlerTest : WordSpec() {
       topCards = setOf(card4.id, card2.id, card5.id)
   )
 
-  val cardsPoolRepository = object: CardsPoolRepository{
+  val cardsPoolRepository = object : CardsPoolRepository {
     override fun findAll(filter: Iterable<QueryFilter>): List<CardsPool> = TODO("not implemented")
     override fun store(data: CardsPool): WriteResult = TODO("not implemented")
     override fun update(data: CardsPool): WriteResult = TODO("not implemented")
-    override fun find(id: UUID): CardsPool? = if(id == cardsPoolId){ baseCardsPool } else null
+    override fun find(id: UUID): CardsPool? = if (id == cardsPoolId) {
+      baseCardsPool
+    } else null
   }
 
   val getCardsQueryHandler = GetCardsQueryHandler(cardsPoolRepository)

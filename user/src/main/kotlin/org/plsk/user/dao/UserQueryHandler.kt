@@ -9,7 +9,7 @@ data class IdentifyUser(val name: String, val password: String, val grant: Itera
 
 class UserQueryHandler(private val userReader: DataReader<User, String>): QueryHandler<GetUserQuery, List<User>> {
 
-  override fun handle(query: GetUserQuery): QueryResult<List<User>> =
+  suspend override fun handle(query: GetUserQuery): QueryResult<List<User>> =
     when(query) {
       is IdentifyUser -> {
           val result = userReader.findAll(setOf<QueryFilter>(

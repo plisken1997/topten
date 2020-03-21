@@ -12,7 +12,7 @@ class WithTmpUserSessionProvider(
     private val userQueryHandler: UserQueryHandler,
     private val accessTokenProvider: AccessTokenProvider): SessionProvider<AuthenticationFailure> {
 
-  override fun createSession(user: AuthUser): Either<AuthenticationFailure, Session> {
+  override suspend fun createSession(user: AuthUser): Either<AuthenticationFailure, Session> {
     val users = userQueryHandler.handle(IdentifyUser(user.name, user.password, user.grants))
 
     return if (users.size != 1) {
@@ -26,7 +26,7 @@ class WithTmpUserSessionProvider(
     }
   }
 
-  override fun validateSession(accessToken: AccessToken): Either<AuthenticationFailure, Session> =
+  override suspend fun validateSession(accessToken: AccessToken): Either<AuthenticationFailure, Session> =
       accessTokenProvider.getUserFromSession(accessToken).bimap(
           { GetAccessTokenError(it.error) },
           { user -> Session(accessToken, user) }

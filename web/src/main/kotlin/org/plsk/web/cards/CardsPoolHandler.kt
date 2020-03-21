@@ -16,6 +16,8 @@ import org.plsk.cardsPool.create.CreateCardsPoolAction
 import org.plsk.cardsPool.promoteCard.*
 import org.plsk.cardsPool.removeCard.RemoveCardAction
 import kotlinx.coroutines.reactor.mono
+import org.plsk.cardsPool.getCards.GetCardsPoolsQuery
+import org.plsk.security.Session
 
 @Component
 class CardsPoolHandler(
@@ -108,18 +110,31 @@ class CardsPoolHandler(
               promoteCardHander.handle(payload.toCommand(UUID.fromString(cardpoolId)))
             }
           }.flatMap {
-
             ServerResponse.ok()
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(BodyInserters.fromObject(TopCardsResult(it)))
           }
 
-  fun getCards(request: ServerRequest): Mono<ServerResponse> {
-    val cardpoolId = request.pathVariable("cardpoolId")
-    val result = getCardsHandler.handle(GetCardsQuery(UUID.fromString(cardpoolId)))
-    return ServerResponse.ok()
-        .contentType(MediaType.APPLICATION_JSON)
-        .body(BodyInserters.fromObject(GetCards.from(result.content)))
+  fun getCards(request: ServerRequest): Mono<ServerResponse> =
+      mono {
+        val cardpoolId = request.pathVariable("cardpoolId")
+        getCardsHandler.handle(GetCardsQuery(UUID.fromString(cardpoolId)))
+      }.flatMap {
+        ServerResponse.ok()
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(BodyInserters.fromObject(GetCards.from(it.content.first())))
+      }
+
+  fun getCardPools(request: ServerRequest): Mono<ServerResponse> {
+    val s = request.exchange().getAttribute<Session>("session")
+    if (s == null) throw Exception("user not found")
+    return mono {
+      getCardsHandler.handle(GetCardsPoolsQuery(s.user.id))
+    }.flatMap {
+      ServerResponse.ok()
+          .contentType(MediaType.APPLICATION_JSON)
+          .body(BodyInserters.fromObject(it.content.map { GetCards.from(it)}))
+    }
   }
 
   @Deprecated("an access token must be provided here")

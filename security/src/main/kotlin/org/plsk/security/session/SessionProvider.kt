@@ -6,6 +6,6 @@ import org.plsk.security.Session
 import org.plsk.security.accessToken.AccessToken
 
 interface SessionProvider<AuthenticationFailure> {
-  fun createSession(user: AuthUser): Either<AuthenticationFailure, Session>
-  fun validateSession(accessToken: AccessToken): Either<AuthenticationFailure, Session>
+  suspend fun createSession(user: AuthUser): Either<AuthenticationFailure, Session>
+  suspend fun validateSession(accessToken: AccessToken): Either<AuthenticationFailure, Session>
 }

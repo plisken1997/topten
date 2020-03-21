@@ -9,6 +9,14 @@ import org.springframework.web.reactive.function.server.*
 class CardsPoolRouter {
 
   @Bean
+  fun getCardsPools(cardsPoolHandler: CardsPoolHandler): RouterFunction<ServerResponse> =
+      RouterFunctions
+          .route(
+              RequestPredicates.GET("/cardspool"),
+              HandlerFunction<ServerResponse>(cardsPoolHandler::getCardPools)
+          )
+
+  @Bean
   fun createCardsPool(cardsPoolHandler: CardsPoolHandler): RouterFunction<ServerResponse> =
     RouterFunctions
         .route(
