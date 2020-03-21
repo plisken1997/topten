@@ -121,10 +121,9 @@ class CardsPoolHandler(
       }
 
   fun getCardPools(request: ServerRequest): Mono<ServerResponse> {
-    val s = request.exchange().getAttribute<Session>("session")
-    if (s == null) throw Exception("user not found")
+    val session = request.exchange().getAttribute<Session>("session")
     return mono {
-      getCardsHandler.handle(GetCardsPoolsQuery(s.user.id))
+      getCardsHandler.handle(GetCardsPoolsQuery(session!!.user.id))
     }.flatMap {
       ServerResponse.ok()
           .contentType(MediaType.APPLICATION_JSON)

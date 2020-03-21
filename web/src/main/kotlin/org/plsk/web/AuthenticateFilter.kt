@@ -43,7 +43,8 @@ class AuthenticateFilter(private val authentication: Authentication<Authenticati
     }
     else Left(AccessTokenNotFound)
 
-  private fun shouldAuthenticate(request: ServerHttpRequest): Boolean = request.path.toString().contains("cardspool")
+  private fun shouldAuthenticate(request: ServerHttpRequest): Boolean =
+      request.path.toString().contains("cardspool") && (request.method?.matches("POST") ?: false || request.method?.matches("PUT") ?: false || request.method?.matches("PATCH") ?: false)
 
   private fun handleError(error: AuthenticationFailure) {
     logger.error("authenticate error : ${error.error}")
