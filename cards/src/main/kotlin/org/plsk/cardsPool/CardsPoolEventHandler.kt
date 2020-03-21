@@ -8,11 +8,10 @@ import org.plsk.cardsPool.removeCard.CardRemoved
 import org.plsk.core.dao.DataWriter
 import org.plsk.core.event.Event
 import org.plsk.core.event.EventHandler
-import org.plsk.core.async.RunAsync
 
-class CardsPoolEventHandler(private val writer: DataWriter<CardsPool, WriteResult>): EventHandler, RunAsync {
+class CardsPoolEventHandler(private val writer: DataWriter<CardsPool, WriteResult>): EventHandler {
 
-  override suspend fun handle(event: Event): Event = runAsync {
+  override suspend fun handle(event: Event): Event =
     when (event) {
       is CardsPoolCreated -> {
         writer.store(event.cardsPool)
@@ -36,6 +35,5 @@ class CardsPoolEventHandler(private val writer: DataWriter<CardsPool, WriteResul
       }
       else -> event
     }
-  }
 
 }

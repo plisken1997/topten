@@ -23,7 +23,7 @@ class AddCardValidation(val cardsPoolRepository: CardsPoolRepository, val clock:
             )
     }
 
-    override fun validate(command: AddCard): Card {
+    override suspend fun validate(command: AddCard): Card {
         var errors = emptyList<AddCardError>()
         val cardsPool: CardsPool? = cardsPoolRepository.find(command.cardsPoolId)
 

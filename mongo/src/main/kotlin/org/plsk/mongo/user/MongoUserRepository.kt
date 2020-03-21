@@ -19,13 +19,13 @@ class MongoUserRepository(db: MongoDatabase): UserRepository, MongoClient<MongoU
 
   override val coll: MongoCollection<MongoUser> = db.getCollection<MongoUser>()
 
-  override fun find(id: String): User? = coll.findOne( MongoUser::id eq id).map{ it.toModel() }.blockingGet()
-  override fun update(data: User): String = TODO("not implemented")
+  override suspend fun find(id: String): User? = coll.findOne( MongoUser::id eq id).map{ it.toModel() }.blockingGet()
+  override suspend fun update(data: User): String = TODO("not implemented")
 
-  override fun findAll(filter: Iterable<QueryFilter>): List<User> =
+  override suspend fun findAll(filter: Iterable<QueryFilter>): List<User> =
       coll.find(BsonDocument(filter.map{it.toBson()})).toObservable().map{ it.toModel() }.blockingIterable().toList()
 
-  override fun store(data: User): String =
+  override suspend fun store(data: User): String =
       coll.insertOne(data.toDTO()).single()
           .map{ it.idValue.toString() }
           .blockingGet()

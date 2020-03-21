@@ -64,10 +64,10 @@ class WithUnknownUserAuthenticationTest : WordSpec() {
 
   val sessionProvider: SessionProvider<AuthenticationFailure> = {
     val accessTokenProvider: AccessTokenProvider = object : AccessTokenProvider {
-      override fun getUserFromSession(accessToken: AccessToken): Either<AccessTokenError, User> = TODO("not implemented")
-      override fun generateToken(user: User): Either<AccessTokenError, AccessToken> = TODO("NOT IMPLEMENTED")
+      override suspend fun getUserFromSession(accessToken: AccessToken): Either<AccessTokenError, User> = TODO("not implemented")
+      override suspend fun generateToken(user: User): Either<AccessTokenError, AccessToken> = TODO("NOT IMPLEMENTED")
 
-      override fun getAccessToken(user: User): Either<AccessTokenError, AccessToken> {
+      override suspend fun getAccessToken(user: User): Either<AccessTokenError, AccessToken> {
         accessTokenStore = accessTokenStore + listOf(accessToken)
         return Right(accessToken)
       }

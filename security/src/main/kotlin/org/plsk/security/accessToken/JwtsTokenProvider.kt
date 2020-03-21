@@ -1,6 +1,8 @@
 package org.plsk.security.accessToken
 
 import arrow.core.Either
+import arrow.core.Left
+import arrow.core.Right
 import arrow.core.flatMap
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.SignatureAlgorithm
@@ -30,17 +32,18 @@ class JwtsTokenProvider(
   private val appId: String
 ): AccessTokenProvider {
 
-  override fun getAccessToken(user: User): Either<AccessTokenError, AccessToken> =
+  override suspend fun getAccessToken(user: User): Either<AccessTokenError, AccessToken> =
       generateToken(user)
-          .map {
-            accessToken ->
-            accessTokenRepository.store(UserAccessToken(user.id, accessToken, clock.plusDays(30)))
-            accessToken
-          }
-
+          .fold (
+              {err -> Left(err) },
+              { accessToken ->
+                accessTokenRepository.store(UserAccessToken(user.id, accessToken, clock.plusDays(30)))
+                Right(accessToken)
+              }
+          )
 
   // @todo should be in a dedicated service
-  override fun generateToken(user: User): Either<AccessTokenError, AccessToken> {
+  override suspend fun generateToken(user: User): Either<AccessTokenError, AccessToken> {
     val header : Map<String, String> = mapOf(
         Pair("iss", appId),
         Pair("sub", "LoginRequest"),
@@ -63,18 +66,13 @@ class JwtsTokenProvider(
     )
   }
 
-  override fun getUserFromSession(accessToken: AccessToken): Either<AccessTokenError, User> {
-    val token: UserAccessToken? = accessTokenRepository.find(accessToken.token)
+  override suspend fun getUserFromSession(accessToken: AccessToken): Either<AccessTokenError, User> {
+    val token: UserAccessToken = accessTokenRepository.find(accessToken.token) ?: return Left(TokenNotFound(accessToken))
 
-    return Either.cond<AccessTokenError, UserAccessToken>(token != null, { token!!}, { TokenNotFound(accessToken)})
-        .flatMap {
-          userAccessToken ->
-          Either.cond<AccessTokenError, String>(userAccessToken.isValid(clock), { userAccessToken.userId }, { ExpiredToken(accessToken) })
-              .flatMap {
-                userId ->
-                  val user: User? = userReader.find(userId)
-                  Either.cond<AccessTokenError, User>(user != null, { user!! }, { UserNotFound(accessToken) })
-              }
-        }
+    if (!token.isValid(clock)) return Left(ExpiredToken(accessToken))
+
+    val user: User? = userReader.find(token.userId)
+
+   return  Either.cond<AccessTokenError, User>(user != null, { user!! }, { UserNotFound(accessToken) })
   }
 }

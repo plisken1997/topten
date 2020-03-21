@@ -28,7 +28,7 @@ class WithTmpUserSessionProvider(
 
   override suspend fun validateSession(accessToken: AccessToken): Either<AuthenticationFailure, Session> =
       accessTokenProvider.getUserFromSession(accessToken).bimap(
-          { GetAccessTokenError(it.error) },
+          { GetAccessTokenError(accessToken.token) },
           { user -> Session(accessToken, user) }
       )
 }

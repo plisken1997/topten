@@ -19,15 +19,15 @@ class DocumentCardsPoolRepository(db: MongoDatabase) : CardsPoolRepository, Mong
 
   override val coll: MongoCollection<MongoCardsPool> = db.getCollection<MongoCardsPool>()
 
-  override fun findAll(filter: Iterable<QueryFilter>): List<CardsPool> =
+  override suspend fun findAll(filter: Iterable<QueryFilter>): List<CardsPool> =
       coll.find(BsonDocument(filter.map{it.toBson()})).toObservable().map{ it.toModel() }.blockingIterable().toList()
 
-  override fun store(data: CardsPool): WriteResult =
+  override suspend fun store(data: CardsPool): WriteResult =
       coll.insertOne(data.toDTO()).single()
           .map { WriteSuccess(data.id) }
           .blockingGet()
 
-  override fun update(data: CardsPool): WriteResult =
+  override suspend fun update(data: CardsPool): WriteResult =
       coll.updateOne(
           MongoCardsPool::id eq data.id.toString(),
           data.toDTO()
@@ -35,6 +35,6 @@ class DocumentCardsPoolRepository(db: MongoDatabase) : CardsPoolRepository, Mong
           .map { WriteSuccess(data.id) }
           .blockingGet()
 
-  override fun find(id: UUID): CardsPool? = coll.findOne(MongoCardsPool::id eq id.toString()).map { it.toModel() }.blockingGet()
+  override suspend fun find(id: UUID): CardsPool? = coll.findOne(MongoCardsPool::id eq id.toString()).map { it.toModel() }.blockingGet()
 
 }

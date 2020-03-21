@@ -14,7 +14,7 @@ data class CardNotFound(val msg: String): PromoteCardError(msg, null)
 
 class PromoteCardValidation(val cardsPoolRepository: CardsPoolRepository): Validation<PromoteType, PromoteCardValidated> {
 
-  override fun validate(command: PromoteType): PromoteCardValidated {
+  override suspend fun validate(command: PromoteType): PromoteCardValidated {
     val cardsPool = cardsPoolRepository.find(command.cardsPoolId)
 
     if(cardsPool == null) {

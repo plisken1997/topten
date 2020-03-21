@@ -12,7 +12,7 @@ object DataReaderTestHelper {
   val user2 = AppUser("50b3e08c-0a36-421e-8a7e-3e5132b5fc5b", "user-2")
 
   val userReader: DataReader<User, String> = object: DataReader<User, String> {
-    override fun findAll(filter: Iterable<QueryFilter>): List<User> {
+    override suspend fun findAll(filter: Iterable<QueryFilter>): List<User> {
       val nameFilter: QueryFilter? = filter.find{ f -> f.name == "name"}
 
       return when(nameFilter) {
@@ -28,7 +28,7 @@ object DataReaderTestHelper {
       }
     }
 
-    override fun find(id: String): User? = TODO("not implemented")
+    override suspend fun find(id: String): User? = TODO("not implemented")
   }
 
 }

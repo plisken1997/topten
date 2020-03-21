@@ -62,11 +62,11 @@ class WithTmpUserSessionProviderTest : WordSpec() {
 
   val sessionProvider: SessionProvider<AuthenticationFailure> = {
     val accessTokenProvider: AccessTokenProvider = object : AccessTokenProvider {
-      override fun getUserFromSession(accessToken: AccessToken): Either<AccessTokenError, User> =
+      override suspend fun getUserFromSession(accessToken: AccessToken): Either<AccessTokenError, User> =
           Either.cond<AccessTokenError, User>(accessToken == testAccessToken, { user }, { TokenNotFound(accessToken) })
 
-      override fun generateToken(user: User): Either<AccessTokenError, AccessToken> = TODO("not implemented")
-      override fun getAccessToken(user: User): Either<AccessTokenError, AccessToken> = Right(testAccessToken)
+      override suspend fun generateToken(user: User): Either<AccessTokenError, AccessToken> = TODO("not implemented")
+      override suspend fun getAccessToken(user: User): Either<AccessTokenError, AccessToken> = Right(testAccessToken)
     }
 
     WithTmpUserSessionProvider(UserQueryHandler(DataReaderTestHelper.userReader), accessTokenProvider)

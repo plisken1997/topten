@@ -79,22 +79,22 @@ class AddCardActionTest : WordSpec() {
 
   val idGen = UUIDGen()
 
-  val addCardHandler = {
+  val addCardHandler: AddCardAction = {
 
     val cardsPoolRepository: CardsPoolRepository = object : CardsPoolRepository {
-      override fun findAll(filter: Iterable<QueryFilter>): List<CardsPool> {
+      override suspend fun findAll(filter: Iterable<QueryFilter>): List<CardsPool> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
       }
 
-      override fun update(data: CardsPool): WriteResult {
+      override suspend fun update(data: CardsPool): WriteResult {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
       }
 
-      override fun store(data: CardsPool): WriteResult {
+      override suspend fun store(data: CardsPool): WriteResult {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
       }
 
-      override fun find(id: UUID): CardsPool? = if (id == baseCardsPool.id) baseCardsPool else null
+      override suspend fun find(id: UUID): CardsPool? = if (id == baseCardsPool.id) baseCardsPool else null
     }
 
     val validation = AddCardValidation(cardsPoolRepository, FakeClock, idGen)

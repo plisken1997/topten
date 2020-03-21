@@ -7,7 +7,7 @@ import org.plsk.core.validation.Validation
 
 class RemoveCardValidation(val cardsPoolRepository: CardsPoolRepository): Validation<RemoveCard, RemoveCardValidated> {
 
-  override fun validate(command: RemoveCard): RemoveCardValidated {
+  override suspend fun validate(command: RemoveCard): RemoveCardValidated {
     val cardsPool = cardsPoolRepository.find(command.cardsPoolId)
 
     if(cardsPool == null) {

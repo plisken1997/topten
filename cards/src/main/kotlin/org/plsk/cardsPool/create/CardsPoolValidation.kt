@@ -22,7 +22,7 @@ class CardsPoolValidation(val idGen: IdGen<UUID>, val clock: Clock) : Validation
             )
     }
 
-    override fun validate(command: CreateCardsPool): CardsPool {
+    override suspend fun validate(command: CreateCardsPool): CardsPool {
         // @todo validate data...
         return createdCardsPool(
                 idGen.fromString(idParts(command)),

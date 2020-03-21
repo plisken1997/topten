@@ -1,6 +1,6 @@
 package org.plsk.core.dao
 
 interface DataWriter<T, WriteResult> {
-  fun store(data: T): WriteResult
-  fun update(data: T): WriteResult
+  suspend fun store(data: T): WriteResult
+  suspend fun update(data: T): WriteResult
 }
