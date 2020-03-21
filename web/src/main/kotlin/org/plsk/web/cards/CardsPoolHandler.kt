@@ -2,7 +2,6 @@ package org.plsk.web.cards
 
 import org.plsk.cardsPool.getCards.GetCardsQuery
 import org.plsk.cardsPool.getCards.GetCardsQueryHandler
-import org.plsk.user.UnknownUser
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.BodyInserters
@@ -31,14 +30,10 @@ class CardsPoolHandler(
   fun createCardPool(request: ServerRequest): Mono<ServerResponse> =
       request.bodyToMono(CreateCardsPoolPayload::class.java)
           .flatMap { payload ->
-            request.remoteAddress().map { addr ->
-              mono {
-                createPoolHandler.handle(
-                    payload.toCommand(UnknownUser(extractRemoteAddress(addr.address))
-                    )
-                )
-              }.map { CreateResourceResult(it) }
-            }.orElseThrow { throw Exception("error") }
+            val session = request.exchange().getAttribute<Session>("session")
+            mono {
+              createPoolHandler.handle(payload.toCommand(session!!.user))
+            }.map { CreateResourceResult(it) }
           }
           .flatMap {
             ServerResponse.ok()
@@ -133,10 +128,7 @@ class CardsPoolHandler(
     }.flatMap {
       ServerResponse.ok()
           .contentType(MediaType.APPLICATION_JSON)
-          .body(BodyInserters.fromObject(it.content.map { GetCards.from(it)}))
+          .body(BodyInserters.fromObject(it.content.map { GetCards.from(it) }))
     }
   }
-
-  @Deprecated("an access token must be provided here")
-  private fun extractRemoteAddress(addr: InetAddress): String = addr.hostAddress
 }
