@@ -6,10 +6,12 @@ import {hasToken} from './../session/accessToken'
 
 const Portail = ({toptenConfig, handleChange, saveConfig, toptens, ...props}) => {
     if (!hasToken()) {
+        // @todo use useEffect
         props.initSession()
         return <div>init session...</div>
     }
     if (hasToken() && !toptens) {
+        // @todo use useEffect
         props.loadToptenList()
         return (<div>load list...</div>)
     }

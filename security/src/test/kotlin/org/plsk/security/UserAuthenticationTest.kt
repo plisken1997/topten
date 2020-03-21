@@ -12,12 +12,12 @@ import org.plsk.security.accessToken.AccessToken
 import org.plsk.security.accessToken.AccessTokenError
 import org.plsk.security.accessToken.AccessTokenProvider
 import org.plsk.security.session.SessionProvider
-import org.plsk.security.session.WithTmpUserSessionProvider
+import org.plsk.security.session.UserSessionProvider
 import org.plsk.user.User
 import org.plsk.user.dao.UserQueryHandler
 import org.plsk.user.tmpUser.CreateTmpUser
 
-class WithUnknownUserAuthenticationTest : WordSpec() {
+class UserAuthenticationTest : WordSpec() {
 
   init {
 
@@ -73,8 +73,8 @@ class WithUnknownUserAuthenticationTest : WordSpec() {
       }
     }
 
-    WithTmpUserSessionProvider(UserQueryHandler(DataReaderTestHelper.userReader), accessTokenProvider)
+    UserSessionProvider(UserQueryHandler(DataReaderTestHelper.userReader), accessTokenProvider)
   }()
 
-  val withUnknownUserAuthentication = WithUnknownUserAuthentication(createUser, sessionProvider)
+  val withUnknownUserAuthentication = UserAuthentication(createUser, sessionProvider)
 }

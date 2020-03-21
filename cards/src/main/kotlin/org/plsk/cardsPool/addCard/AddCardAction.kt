@@ -23,16 +23,17 @@ class AddCardAction(
     val card = cardValidator.validate(command)
 
     val cardsPool = cardsPoolRepository.find(command.cardsPoolId)
-    if (cardsPool != null) {
-      val updatedCardsPool = cardsPool.addCard(
-          card,
-          command.position
-      )
-      eventBus.dispatch(CardAddedEvent(updatedCardsPool))
-      return card.id
-    } else {
+    if (cardsPool == null) {
       throw Exception("could not find cardsPool")
     }
+
+    val updatedCardsPool = cardsPool.addCard(
+        card,
+        command.position
+    )
+    eventBus.dispatch(CardAddedEvent(updatedCardsPool))
+
+    return card.id
   }
 
 }

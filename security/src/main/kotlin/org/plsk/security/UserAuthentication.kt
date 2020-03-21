@@ -23,7 +23,7 @@ object AccessTokenNotFound: AuthenticationFailure() {
 
 data class GetAccessTokenError(override val error: String): AuthenticationFailure()
 
-class WithUnknownUserAuthentication(
+class UserAuthentication(
     private val createUser: CommandHandler<CreateTmpUser, User>,
     private val sessionProvider: SessionProvider<AuthenticationFailure>
   ): Authentication<AuthenticationFailure> {

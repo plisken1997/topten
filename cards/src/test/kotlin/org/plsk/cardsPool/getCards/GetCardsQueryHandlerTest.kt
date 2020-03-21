@@ -72,9 +72,7 @@ class GetCardsQueryHandlerTest : WordSpec() {
     override suspend fun findAll(filter: Iterable<QueryFilter>): List<CardsPool> = TODO("not implemented")
     override suspend fun store(data: CardsPool): WriteResult = TODO("not implemented")
     override suspend fun update(data: CardsPool): WriteResult = TODO("not implemented")
-    override suspend fun find(id: UUID): CardsPool? = if (id == cardsPoolId) {
-      baseCardsPool
-    } else null
+    override suspend fun find(id: UUID): CardsPool? = if (id == cardsPoolId) baseCardsPool else null
   }
 
   val getCardsQueryHandler = GetCardsQueryHandler(cardsPoolRepository)

@@ -23,8 +23,8 @@ data class CardsPoolContent(
 )
 
 class GetCardsQueryHandler(private val cardsPoolRepository: CardsPoolRepository) : QueryHandler<CardQuery, List<CardsPoolContent>> {
-  suspend override fun handle(query: CardQuery): QueryResult<List<CardsPoolContent>> {
-    val queryResult: QueryResult<List<CardsPoolContent>> = when (query) {
+  suspend override fun handle(query: CardQuery): QueryResult<List<CardsPoolContent>> =
+    when (query) {
       is GetCardsQuery -> {
         val cardsPool = cardsPoolRepository.find(query.cardsPoolId)
         if (cardsPool == null) QueryResult(0, emptyList())
@@ -37,8 +37,8 @@ class GetCardsQueryHandler(private val cardsPoolRepository: CardsPoolRepository)
                       cardsPool.name,
                       cardsPool.description,
                       cardsPool.slots,
-                      cardsPool.getHighlighted() ?: emptySet(),
-                      cardsPool.getPool() ?: emptySet()
+                      cardsPool.getHighlighted(),
+                      cardsPool.getPool()
                   ))
           )
         }
@@ -60,7 +60,4 @@ class GetCardsQueryHandler(private val cardsPoolRepository: CardsPoolRepository)
         )
       }
     }
-    return queryResult
-  }
 }
-

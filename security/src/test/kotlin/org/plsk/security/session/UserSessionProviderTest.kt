@@ -15,7 +15,7 @@ import org.plsk.user.AppUser
 import org.plsk.user.User
 import org.plsk.user.dao.UserQueryHandler
 
-class WithTmpUserSessionProviderTest : WordSpec() {
+class UserSessionProviderTest : WordSpec() {
 
   init {
 
@@ -69,6 +69,6 @@ class WithTmpUserSessionProviderTest : WordSpec() {
       override suspend fun getAccessToken(user: User): Either<AccessTokenError, AccessToken> = Right(testAccessToken)
     }
 
-    WithTmpUserSessionProvider(UserQueryHandler(DataReaderTestHelper.userReader), accessTokenProvider)
+    UserSessionProvider(UserQueryHandler(DataReaderTestHelper.userReader), accessTokenProvider)
   }()
 }

@@ -71,18 +71,9 @@ class RemoveCardValidationTest : WordSpec() {
   )
 
   val cardsPoolRepository: CardsPoolRepository = object : CardsPoolRepository {
-    override suspend fun findAll(filter: Iterable<QueryFilter>): List<CardsPool> {
-      TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override suspend fun update(data: CardsPool): WriteResult {
-      TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override suspend fun store(data: CardsPool): WriteResult {
-      TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
+    override suspend fun findAll(filter: Iterable<QueryFilter>): List<CardsPool> = TODO("not implemented")
+    override suspend fun update(data: CardsPool): WriteResult = TODO("not implemented")
+    override suspend fun store(data: CardsPool): WriteResult = TODO("not implemented")
     override suspend fun find(id: UUID): CardsPool? = if (id == baseCardsPool.id) baseCardsPool else null
   }
 

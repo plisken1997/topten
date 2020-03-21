@@ -7,12 +7,12 @@ import org.plsk.core.dao.DataReader
 import org.plsk.mongo.security.DocumentAccessTokenRepository
 import org.plsk.security.Authentication
 import org.plsk.security.AuthenticationFailure
-import org.plsk.security.WithUnknownUserAuthentication
+import org.plsk.security.UserAuthentication
 import org.plsk.security.accessToken.AccessTokenProvider
 import org.plsk.security.accessToken.AccessTokenRepository
 import org.plsk.security.accessToken.JwtsTokenProvider
 import org.plsk.security.session.SessionProvider
-import org.plsk.security.session.WithTmpUserSessionProvider
+import org.plsk.security.session.UserSessionProvider
 import org.plsk.user.User
 import org.plsk.user.dao.UserQueryHandler
 import org.plsk.user.tmpUser.CreateTmpUser
@@ -35,11 +35,11 @@ class SecurityConfig {
   fun provideSessionProvider(
       userQueryHandler: UserQueryHandler,
       accessTokenProvider: AccessTokenProvider
-  ): SessionProvider<AuthenticationFailure> = WithTmpUserSessionProvider(userQueryHandler, accessTokenProvider)
+  ): SessionProvider<AuthenticationFailure> = UserSessionProvider(userQueryHandler, accessTokenProvider)
 
   @Bean
   fun provideAuthentication(
       createUser: CommandHandler<CreateTmpUser, User>,
       sessionProvider: SessionProvider<AuthenticationFailure>
-  ): Authentication<AuthenticationFailure> = WithUnknownUserAuthentication(createUser, sessionProvider)
+  ): Authentication<AuthenticationFailure> = UserAuthentication(createUser, sessionProvider)
 }

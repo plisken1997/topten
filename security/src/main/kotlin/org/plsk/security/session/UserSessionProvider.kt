@@ -8,7 +8,7 @@ import org.plsk.security.accessToken.AccessTokenProvider
 import org.plsk.user.dao.IdentifyUser
 import org.plsk.user.dao.UserQueryHandler
 
-class WithTmpUserSessionProvider(
+class UserSessionProvider(
     private val userQueryHandler: UserQueryHandler,
     private val accessTokenProvider: AccessTokenProvider): SessionProvider<AuthenticationFailure> {
 

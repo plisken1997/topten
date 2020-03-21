@@ -30,9 +30,9 @@ class PromoteCardAction(
 ): CommandHandler<PromoteType, Set<UUID>> {
 
   override suspend fun handle(command: PromoteType): Set<UUID> {
-    val validated = validation.validate(command)
+    val validated: PromoteCardValidated = validation.validate(command)
 
-    val promoteEvent = when(command) {
+    val promoteEvent: PromotedEvent = when(command) {
       is PromoteCard -> {
         val updatedCardsPool = validated.cardsPool.promote(command.cardId, command.position)
         CardPromoted(command.cardId, command.position, updatedCardsPool)
