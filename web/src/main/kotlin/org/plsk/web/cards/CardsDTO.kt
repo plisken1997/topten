@@ -52,3 +52,16 @@ data class GetCards(val highlighted: Set<CardResult>, val cardsPool: Set<CardRes
         )
   }
 }
+
+data class GetCardsPool(val id: UUID, val name: String, val description: String?, val slots: Int?, val cards: GetCards){
+  companion object{
+    fun from(cardsPoolContent: CardsPoolContent): GetCardsPool =
+        GetCardsPool(
+            cardsPoolContent.id,
+            cardsPoolContent.name,
+            cardsPoolContent.description,
+            cardsPoolContent.slots,
+            GetCards.from(cardsPoolContent)
+        )
+  }
+}

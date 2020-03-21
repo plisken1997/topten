@@ -127,7 +127,7 @@ class CardsPoolHandler(
     }.flatMap {
       ServerResponse.ok()
           .contentType(MediaType.APPLICATION_JSON)
-          .body(BodyInserters.fromObject(it.content.map { GetCards.from(it) }))
+          .body(BodyInserters.fromObject(it.content.map { GetCardsPool.from(it) }))
     }
   }
 }
