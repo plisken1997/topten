@@ -1,20 +1,23 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import ConfigureTopTen from './ConfigureTopTen'
-import UserLists from './UserLists'
-
-const hasToken = () => !!localStorage.getItem('access_token')
+import ToptenLists from './ToptenLists'
+import {hasToken} from './../session/accessToken'
 
 const Portail = ({toptenConfig, handleChange, saveConfig, toptens, ...props}) => {
     if (!hasToken()) {
         props.initSession()
         return <div>init session...</div>
     }
+    if (hasToken() && !toptens) {
+        props.loadToptenList()
+        return (<div>load list...</div>)
+    }
     return (
     <div>
         <ConfigureTopTen toptenConfig={toptenConfig} handleChange={handleChange(toptenConfig)} save={saveConfig(toptenConfig)}/>
-        {toptens.length > 0 && <div>OR</div>}
-        {toptens.length > 0 && <UserLists toptens={toptens}/>}
+        {toptens && toptens.length > 0 && <div>OR</div>}
+        {toptens && toptens.length > 0 && <ToptenLists toptens={toptens}/>}
     </div>
     )
 }
@@ -25,6 +28,7 @@ Portail.propTypes = {
     handleChange: PropTypes.func.isRequired,
     saveConfig: PropTypes.func.isRequired,
     initSession: PropTypes.func.isRequired,
+    loadToptenList: PropTypes.func.isRequired,
 }
 
 export default Portail

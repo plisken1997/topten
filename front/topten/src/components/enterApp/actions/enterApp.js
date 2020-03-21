@@ -42,3 +42,18 @@ const validateSave = obj => {
     }
     return errors
 }
+
+export const LOAD_TOPTEN_LIST = 'LOAD_TOPTEN_LIST'
+export const TOPTEN_LIST_LOADED = 'TOPTEN_LIST_LOADED'
+export const loadToptenList = httpGet => dispatch => {
+    dispatch({type: LOAD_TOPTEN_LIST})
+
+    return httpGet(config.toptenConfig.cardspool.path).then(({data}) => {
+        return dispatch({
+            type: TOPTEN_LIST_LOADED,
+            payload: {
+                toptens: data
+            }
+        })
+    })
+}
