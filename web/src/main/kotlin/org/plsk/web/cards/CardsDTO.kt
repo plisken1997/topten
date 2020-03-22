@@ -18,7 +18,7 @@ data class CreateCardsPoolPayload(val name: String, val description: String?, va
 }
 
 data class AddCardPayload(val title: String, val description: String?, val position: Int) {
-  fun toCommand(cardsPoolId: UUID): AddCard = AddCard(title, description, position, cardsPoolId)
+  fun toCommand(cardsPoolId: UUID, userId: String): AddCard = AddCard(title, description, position, cardsPoolId, userId)
 }
 
 data class PromoteCardPayload(val cardId: UUID, val position: Int) {

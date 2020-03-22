@@ -28,7 +28,7 @@ class AddCardActionTest : WordSpec() {
         "fail to validate" {
           runBlocking {
 
-            val command = AddCard("test-card", "desc", 1, UUID.randomUUID())
+            val command = AddCard("test-card", "desc", 1, UUID.randomUUID(), FakeUser.id)
             shouldThrowExactly<Exception> {
               addCardHandler.handle(command)
             }
@@ -41,7 +41,7 @@ class AddCardActionTest : WordSpec() {
         "publish a `card added` event to the event bus" {
 
           runBlocking {
-            val command = AddCard("test-card", "desc", 0, baseCardsPool.id)
+            val command = AddCard("test-card", "desc", 0, baseCardsPool.id, FakeUser.id)
             val createdId = addCardHandler.handle(command)
 
             val expectedId = idGen.fromString(command.title + baseCardsPool.id.toString())

@@ -5,6 +5,10 @@ import java.util.*
 
 sealed class AddCardError
 
+object Unauthorized: AddCardError() {
+    override fun toString(): String = "Unauthorized"
+}
+
 data class CardsPoolNotFound(val id: UUID) : AddCardError() {
     override fun toString(): String = "cards pool not found for id ${id}"
 }

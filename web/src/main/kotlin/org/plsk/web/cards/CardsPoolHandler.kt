@@ -44,10 +44,11 @@ class CardsPoolHandler(
   fun addCard(request: ServerRequest): Mono<ServerResponse> =
       request.bodyToMono(AddCardPayload::class.java)
           .flatMap { payload ->
+            val session = request.exchange().getAttribute<Session>("session")
             val cardpoolId = request.pathVariable("cardpoolId")
             mono {
               addCardHandler.handle(
-                  payload.toCommand(UUID.fromString(cardpoolId))
+                  payload.toCommand(UUID.fromString(cardpoolId), session!!.user.id)
               )
             }
           }.flatMap {

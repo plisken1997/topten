@@ -25,7 +25,7 @@ class AddCardValidationTest : WordSpec() {
         "fail to validate" {
           runBlocking {
 
-            val command = AddCard("insert-1", "desc", 1, UUID.nameUUIDFromBytes("test".toByteArray()))
+            val command = AddCard("insert-1", "desc", 1, UUID.nameUUIDFromBytes("test".toByteArray()), "unauthorized-user")
             // @todo will be better tested after implemented the monadic effect on validation output
             shouldThrowExactly<Exception> {
               validation.validate(command)
@@ -38,7 +38,21 @@ class AddCardValidationTest : WordSpec() {
 
         "fail to validate" {
           runBlocking {
-            val command = AddCard("test-card 2", "desc", 1, baseCardsPool.id)
+            val command = AddCard("test-card 2", "desc", 1, baseCardsPool.id, FakeUser.id)
+            // @todo will be better tested after implemented the monadic effect on validation output
+            shouldThrowExactly<Exception> {
+              validation.validate(command)
+            }
+          }
+        }
+
+      }
+
+      "validate an unauthorized user" should {
+
+        "fail to validate" {
+          runBlocking {
+            val command = AddCard("test-card", "desc", 1, baseCardsPool.id, "unauthorized-userd")
             // @todo will be better tested after implemented the monadic effect on validation output
             shouldThrowExactly<Exception> {
               validation.validate(command)
@@ -52,7 +66,7 @@ class AddCardValidationTest : WordSpec() {
 
         "add the card to the cards pool" {
           runBlocking {
-            val command = AddCard("test-card", "desc", 1, baseCardsPool.id)
+            val command = AddCard("test-card", "desc", 1, baseCardsPool.id, FakeUser.id)
             val newCardsPool = validation.validate(command)
             val expected = Card(
                 idGen.fromString("test-card" + baseCardsPool.id.toString()),

@@ -10,7 +10,7 @@ import java.util.*
 
 class AddCardValidation(val cardsPoolRepository: CardsPoolRepository, val clock: Clock, val idGen: IdGen<UUID>) : Validation<AddCard, Card> {
 
-    fun genereateId(label: String, cardsPool: CardsPool): UUID = idGen.fromString(label + cardsPool.id.toString())
+    private fun genereateId(label: String, cardsPool: CardsPool): UUID = idGen.fromString(label + cardsPool.id.toString())
 
     companion object {
 
@@ -21,6 +21,11 @@ class AddCardValidation(val cardsPoolRepository: CardsPoolRepository, val clock:
                 command.description,
                 clock.now().timestamp()
             )
+
+      fun nameAlreadyUsed(command: AddCard, cardsPool: CardsPool): Boolean =
+          cardsPool.cards.any{kv -> kv.value.label == command.title}
+
+      fun unauthorized(command: AddCard, cardsPool: CardsPool): Boolean = cardsPool.createdBy != command.userId
     }
 
     override suspend fun validate(command: AddCard): Card {
@@ -30,8 +35,14 @@ class AddCardValidation(val cardsPoolRepository: CardsPoolRepository, val clock:
         // will be refactored using a `Either` data class
         if (cardsPool == null) {
             errors = errors.plus(CardsPoolNotFound(command.cardsPoolId))
-        } else if (cardsPool.cards.any{kv -> kv.value.label == command.title}) {
-            errors = errors.plus(LabelExists(command.title))
+        } else {
+          if (unauthorized(command, cardsPool)) {
+              errors = errors.plus(Unauthorized)
+          } else {
+            if (nameAlreadyUsed(command, cardsPool)) {
+              errors = errors.plus(LabelExists(command.title))
+            }
+          }
         }
 
         if (errors.isNotEmpty()) {
