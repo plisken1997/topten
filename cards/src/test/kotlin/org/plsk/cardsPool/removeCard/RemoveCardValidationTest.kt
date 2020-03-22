@@ -23,7 +23,7 @@ class RemoveCardValidationTest : WordSpec() {
 
       "fail when the cards pool does not exists" {
         runBlocking {
-          val command = RemoveCard(card1.id, UUID.randomUUID())
+          val command = RemoveCard(card1.id, UUID.randomUUID(), FakeUser.id)
           shouldThrowExactly<CardsPoolNotFound> {
             validation.validate(command)
           }
@@ -32,8 +32,17 @@ class RemoveCardValidationTest : WordSpec() {
 
       "fail when the cards pool does not contains the cardId " {
         runBlocking {
-          val command = RemoveCard(UUID.randomUUID(), baseCardsPool.id)
+          val command = RemoveCard(UUID.randomUUID(), baseCardsPool.id, FakeUser.id)
           shouldThrowExactly<CardNotFound> {
+            validation.validate(command)
+          }
+        }
+      }
+
+      "fail when the user is not authorized" {
+        runBlocking {
+          val command = RemoveCard(card1.id, baseCardsPool.id, "not-authorized")
+          shouldThrowExactly<Unauthorized> {
             validation.validate(command)
           }
         }
@@ -41,7 +50,7 @@ class RemoveCardValidationTest : WordSpec() {
 
       "return the parent cards pool when the command is valid" {
         runBlocking {
-          val command = RemoveCard(card1.id, baseCardsPool.id)
+          val command = RemoveCard(card1.id, baseCardsPool.id, FakeUser.id)
           validation.validate(command) shouldBe RemoveCardValidated(command.cardId, baseCardsPool)
         }
       }

@@ -23,7 +23,7 @@ class RemoveCardActionTest : WordSpec() {
 
       "remove a card from a cards pool" {
         runBlocking {
-          val command = RemoveCard(card1.id, baseCardsPool.id)
+          val command = RemoveCard(card1.id, baseCardsPool.id, FakeUser.id)
           val removedCardsPool =
               CardsPool(
                   baseCardsPool.id,

@@ -23,19 +23,19 @@ data class AddCardPayload(val title: String, val description: String?, val posit
 }
 
 data class PromoteCardPayload(val cardId: UUID, val position: Int) {
-  fun toCommand(cardsPoolId: UUID, userId: String): PromoteCard = PromoteCard(cardId, position, cardsPoolId)
+  fun toCommand(cardsPoolId: UUID, userId: String): PromoteCard = PromoteCard(cardId, position, cardsPoolId, userId)
 }
 
 data class UpdateCardPositionPayload(val cardId: UUID, val position: Int) {
-  fun toCommand(cardsPoolId: UUID, userId: String): UpdateCardPosition = UpdateCardPosition(cardId, position, cardsPoolId)
+  fun toCommand(cardsPoolId: UUID, userId: String): UpdateCardPosition = UpdateCardPosition(cardId, position, cardsPoolId, userId)
 }
 
 data class RemoveCardPayload(val cardId: String) {
-  fun toCommand(cardsPoolId: UUID, userId: String): RemoveCard = RemoveCard(UUID.fromString(cardId), cardsPoolId)
+  fun toCommand(cardsPoolId: UUID, userId: String): RemoveCard = RemoveCard(UUID.fromString(cardId), cardsPoolId, userId)
 }
 
 data class UnPromoteCardPayload(val cardId: String) {
-  fun toCommand(cardsPoolId: UUID, userId: String): UnpromoteCard = UnpromoteCard(UUID.fromString(cardId), cardsPoolId)
+  fun toCommand(cardsPoolId: UUID, userId: String): UnpromoteCard = UnpromoteCard(UUID.fromString(cardId), cardsPoolId, userId)
 }
 
 /******* results *******/

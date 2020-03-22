@@ -24,7 +24,7 @@ class PromoteCardTest: WordSpec() {
 
       "promote a card to a fixed position" {
         runBlocking {
-        val command = PromoteCard(card3.id, 1, baseCardsPool.id)
+        val command = PromoteCard(card3.id, 1, baseCardsPool.id, FakeUser.id)
         val promotedCardsPool = baseCardsPool.promote(command.cardId, command.position)
 
         val topCards = promoteHandler.handle(command)

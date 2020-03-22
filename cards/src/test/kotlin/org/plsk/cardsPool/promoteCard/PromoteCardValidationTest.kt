@@ -22,7 +22,7 @@ class PromoteCardValidationTest : WordSpec() {
 
       "fail when the cards pool does not exists" {
         runBlocking {
-          val command = PromoteCard(card1.id, 1, UUID.randomUUID())
+          val command = PromoteCard(card1.id, 1, UUID.randomUUID(), FakeUser.id)
           shouldThrowExactly<CardsPoolNotFound> {
             validation.validate(command)
           }
@@ -31,16 +31,27 @@ class PromoteCardValidationTest : WordSpec() {
 
       "fail when the cards pool does not contains the cardId " {
         runBlocking {
-          val command = PromoteCard(UUID.randomUUID(), 1, baseCardsPool.id)
+          val command = PromoteCard(UUID.randomUUID(), 1, baseCardsPool.id, FakeUser.id)
           shouldThrowExactly<CardNotFound> {
             validation.validate(command)
           }
         }
       }
 
+      "fail when the user is not authorized" {
+        runBlocking {
+          val command = PromoteCard(card1.id, 1, baseCardsPool.id, "not-authorized-user")
+          shouldThrowExactly<Unauthorized> {
+            validation.validate(command)
+          }
+        }
+
+      }
+
+
       "return the parent cards pool when the command is valid" {
         runBlocking {
-          val command = PromoteCard(card1.id, 1, baseCardsPool.id)
+          val command = PromoteCard(card1.id, 1, baseCardsPool.id, FakeUser.id)
           validation.validate(command) shouldBe PromoteCardValidated(command.cardId, baseCardsPool)
         }
       }

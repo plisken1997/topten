@@ -7,7 +7,7 @@ import org.plsk.core.event.EventBus
 import org.plsk.core.validation.Validation
 import java.util.*
 
-data class RemoveCard(val cardId: UUID, val cardsPoolId: UUID)
+data class RemoveCard(val cardId: UUID, val cardsPoolId: UUID, val userId: String)
 
 data class RemoveCardValidated(val cardId: UUID, val cardsPool: CardsPool)
 

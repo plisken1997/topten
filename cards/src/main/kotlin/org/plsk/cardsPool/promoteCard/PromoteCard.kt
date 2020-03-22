@@ -10,11 +10,12 @@ import java.util.*
 interface PromoteType{
   val cardId: UUID
   val cardsPoolId: UUID
+  val userId: String
 }
 
-data class PromoteCard(override val cardId: UUID, val position: Int, override val cardsPoolId: UUID): PromoteType
-data class UpdateCardPosition(override val cardId: UUID, val position: Int, override val cardsPoolId: UUID): PromoteType
-data class UnpromoteCard(override val cardId: UUID, override val cardsPoolId: UUID): PromoteType
+data class PromoteCard(override val cardId: UUID, val position: Int, override val cardsPoolId: UUID, override val userId: String): PromoteType
+data class UpdateCardPosition(override val cardId: UUID, val position: Int, override val cardsPoolId: UUID, override val userId: String): PromoteType
+data class UnpromoteCard(override val cardId: UUID, override val cardsPoolId: UUID, override val userId: String): PromoteType
 
 sealed class PromotedEvent: Event {
   abstract val cardsPool: CardsPool
