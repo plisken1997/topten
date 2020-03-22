@@ -9,7 +9,7 @@ import java.util.*
 
 sealed class CardQuery : Query
 
-data class GetCardsQuery(val cardsPoolId: UUID) : CardQuery()
+data class GetCardsQuery(val cardsPoolId: UUID, val userId: String) : CardQuery()
 data class GetCardsPoolsQuery(val userId: String) : CardQuery()
 
 // @todo use a sorted set
@@ -26,6 +26,7 @@ class GetCardsQueryHandler(private val cardsPoolRepository: CardsPoolRepository)
   suspend override fun handle(query: CardQuery): QueryResult<List<CardsPoolContent>> =
     when (query) {
       is GetCardsQuery -> {
+        // @todo filter on user id !!!
         val cardsPool = cardsPoolRepository.find(query.cardsPoolId)
         if (cardsPool == null) QueryResult(0, emptyList())
         else {

@@ -10,6 +10,7 @@ import org.plsk.cardsPool.removeCard.RemoveCard
 import org.plsk.user.User
 import java.util.*
 
+/****** payload ******/
 
 data class CreateCardsPoolPayload(val name: String, val description: String?, val slots: Int?) {
   fun toCommand(user: User): CreateCardsPool = CreateCardsPool(name, description, slots, user)
@@ -22,20 +23,22 @@ data class AddCardPayload(val title: String, val description: String?, val posit
 }
 
 data class PromoteCardPayload(val cardId: UUID, val position: Int) {
-  fun toCommand(cardsPoolId: UUID): PromoteCard = PromoteCard(cardId, position, cardsPoolId)
+  fun toCommand(cardsPoolId: UUID, userId: String): PromoteCard = PromoteCard(cardId, position, cardsPoolId)
 }
 
 data class UpdateCardPositionPayload(val cardId: UUID, val position: Int) {
-  fun toCommand(cardsPoolId: UUID): UpdateCardPosition = UpdateCardPosition(cardId, position, cardsPoolId)
+  fun toCommand(cardsPoolId: UUID, userId: String): UpdateCardPosition = UpdateCardPosition(cardId, position, cardsPoolId)
 }
 
 data class RemoveCardPayload(val cardId: String) {
-  fun toCommand(cardsPoolId: UUID): RemoveCard = RemoveCard(UUID.fromString(cardId), cardsPoolId)
+  fun toCommand(cardsPoolId: UUID, userId: String): RemoveCard = RemoveCard(UUID.fromString(cardId), cardsPoolId)
 }
 
 data class UnPromoteCardPayload(val cardId: String) {
-  fun toCommand(cardsPoolId: UUID): UnpromoteCard = UnpromoteCard(UUID.fromString(cardId), cardsPoolId)
+  fun toCommand(cardsPoolId: UUID, userId: String): UnpromoteCard = UnpromoteCard(UUID.fromString(cardId), cardsPoolId)
 }
+
+/******* results *******/
 
 data class CreateResourceResult(val id: UUID)
 

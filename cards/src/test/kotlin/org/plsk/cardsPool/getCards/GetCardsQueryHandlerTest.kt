@@ -20,7 +20,8 @@ class GetCardsQueryHandlerTest : WordSpec() {
 
       "return an empty QueryResult when no cards pool is found" {
         runBlocking {
-          val res: QueryResult<List<CardsPoolContent>> = getCardsQueryHandler.handle(GetCardsQuery(UUID.fromString("dd6cc82b-1f1a-458c-b285-44286c7093f9")))
+          val res: QueryResult<List<CardsPoolContent>> =
+              getCardsQueryHandler.handle(GetCardsQuery(UUID.fromString("dd6cc82b-1f1a-458c-b285-44286c7093f9"), FakeUser.id))
           res shouldBe QueryResult(0, emptyList<CardsPoolContent>())
         }
       }
@@ -28,18 +29,18 @@ class GetCardsQueryHandlerTest : WordSpec() {
       "return highlighted and pools list with an ascending sort" {
         runBlocking {
 
-          val res: QueryResult<List<CardsPoolContent>> = getCardsQueryHandler.handle(GetCardsQuery(cardsPoolId))
+          val res: QueryResult<List<CardsPoolContent>> = getCardsQueryHandler.handle(GetCardsQuery(cardsPoolId, FakeUser.id))
           val expected = QueryResult(
               1,
               listOf(
-                CardsPoolContent(
-                    baseCardsPool.id,
-                    baseCardsPool.name,
-                    baseCardsPool.description,
-                    baseCardsPool.slots,
-                    setOf(card4, card2, card5),
-                    setOf(card1, card3)
-                )
+                  CardsPoolContent(
+                      baseCardsPool.id,
+                      baseCardsPool.name,
+                      baseCardsPool.description,
+                      baseCardsPool.slots,
+                      setOf(card4, card2, card5),
+                      setOf(card1, card3)
+                  )
               )
           )
           res shouldBe expected

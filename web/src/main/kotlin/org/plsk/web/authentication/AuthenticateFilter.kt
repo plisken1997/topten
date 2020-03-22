@@ -1,4 +1,4 @@
-package org.plsk.web
+package org.plsk.web.authentication
 
 import arrow.core.Either
 import arrow.core.Left
@@ -12,7 +12,6 @@ import org.springframework.web.server.WebFilter
 import org.springframework.web.server.WebFilterChain
 import reactor.core.publisher.Mono
 import kotlinx.coroutines.reactor.mono
-import org.springframework.http.server.RequestPath
 
 @Component
 class AuthenticateFilter(private val authentication: Authentication<AuthenticationFailure>): WebFilter {
@@ -51,6 +50,7 @@ class AuthenticateFilter(private val authentication: Authentication<Authenticati
           || (request.method?.matches("POST") ?: false)
           || (request.method?.matches("PUT") ?: false)
           || (request.method?.matches("PATCH") ?: false)
+          || (request.method?.matches("DELETE") ?: false)
 
   private fun handleError(error: AuthenticationFailure) {
     logger.error("authenticate error : ${error.error}")
