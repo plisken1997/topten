@@ -75,7 +75,7 @@ class CardsPoolHandler(
         .flatMap { payload ->
           val cardpoolId = request.pathVariable("cardpoolId")
           mono {
-            promoteCardHander.handle(
+              promoteCardHander.handle(
                 payload.toCommand(UUID.fromString(cardpoolId), session.user.id)
             )
           }

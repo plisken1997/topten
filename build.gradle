@@ -3,15 +3,23 @@ buildscript {
   ext.spring_boot_version = '2.1.0.RELEASE'
   ext.arrow_version = "0.10.4"
   ext.kotlinx_version = "1.3.5"
+  ext.klint_version = "9.2.1"
+  ext.klint_debug = true
 
   repositories {
     jcenter()
+    maven {
+      url "https://plugins.gradle.org/m2/"
+    }
   }
   dependencies {
     classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version" // Required for Kotlin integration
     classpath "org.jetbrains.kotlin:kotlin-allopen:$kotlin_version"
     // See https://kotlinlang.org/docs/reference/compiler-plugins.html#spring-support
     classpath "org.springframework.boot:spring-boot-gradle-plugin:$spring_boot_version"
+
+    // klint
+    classpath "org.jlleitschuh.gradle:ktlint-gradle:$klint_version"
   }
 }
 
@@ -22,6 +30,12 @@ plugins {
   // Apply the application plugin to add support for building a CLI application.
   id 'application'
 
+  // klint
+  //id "org.jlleitschuh.gradle.ktlint" version "$klint_version"
+  id "org.jlleitschuh.gradle.ktlint" version "9.2.1"
+
+  // kapt ?
+  //id "org.jetbrains.kotlin.kapt" version "1.3.70"
   //id "org.jetbrains.kotlin.kapt" version "1.3.50"
 }
 
@@ -40,6 +54,7 @@ allprojects {
 
   apply plugin: 'kotlin'
   apply plugin: 'kotlin-kapt'
+  apply plugin: "org.jlleitschuh.gradle.ktlint"
 
   repositories {
     mavenCentral()
@@ -50,6 +65,22 @@ allprojects {
 
   test {
     useJUnitPlatform()
+  }
+
+  ktlint {
+    debug = klint_debug
+    verbose = true
+    reporters {
+      reporter "checkstyle"
+      reporter "plain"
+
+      customReporters {
+        "html" {
+          fileExtension = "html"
+          dependency = "me.cassiano:ktlint-html-reporter:0.2.3"
+        }
+      }
+    }
   }
 
   dependencies {
