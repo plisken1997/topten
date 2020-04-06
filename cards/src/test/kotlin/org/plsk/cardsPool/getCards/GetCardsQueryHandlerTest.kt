@@ -6,6 +6,7 @@ import kotlinx.coroutines.runBlocking
 import org.plsk.cards.Card
 import org.plsk.cardsPool.CardsPool
 import org.plsk.cardsPool.CardsPoolRepository
+import org.plsk.cardsPool.DisplayType
 import org.plsk.cardsPool.WriteResult
 import org.plsk.core.clock.FakeClock
 import org.plsk.core.dao.QueryFilter
@@ -38,6 +39,7 @@ class GetCardsQueryHandlerTest : WordSpec() {
                       baseCardsPool.name,
                       baseCardsPool.description,
                       baseCardsPool.slots,
+                      DisplayType.ASC,
                       setOf(card4, card2, card5),
                       setOf(card1, card3)
                   )
@@ -63,6 +65,7 @@ class GetCardsQueryHandlerTest : WordSpec() {
       "desc",
       10,
       mapOf(Pair(card2.id, card2), Pair(card5.id, card5), Pair(card3.id, card3), Pair(card1.id, card1), Pair(card4.id, card4)),
+      DisplayType.ASC,
       FakeClock.now().timestamp(),
       FakeUser.id,
       stock = setOf(card1.id, card3.id),

@@ -11,6 +11,7 @@ import org.plsk.core.id.UUIDGen
 import org.plsk.user.FakeUser
 import java.util.*
 import kotlinx.coroutines.runBlocking
+import org.plsk.cardsPool.DisplayType
 
 class CreateCardsPoolActionTest : WordSpec() {
 
@@ -20,7 +21,7 @@ class CreateCardsPoolActionTest : WordSpec() {
 
       "publish the created cards pool" {
         runBlocking {
-          val createCardPool = CreateCardsPool("test-name", "description !", 10, FakeUser)
+          val createCardPool = CreateCardsPool("test-name", "description !", 10, "asc", FakeUser)
           val expectedId = UUID.fromString("9ff495f9-7e47-31fb-ab60-dc513af657d2")
 
           val expectedCreatedCardPoolEvent = CardsPoolCreated(
@@ -29,6 +30,7 @@ class CreateCardsPoolActionTest : WordSpec() {
                   createCardPool.name,
                   createCardPool.description,
                   10,
+                  display = DisplayType.ASC,
                   createdAt = clock.now().timestamp(),
                   createdBy = FakeUser.id
               )

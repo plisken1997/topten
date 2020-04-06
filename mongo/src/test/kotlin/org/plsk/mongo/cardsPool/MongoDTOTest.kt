@@ -4,6 +4,7 @@ import io.kotlintest.shouldBe
 import io.kotlintest.specs.WordSpec
 import org.plsk.cards.Card
 import org.plsk.cardsPool.CardsPool
+import org.plsk.cardsPool.DisplayType
 import org.plsk.core.clock.FakeClock
 import org.plsk.user.FakeUser
 import java.time.ZonedDateTime
@@ -36,12 +37,14 @@ class MongoDTOTest: WordSpec() {
                 MongoCard(card4.id.toString(), "test-card 4", "desc", timestamp),
                 MongoCard(card5.id.toString(), "test-card 5", "desc", timestamp)
             ),
+            "ASC",
             timestamp,
             "3c5c2d0f-5fd3-4852-9493-a5025d6fd7d9",
             listOf(card4.id.toString(), card5.id.toString()),
             listOf(card1.id.toString(), card2.id.toString(), card3.id.toString())
         )
-        baseCardsPool.toDTO() shouldBe mongoDTO
+        val z = baseCardsPool.toDTO()
+        z shouldBe mongoDTO
       }
 
       "transform a mongo cards pool to a domain cards pool" {
@@ -57,6 +60,7 @@ class MongoDTOTest: WordSpec() {
                 MongoCard(card4.id.toString(), "test-card 4", "desc", timestamp),
                 MongoCard(card5.id.toString(), "test-card 5", "desc", timestamp)
             ),
+            "ASC",
             timestamp,
             "3c5c2d0f-5fd3-4852-9493-a5025d6fd7d9",
             listOf(card4.id.toString(), card5.id.toString()),
@@ -90,6 +94,7 @@ class MongoDTOTest: WordSpec() {
       "desc",
       10,
       cards,
+      DisplayType.ASC,
       FakeClock.now().timestamp(),
       FakeUser.id,
       setOf(card4.id, card5.id),

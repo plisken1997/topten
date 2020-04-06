@@ -11,6 +11,16 @@ const ConfigureTopTen = ({toptenConfig = {name: "", slots: 10}, handleChange, sa
             <br />
             <input type="number" step="1" value={toptenConfig.slots} placeholder="highlight slots" id="topten-config-slots" onChange={handleChange("slots")}/>
             <br />
+            <div>
+                <h3>affichage</h3>
+                <label htmlFor="topten-config-display-asc">
+                    <input checked={toptenConfig.display === "asc"} type="radio" name="topten-config-display" id="topten-config-display-asc" value="asc" step="2" onChange={handleChange("display")}/>croissant
+                </label>
+                <label htmlFor="topten-config-display-desc">
+                    <input checked={toptenConfig.display === "desc"} type="radio" name="topten-config-display" id="topten-config-display-desc" value="desc" step="3" onChange={handleChange("display")}/>décroissant
+                </label>
+            </div>
+            <br />
             <input type="submit" value="ok" id="topten-config-submit" onClick={save}/>
         </form>
     </div>

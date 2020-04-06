@@ -16,6 +16,7 @@ import org.plsk.core.id.UUIDGen
 import org.plsk.user.FakeUser
 import java.util.*
 import kotlinx.coroutines.runBlocking
+import org.plsk.cardsPool.DisplayType
 
 class AddCardActionTest : WordSpec() {
 
@@ -70,6 +71,7 @@ class AddCardActionTest : WordSpec() {
       "desc",
       10,
       mapOf(Pair(card1.id, card1)),
+      DisplayType.ASC,
       FakeClock.now().timestamp(),
       FakeUser.id,
       stock = setOf(card1.id)

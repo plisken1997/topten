@@ -7,6 +7,7 @@ import kotlinx.coroutines.runBlocking
 import org.plsk.cards.Card
 import org.plsk.cardsPool.CardsPool
 import org.plsk.cardsPool.CardsPoolRepository
+import org.plsk.cardsPool.DisplayType
 import org.plsk.cardsPool.WriteResult
 import org.plsk.cardsPool.promoteCard.*
 import org.plsk.core.clock.FakeClock
@@ -73,6 +74,7 @@ class RemoveCardValidationTest : WordSpec() {
       "desc",
       10,
       cards,
+      DisplayType.ASC,
       FakeClock.now().timestamp(),
       FakeUser.id,
       setOf(card1.id, card2.id),

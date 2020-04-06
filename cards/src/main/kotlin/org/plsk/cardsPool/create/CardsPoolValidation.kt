@@ -1,6 +1,7 @@
 package org.plsk.cardsPool.create
 
 import org.plsk.cardsPool.CardsPool
+import org.plsk.cardsPool.DisplayType
 import org.plsk.core.clock.Clock
 import org.plsk.core.id.IdGen
 import org.plsk.core.validation.Validation
@@ -13,10 +14,11 @@ class CardsPoolValidation(val idGen: IdGen<UUID>, val clock: Clock) : Validation
 
         fun createdCardsPool(id: UUID, command: CreateCardsPool, clock: Clock): CardsPool =
             CardsPool(
-                id,
-                command.name,
-                command.description,
-                command.slots,
+                id = id,
+                name = command.name,
+                description = command.description,
+                slots = command.slots,
+                display = command.display?.let{ DisplayType.valueOf(it.toUpperCase()) },
                 createdAt = clock.now().timestamp(),
                 createdBy = command.user.id
             )

@@ -8,6 +8,9 @@ export const SAVE_TOPTEN_CONFIG_START = 'SAVE_TOPTEN_CONFIG_START'
 export const SAVE_TOPTEN_CONFIG = 'SAVE_TOPTEN_CONFIG'
 export const SAVE_TOPTEN_CONFIG_ERROR = 'SAVE_TOPTEN_CONFIG_ERROR'
 
+// @todo clean values !
+const cleanCardsPool = obj => obj
+
 export const saveConfig = (httpPost) => (obj) => dispatch => {
     const errors = validateSave(obj)
 
@@ -24,7 +27,7 @@ export const saveConfig = (httpPost) => (obj) => dispatch => {
 
     dispatch({type: SAVE_TOPTEN_CONFIG_START})
 
-    return save(httpPost, obj)
+    return save(httpPost, cleanCardsPool(obj))
         .then(({data}) => {
             const {id} = data
             return dispatch({

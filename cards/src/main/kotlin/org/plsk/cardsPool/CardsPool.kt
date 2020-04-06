@@ -5,12 +5,15 @@ import arrow.syntax.collections.flatten
 import org.plsk.cards.Card
 import java.util.*
 
+enum class DisplayType { ASC, DESC }
+
 data class CardsPool(
     val id: UUID,
     val name: String,
     val description: String?,
     val slots: Int?,
     val cards: Map<UUID, Card> = emptyMap(),
+    val display: DisplayType?,
     val createdAt: Long,
     val createdBy: String,
     val stock: Set<UUID> = emptySet(),

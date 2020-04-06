@@ -6,6 +6,7 @@ import kotlinx.coroutines.runBlocking
 import org.plsk.cards.Card
 import org.plsk.cardsPool.CardsPool
 import org.plsk.cardsPool.CardsPoolRepository
+import org.plsk.cardsPool.DisplayType
 import org.plsk.cardsPool.WriteResult
 import org.plsk.core.clock.FakeClock
 import org.plsk.core.dao.QueryFilter
@@ -34,6 +35,7 @@ class RemoveCardActionTest : WordSpec() {
                       Pair(card2.id, card2),
                       Pair(card3.id, card3)
                   ),
+                  DisplayType.ASC,
                   FakeClock.now().timestamp(),
                   FakeUser.id,
                   setOf(card2.id, card3.id),
@@ -66,6 +68,7 @@ class RemoveCardActionTest : WordSpec() {
       "desc",
       10,
       cards,
+      DisplayType.ASC,
       FakeClock.now().timestamp(),
       FakeUser.id,
       setOf(card1.id, card2.id, card3.id),

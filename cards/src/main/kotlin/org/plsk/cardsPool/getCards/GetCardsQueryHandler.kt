@@ -1,7 +1,9 @@
 package org.plsk.cardsPool.getCards
 
 import org.plsk.cards.Card
+import org.plsk.cardsPool.CardsPool
 import org.plsk.cardsPool.CardsPoolRepository
+import org.plsk.cardsPool.DisplayType
 import org.plsk.core.dao.Query
 import org.plsk.core.dao.QueryHandler
 import org.plsk.core.dao.QueryResult
@@ -18,9 +20,28 @@ data class CardsPoolContent(
     val name: String,
     val description: String?,
     val slots: Int?,
+    val display: DisplayType?,
     val highlighted: Set<Card>,
     val cardsPool: Set<Card>
-)
+) {
+  companion object {
+
+    fun fromCardsPool(cardsPool: CardsPool): CardsPoolContent =
+        CardsPoolContent(
+            cardsPool.id,
+            cardsPool.name,
+            cardsPool.description,
+            cardsPool.slots,
+            cardsPool.display,
+            cardsPool.getHighlighted(),
+            cardsPool.getPool()
+        )
+  }
+
+  private fun isSortedAsc(): Boolean = display?.let { it == DisplayType.ASC} ?: true
+
+  fun getOrderedHighlighted(): Set<Card> = if(isSortedAsc()) highlighted else highlighted.reversed().toSet()
+}
 
 class GetCardsQueryHandler(private val cardsPoolRepository: CardsPoolRepository) : QueryHandler<CardQuery, List<CardsPoolContent>> {
   suspend override fun handle(query: CardQuery): QueryResult<List<CardsPoolContent>> =
@@ -30,34 +51,14 @@ class GetCardsQueryHandler(private val cardsPoolRepository: CardsPoolRepository)
         val cardsPool = cardsPoolRepository.find(query.cardsPoolId)
         if (cardsPool == null) QueryResult(0, emptyList())
         else {
-          QueryResult(
-              1,
-              listOf(
-                  CardsPoolContent(
-                      cardsPool.id,
-                      cardsPool.name,
-                      cardsPool.description,
-                      cardsPool.slots,
-                      cardsPool.getHighlighted(),
-                      cardsPool.getPool()
-                  ))
-          )
+          QueryResult(1, listOf(CardsPoolContent.fromCardsPool(cardsPool)))
         }
       }
       is GetCardsPoolsQuery -> {
         val cardsPools = cardsPoolRepository.findByUser(query.userId)
         QueryResult(
             cardsPools.size,
-            cardsPools.map { cardsPool ->
-              CardsPoolContent(
-                  cardsPool.id,
-                  cardsPool.name,
-                  cardsPool.description,
-                  cardsPool.slots,
-                  cardsPool.getHighlighted(),
-                  cardsPool.getPool()
-              )
-            }
+            cardsPools.map { CardsPoolContent.fromCardsPool(it) }
         )
       }
     }

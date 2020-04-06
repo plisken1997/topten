@@ -8,7 +8,7 @@ import org.plsk.core.validation.Validation
 import org.plsk.user.User
 import java.util.*
 
-data class CreateCardsPool(val name: String, val description: String?, val slots: Int?, val user: User)
+data class CreateCardsPool(val name: String, val description: String?, val slots: Int?, val display: String?, val user: User)
 
 data class CardsPoolCreated(val cardsPool: CardsPool): Event
 
