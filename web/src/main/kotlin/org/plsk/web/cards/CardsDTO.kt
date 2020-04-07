@@ -38,6 +38,8 @@ data class UnPromoteCardPayload(val cardId: String) {
   fun toCommand(cardsPoolId: UUID, userId: String): UnpromoteCard = UnpromoteCard(UUID.fromString(cardId), cardsPoolId, userId)
 }
 
+data class UpdateCardPayload(val cardId: String, val field: String, val value: String)
+
 /******* results *******/
 
 data class CreateResourceResult(val id: UUID)
@@ -68,3 +70,5 @@ data class GetCardsPool(val id: UUID, val name: String, val description: String?
         )
   }
 }
+
+data class UpdateCardsResult(val id: UUID)

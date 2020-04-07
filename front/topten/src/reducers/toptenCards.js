@@ -31,6 +31,18 @@ const reduceTopTenCards = (state = defaultState, action) => {
       return {...state, cardsPool: state.cardsPool.filter(c => c.id !== action.payload.id)}
       case actions.CARDS_LOADED:
       return {...state, cardsPool: action.payload.cardsPool, highlighted: action.payload.highlighted}
+    case actions.UPDATE_CARD_SUCCEEDED:
+      const update = v => {
+        if (v.id === action.payload.cardId) {
+          return {...v, [action.payload.field]: action.payload.value}
+        }
+        return v
+      }
+      {
+        const cardsPool = state.cardsPool.map(update)
+        const highlighted = state.highlighted.map(update)
+        return  {...state, cardsPool, highlighted}
+      }
     case actions.SKIP:
       console.log("skip action", action)
       return state

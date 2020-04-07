@@ -18,3 +18,10 @@ export const httpPost = (path, payload, headers = {}) =>
 export const httpDelete = (path, headers = {}) => axios.delete(path, {headers: addCustomHeaders(headers)})
 
 export const httpGet = (path, headers = {}) => axios.get(path, {headers: addCustomHeaders(headers)})
+
+export const httpPatch = (path, payload, headers = {}) =>
+    axios.patch(
+        path, 
+        payload, 
+        {headers: addCustomHeaders(headers)}
+    )

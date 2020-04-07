@@ -25,4 +25,7 @@ export default {
     initSession: {
         path: () => withHost(`authentication/init-session`)
     },
+    updateCard: {
+        path: cardsPoolId => withHost(`cardspool/${cardsPoolId}/updateCard`)
+    }
 }

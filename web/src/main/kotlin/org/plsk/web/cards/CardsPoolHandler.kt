@@ -104,4 +104,15 @@ class CardsPoolHandler(
       getCardsHandler.handle(GetCardsPoolsQuery(session.user.id))
     }.flatMap { jsonResponse(it.content.map { GetCardsPool.from(it) }) }
   }
+
+  fun updateCard(request: ServerRequest): Mono<ServerResponse> = withSession(request) { session ->
+    request.bodyToMono(UpdateCardPayload::class.java)
+        .flatMap { payload ->
+          val cardpoolId = request.pathVariable("cardpoolId")
+          mono {
+            // @todo update service here
+            UUID.fromString(payload.cardId)
+          }
+        }.flatMap { jsonResponse(UpdateCardsResult(it)) }
+  }
 }

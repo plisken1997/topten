@@ -107,4 +107,15 @@ const loadCards = httpGet => cardsPoolId => dispatch => {
     }))
 }
 
-export { onDragEnd, addCard, newCardChange, unpromote, dropCard, loadCards }
+export const UPDATE_CARD_START = 'UPDATE_CARD_START'
+export const  UPDATE_CARD_SUCCEEDED = 'UPDATE_CARD_SUCCEEDED'
+const updateCard = httpPatch => (cardsPoolId, cardId, field, value) => dispatch => {
+  const payload = {cardId, field, value}
+  dispatch({type: UPDATE_CARD_START, payload})
+  return httpPatch(
+    config.toptenConfig.updateCard.path(cardsPoolId),
+    {cardId, field, value}
+  ).then(({data}) => dispatch({type: UPDATE_CARD_SUCCEEDED, payload}))
+}
+
+export { onDragEnd, addCard, newCardChange, unpromote, dropCard, loadCards, updateCard }

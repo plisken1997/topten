@@ -6,12 +6,12 @@ import './style/cardsPool.css'
 
 const DraggableCard = WithDraggable(Card)
 
-const CardsPool = ({cardsPool = [], placeholder, dropCard, ...props}) => {
+const CardsPool = ({cardsPool = [], placeholder, dropCard, updateCard, ...props}) => {
     return (
         <div className="cont-cards-pool">
             {cardsPool.map((c, k) => (
                 <div className="cards-pool-item" key={k}>
-                    <DraggableCard {...c} index={k} key={k}/>
+                    <DraggableCard {...c} index={k} key={k} updateCard={updateCard}/>
                     <button className="cards-poll-drop" onClick={dropCard(c.id)}>drop</button>
                 </div>
             ))}
@@ -23,7 +23,8 @@ const CardsPool = ({cardsPool = [], placeholder, dropCard, ...props}) => {
 CardsPool.propTypes = {
     cardsPool: PropTypes.array.isRequired,
     placeholder: PropTypes.element.isRequired,
-    dropCard: PropTypes.func.isRequired
+    dropCard: PropTypes.func.isRequired,
+    updateCard: PropTypes.func.isRequired
 }
 
 export default WithDroppable("droppable-CardsPool")(CardsPool)

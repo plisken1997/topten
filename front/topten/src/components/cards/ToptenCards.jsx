@@ -7,12 +7,14 @@ import Button from './AddButton'
 import AddCard from './AddCard'
 import Header from './Header'
 import './style/container.css'
+import { useParams } from "react-router-dom";
 
 const ToptenCards = (props) => {
+    const { toptenId } = useParams('toptenId')
     const [addCardDisplayed, displayAddCardForm] = useState(false)
-    const {highlighted, cardsPool, onDragEnd, newCard, addCard, newCardChange, unpromote, dropCard, toptenConfig, loadCards} = props
+    const {highlighted, cardsPool, onDragEnd, newCard, addCard, newCardChange, unpromote, dropCard, toptenConfig, loadCards, updateCard} = props
     const loaded = true
-    const cardsPoolId = toptenConfig.id
+    const cardsPoolId = toptenConfig.id || toptenId
 
     useEffect(() => {
         loadCards(cardsPoolId)
@@ -22,8 +24,8 @@ const ToptenCards = (props) => {
         <DragDropContext onDragEnd={onDragEnd(highlighted, cardsPool, cardsPoolId)}>
             <Header config={toptenConfig}/>
             <div className="cont-list">
-                <Highlighted highlighted={highlighted} unpromote={unpromote(cardsPoolId)}/>
-                <CardsPool cardsPool={cardsPool} dropCard={dropCard(cardsPoolId)}/>
+                <Highlighted highlighted={highlighted} unpromote={unpromote(cardsPoolId)} updateCard={updateCard(cardsPoolId)}/>
+                <CardsPool cardsPool={cardsPool} dropCard={dropCard(cardsPoolId)} updateCard={updateCard(cardsPoolId)}/>
                 <Button onClick={displayAddCardForm}/>
                 {addCardDisplayed && <AddCard card={newCard} addCard={addCard(newCard, cardsPoolId)} handleChange={newCardChange(newCard)}/>}
             </div>
@@ -41,7 +43,8 @@ ToptenCards.propTypes = {
     newCardChange: PropTypes.func.isRequired,
     unpromote: PropTypes.func.isRequired,
     dropCard: PropTypes.func.isRequired,
-    loadCards: PropTypes.func.isRequired
+    loadCards: PropTypes.func.isRequired,
+    updateCard: PropTypes.func.isRequired
 }
 
 export default ToptenCards

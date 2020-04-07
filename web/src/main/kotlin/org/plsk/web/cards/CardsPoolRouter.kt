@@ -76,4 +76,13 @@ class CardsPoolRouter {
               RequestPredicates.GET("/cardspool/{cardpoolId:[\\w-]+}"),
               HandlerFunction<ServerResponse>(cardsPoolHandler::getCards)
           )
+
+  @Bean
+  fun updateCard(cardsPoolHandler: CardsPoolHandler): RouterFunction<ServerResponse> =
+      RouterFunctions
+          .route(
+              RequestPredicates.PATCH("/cardspool/{cardpoolId:[\\w-]+}/updateCard")
+                  .and(RequestPredicates.accept(MediaType.APPLICATION_JSON)),
+              HandlerFunction<ServerResponse>(cardsPoolHandler::updateCard)
+          )
 }
