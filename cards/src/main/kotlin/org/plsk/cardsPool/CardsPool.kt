@@ -3,6 +3,7 @@ package org.plsk.cardsPool
 import arrow.core.getOption
 import arrow.syntax.collections.flatten
 import org.plsk.cards.Card
+import org.plsk.cardsPool.promoteCard.CardNotFound
 import java.util.*
 
 enum class DisplayType { ASC, DESC }
@@ -68,6 +69,18 @@ data class CardsPool(
           stock = stock.filter { it != cardId }.toSet(),
           topCards = topCards.filter { it != cardId }.toSet()
       )
+
+  fun changeCardContent(cardId: UUID, field: String, content: String): CardsPool =
+    find(cardId)?.let {
+      card ->
+        val updated = card.changeContent(field, content)
+      val cards = cards.filterKeys { it != cardId }.plus(Pair(cardId, updated))
+      copy(cards = cards)
+    } ?: throw CardNotFound("card [${cardId}] not found")
+
+  fun contains(cardId: UUID): Boolean = cards.containsKey(cardId)
+
+  fun find(cardId: UUID): Card? = cards.get(cardId)
 
   fun getHighlighted(): Set<Card> = topCards.map{ cards.getOption(it) }.flatten().toSet()
 

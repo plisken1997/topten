@@ -24,7 +24,7 @@ class PromoteCardValidation(val cardsPoolRepository: CardsPoolRepository): Valid
       throw org.plsk.cardsPool.promoteCard.Unauthorized
     }
 
-    if (!cardsPool.cards.containsKey(command.cardId)) {
+    if (!cardsPool.contains(command.cardId)) {
       throw CardNotFound("card [${command.cardId}] not found")
     }
 

@@ -1,7 +1,10 @@
 package org.plsk.cardsPool
 
 import io.kotlintest.matchers.collections.shouldContainExactly
+import io.kotlintest.matchers.types.beNull
+import io.kotlintest.should
 import io.kotlintest.shouldBe
+import io.kotlintest.shouldNotBe
 import io.kotlintest.specs.WordSpec
 import org.plsk.cards.Card
 import org.plsk.core.clock.FakeClock
@@ -177,6 +180,28 @@ class CardsPoolTest  : WordSpec() {
         val pool = newOrderCardPool.getPool()
         val expected = setOf(card1, card5, card4, card2)
         pool shouldContainExactly expected
+      }
+
+      "find an existing card" {
+        baseCardsPool.contains(card1.id) shouldBe true
+        baseCardsPool.find(card1.id) shouldBe card1
+      }
+
+      "not find a non-existing card" {
+        baseCardsPool.contains(UUID.randomUUID()) shouldBe false
+        baseCardsPool.find(UUID.randomUUID()) should beNull()
+      }
+
+      "change the content of a card" {
+        val updatedCard = card1.copy(label ="new label")
+        val updated = baseCardsPool.changeCardContent(card1.id, "label", "new label")
+        updated.cards shouldBe mapOf(
+            Pair(card1.id, updatedCard),
+            Pair(card2.id, card2),
+            Pair(card3.id, card3),
+            Pair(card4.id, card4),
+            Pair(card5.id, card5)
+        )
       }
 
     }
