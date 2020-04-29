@@ -13,6 +13,7 @@ data class Datetime(val date: ZonedDateTime) {
   }
 }
 
+// @todo use java.time.Clock
 interface Clock {
   fun now(): Datetime
   fun plusDays(days: Long) = Datetime(now().date.plusDays(days))

@@ -10,7 +10,7 @@ import java.util.*
 data class ChangeCardContent(val cardId: UUID, val cardsPoolId: UUID, val field: String, val value: String, val userId: String)
 data class ChangeCardContentValidated(val cardId: UUID, val cardsPool: CardsPool): Event
 
-class UpdateCardAction(
+class ChangeCardContentAction(
     private val validate: Validation<ChangeCardContent, ChangeCardContentValidated>,
     private val eventBus: EventBus): CommandHandler<ChangeCardContent, Unit> {
 
