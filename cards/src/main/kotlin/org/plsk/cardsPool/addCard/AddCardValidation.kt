@@ -3,6 +3,7 @@ package org.plsk.cardsPool.addCard
 import org.plsk.cards.Card
 import org.plsk.cardsPool.CardsPoolRepository
 import org.plsk.cardsPool.CardsPool
+import org.plsk.cardsPool.GetCardsQuery
 import org.plsk.cardsPool.ValidateUser
 import org.plsk.core.clock.Clock
 import org.plsk.core.id.IdGen
@@ -29,7 +30,7 @@ class AddCardValidation(val cardsPoolRepository: CardsPoolRepository, val clock:
 
   override suspend fun validate(command: AddCard): Card {
     var errors = emptyList<AddCardError>()
-    val cardsPool: CardsPool = cardsPoolRepository.find(command.cardsPoolId)
+    val cardsPool: CardsPool = cardsPoolRepository.find(GetCardsQuery(command.cardsPoolId, command.userId))
         ?: throw Exception(CardsPoolNotFound(command.cardsPoolId).toString())
 
     if (unauthorized(command.userId, cardsPool)) {

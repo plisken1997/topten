@@ -9,4 +9,5 @@ data class UserAccessToken(val userId: String, val token: AccessToken, val expir
   fun isValid(clock: Clock): Boolean = clock.now().isBefore(expireAt)
 }
 
+@Deprecated("AccessTokenRepository must be a designed according to it's usage instead of extends genreric interfaces")
 interface AccessTokenRepository: DataReader<UserAccessToken, String>, DataWriter<UserAccessToken, String>

@@ -1,6 +1,5 @@
 package org.plsk.web.cards
 
-import org.plsk.cardsPool.getCards.GetCardsQuery
 import org.plsk.cardsPool.getCards.GetCardsQueryHandler
 import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.server.ServerRequest
@@ -12,7 +11,8 @@ import org.plsk.cardsPool.create.CreateCardsPoolAction
 import org.plsk.cardsPool.promoteCard.*
 import org.plsk.cardsPool.removeCard.RemoveCardAction
 import kotlinx.coroutines.reactor.mono
-import org.plsk.cardsPool.getCards.GetCardsPoolsQuery
+import org.plsk.cardsPool.GetCardsPoolByUser
+import org.plsk.cardsPool.GetCardsQuery
 import org.plsk.web.authentication.WithAuthentication
 import org.plsk.web.util.HttpResponse
 
@@ -101,7 +101,7 @@ class CardsPoolHandler(
 
   fun getCardPools(request: ServerRequest): Mono<ServerResponse> = withSession(request) { session ->
     mono {
-      getCardsHandler.handle(GetCardsPoolsQuery(session.user.id))
+      getCardsHandler.handle(GetCardsPoolByUser(session.user.id))
     }.flatMap { jsonResponse(it.content.map { GetCardsPool.from(it) }) }
   }
 

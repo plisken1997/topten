@@ -2,22 +2,17 @@ package org.plsk.cardsPool.promoteCard
 
 import io.kotlintest.matchers.collections.shouldContain
 import io.kotlintest.shouldBe
-import io.kotlintest.specs.WordSpec
 import kotlinx.coroutines.runBlocking
 import org.plsk.cards.Card
-import org.plsk.cardsPool.CardsPool
-import org.plsk.cardsPool.CardsPoolRepository
-import org.plsk.cardsPool.DisplayType
-import org.plsk.cardsPool.WriteResult
+import org.plsk.cardsPool.*
 import org.plsk.core.clock.FakeClock
-import org.plsk.core.dao.QueryFilter
 import org.plsk.core.event.Event
 import org.plsk.core.event.EventBus
 import org.plsk.core.validation.Validation
 import org.plsk.user.FakeUser
 import java.util.*
 
-class PromoteCardTest: WordSpec() {
+class PromoteCardTest: BaseCardsActionTest() {
 
   init {
 
@@ -39,10 +34,6 @@ class PromoteCardTest: WordSpec() {
 
   }
 
-  val card1 = Card(UUID.randomUUID(), "test-card 1", "desc", FakeClock.now().timestamp())
-  val card2 = Card(UUID.randomUUID(), "test-card 2", "desc", FakeClock.now().timestamp())
-  val card3 = Card(UUID.randomUUID(), "test-card 3", "desc", FakeClock.now().timestamp())
-
   val cards = mapOf<UUID, Card>(
     Pair(card1.id, card1),
     Pair(card2.id, card2),
@@ -62,14 +53,9 @@ class PromoteCardTest: WordSpec() {
       setOf(card1.id, card2.id)
   )
 
-  val cardsPoolRepository: CardsPoolRepository = object: CardsPoolRepository {
-    override suspend fun findAll(filter: Iterable<QueryFilter>): List<CardsPool> = TODO("not implemented")
-    override suspend fun update(data: CardsPool): WriteResult = TODO("not implemented")
-    override suspend fun store(data: CardsPool): WriteResult = TODO("not implemented")
-    override suspend fun find(id: UUID): CardsPool? = if (id == baseCardsPool.id) baseCardsPool else null
-  }
+  val validation: Validation<PromoteType, PromoteCardValidated> =
+      PromoteCardValidation(getCardsPoolRepository(baseCardsPool))
 
-  val validation: Validation<PromoteType, PromoteCardValidated> = PromoteCardValidation(cardsPoolRepository)
   var events = emptyList<CardPromoted>()
 
   val eventBus: EventBus = object : EventBus {

@@ -2,6 +2,7 @@ package org.plsk.cardsPool.promoteCard
 
 import org.plsk.cardsPool.CardsPool
 import org.plsk.cardsPool.CardsPoolRepository
+import org.plsk.cardsPool.GetCardsQuery
 import org.plsk.cardsPool.ValidateUser
 import org.plsk.core.validation.Validation
 import java.util.*
@@ -18,7 +19,7 @@ object Unauthorized: PromoteCardError("Unauthorized", null)
 class PromoteCardValidation(val cardsPoolRepository: CardsPoolRepository): Validation<PromoteType, PromoteCardValidated>, ValidateUser {
 
   override suspend fun validate(command: PromoteType): PromoteCardValidated {
-    val cardsPool = cardsPoolRepository.find(command.cardsPoolId) ?: throw CardsPoolNotFound("cards pool [${command.cardsPoolId}] not found")
+    val cardsPool = cardsPoolRepository.find(GetCardsQuery(command.cardsPoolId, command.userId)) ?: throw CardsPoolNotFound("cards pool [${command.cardsPoolId}] not found")
 
     if (unauthorized(command.userId, cardsPool)) {
       throw org.plsk.cardsPool.promoteCard.Unauthorized

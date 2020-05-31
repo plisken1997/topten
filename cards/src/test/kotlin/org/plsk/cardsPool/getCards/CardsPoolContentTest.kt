@@ -1,15 +1,14 @@
 package org.plsk.cardsPool.getCards
 
 import io.kotlintest.matchers.collections.shouldContainExactly
-import io.kotlintest.specs.WordSpec
-import org.plsk.cards.Card
+import org.plsk.cardsPool.BaseCardsActionTest
 import org.plsk.cardsPool.CardsPool
 import org.plsk.cardsPool.DisplayType
 import org.plsk.core.clock.FakeClock
 import org.plsk.user.FakeUser
 import java.util.*
 
-class CardsPoolContentTest: WordSpec() {
+class CardsPoolContentTest: BaseCardsActionTest() {
 
   init {
 
@@ -44,11 +43,6 @@ class CardsPoolContentTest: WordSpec() {
     }
   }
 
-  val card1 = Card(UUID.randomUUID(), "test-card 1", "desc", FakeClock.now().timestamp())
-  val card2 = Card(UUID.randomUUID(), "test-card 2", "desc", FakeClock.now().timestamp())
-  val card3 = Card(UUID.randomUUID(), "test-card 3", "desc", FakeClock.now().timestamp())
-  val card4 = Card(UUID.randomUUID(), "test-card 4", "desc", FakeClock.now().timestamp())
-  val card5 = Card(UUID.randomUUID(), "test-card 5", "desc", FakeClock.now().timestamp())
   val cardsPoolId = UUID.fromString("439dac7c-aec3-4597-aa40-fcc96a76b1d2")
 
   val baseCardsPool = CardsPool(

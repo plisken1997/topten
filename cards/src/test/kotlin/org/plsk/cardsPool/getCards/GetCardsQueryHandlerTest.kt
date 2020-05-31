@@ -1,20 +1,14 @@
 package org.plsk.cardsPool.getCards
 
 import io.kotlintest.shouldBe
-import io.kotlintest.specs.WordSpec
 import kotlinx.coroutines.runBlocking
-import org.plsk.cards.Card
-import org.plsk.cardsPool.CardsPool
-import org.plsk.cardsPool.CardsPoolRepository
-import org.plsk.cardsPool.DisplayType
-import org.plsk.cardsPool.WriteResult
+import org.plsk.cardsPool.*
 import org.plsk.core.clock.FakeClock
-import org.plsk.core.dao.QueryFilter
 import org.plsk.core.dao.QueryResult
 import org.plsk.user.FakeUser
 import java.util.*
 
-class GetCardsQueryHandlerTest : WordSpec() {
+class GetCardsQueryHandlerTest : BaseCardsActionTest() {
 
   init {
     "getcards query handler" should {
@@ -52,11 +46,6 @@ class GetCardsQueryHandlerTest : WordSpec() {
     }
   }
 
-  val card1 = Card(UUID.randomUUID(), "test-card 1", "desc", FakeClock.now().timestamp())
-  val card2 = Card(UUID.randomUUID(), "test-card 2", "desc", FakeClock.now().timestamp())
-  val card3 = Card(UUID.randomUUID(), "test-card 3", "desc", FakeClock.now().timestamp())
-  val card4 = Card(UUID.randomUUID(), "test-card 4", "desc", FakeClock.now().timestamp())
-  val card5 = Card(UUID.randomUUID(), "test-card 5", "desc", FakeClock.now().timestamp())
   val cardsPoolId = UUID.fromString("439dac7c-aec3-4597-aa40-fcc96a76b1d2")
 
   val baseCardsPool = CardsPool(
@@ -72,12 +61,5 @@ class GetCardsQueryHandlerTest : WordSpec() {
       topCards = setOf(card4.id, card2.id, card5.id)
   )
 
-  val cardsPoolRepository = object : CardsPoolRepository {
-    override suspend fun findAll(filter: Iterable<QueryFilter>): List<CardsPool> = TODO("not implemented")
-    override suspend fun store(data: CardsPool): WriteResult = TODO("not implemented")
-    override suspend fun update(data: CardsPool): WriteResult = TODO("not implemented")
-    override suspend fun find(id: UUID): CardsPool? = if (id == cardsPoolId) baseCardsPool else null
-  }
-
-  val getCardsQueryHandler = GetCardsQueryHandler(cardsPoolRepository)
+  val getCardsQueryHandler = GetCardsQueryHandler(getCardsPoolRepository(baseCardsPool))
 }

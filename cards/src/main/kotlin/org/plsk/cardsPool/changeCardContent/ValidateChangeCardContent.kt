@@ -1,6 +1,7 @@
 package org.plsk.cardsPool.changeCardContent
 
 import org.plsk.cardsPool.CardsPoolRepository
+import org.plsk.cardsPool.GetCardsQuery
 import org.plsk.cardsPool.ValidateUser
 import org.plsk.cardsPool.addCard.CardsPoolNotFound
 import org.plsk.cardsPool.addCard.Unauthorized
@@ -11,7 +12,7 @@ class ValidateChangeCardContent(
 ): Validation<ChangeCardContent, ChangeCardContentValidated>, ValidateUser {
 
   override suspend fun validate(command: ChangeCardContent): ChangeCardContentValidated =
-    cardsPoolRepository.find(command.cardsPoolId)?.let {
+    cardsPoolRepository.find(GetCardsQuery(command.cardsPoolId, command.userId))?.let {
       cardsPool ->
         if (unauthorized(command.userId, cardsPool)) {
           throw Exception(Unauthorized.toString())

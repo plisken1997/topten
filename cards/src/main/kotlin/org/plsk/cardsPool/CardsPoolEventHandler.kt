@@ -5,16 +5,15 @@ import org.plsk.cardsPool.create.CardsPoolCreated
 import org.plsk.cardsPool.promoteCard.CardPositionUpdated
 import org.plsk.cardsPool.promoteCard.PromotedEvent
 import org.plsk.cardsPool.removeCard.CardRemoved
-import org.plsk.core.dao.DataWriter
 import org.plsk.core.event.Event
 import org.plsk.core.event.EventHandler
 
-class CardsPoolEventHandler(private val writer: DataWriter<CardsPool, WriteResult>): EventHandler {
+class CardsPoolEventHandler(private val writer: CardsPoolRepository): EventHandler {
 
   override suspend fun handle(event: Event): Event =
     when (event) {
       is CardsPoolCreated -> {
-        writer.store(event.cardsPool)
+        writer.add(event.cardsPool)
         event
       }
       is CardAddedEvent -> {

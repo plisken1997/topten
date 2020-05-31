@@ -1,5 +1,6 @@
 package org.plsk.core.dao
 
+@Deprecated("query type should be free")
 interface Query
 
 data class QueryResult<DataType>(
@@ -7,6 +8,6 @@ data class QueryResult<DataType>(
   val content: DataType
 )
 
-interface QueryHandler<Q: Query, DataType> {
+interface QueryHandler<Q, DataType> {
   suspend fun handle(query: Q): QueryResult<DataType>
 }

@@ -3,6 +3,7 @@ package org.plsk.cardsPool.addCard
 import org.plsk.cards.Card
 import org.plsk.cardsPool.CardsPool
 import org.plsk.cardsPool.CardsPoolRepository
+import org.plsk.cardsPool.GetCardsQuery
 import org.plsk.core.command.CommandHandler
 import org.plsk.core.event.Event
 import org.plsk.core.event.EventBus
@@ -22,7 +23,7 @@ class AddCardAction(
   override suspend fun handle(command: AddCard): UUID {
     val card = cardValidator.validate(command)
 
-    val cardsPool = cardsPoolRepository.find(command.cardsPoolId)
+    val cardsPool = cardsPoolRepository.find(GetCardsQuery(command.cardsPoolId, command.userId))
     if (cardsPool == null) {
       throw Exception("could not find cardsPool")
     }

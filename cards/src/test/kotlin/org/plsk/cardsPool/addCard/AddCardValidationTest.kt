@@ -2,20 +2,14 @@ package org.plsk.cardsPool.addCard
 
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldThrowExactly
-import io.kotlintest.specs.WordSpec
 import kotlinx.coroutines.runBlocking
 import org.plsk.cards.Card
-import org.plsk.cardsPool.CardsPool
-import org.plsk.cardsPool.CardsPoolRepository
-import org.plsk.cardsPool.DisplayType
-import org.plsk.cardsPool.WriteResult
+import org.plsk.cardsPool.*
 import org.plsk.core.clock.FakeClock
-import org.plsk.core.dao.QueryFilter
-import org.plsk.core.id.UUIDGen
 import org.plsk.user.FakeUser
 import java.util.*
 
-class AddCardValidationTest : WordSpec() {
+class AddCardValidationTest : BaseCardsActionTest() {
 
   init {
 
@@ -85,12 +79,6 @@ class AddCardValidationTest : WordSpec() {
 
   }
 
-  val idGen = UUIDGen()
-
-  val card1 = Card(UUID.randomUUID(), "test-card 1", "desc", FakeClock.now().timestamp())
-  val card2 = Card(UUID.randomUUID(), "test-card 2", "desc", FakeClock.now().timestamp())
-  val card3 = Card(UUID.randomUUID(), "test-card 3", "desc", FakeClock.now().timestamp())
-
   val baseCardsPool = CardsPool(
       UUID.randomUUID(),
       "test cards pool",
@@ -102,11 +90,9 @@ class AddCardValidationTest : WordSpec() {
       FakeUser.id
   )
 
-  val cardsPoolRepository: CardsPoolRepository = object : CardsPoolRepository {
-    override suspend fun findAll(filter: Iterable<QueryFilter>): List<CardsPool> = TODO("not implemented")
-    override suspend fun update(data: CardsPool): WriteResult = TODO("not implemented")
-    override suspend fun store(data: CardsPool): WriteResult = TODO("not implemented")
-    override suspend fun find(id: UUID): CardsPool? = if (id == baseCardsPool.id) baseCardsPool else null
-  }
-  val validation = AddCardValidation(cardsPoolRepository, FakeClock, idGen)
+  val validation = AddCardValidation(
+      getCardsPoolRepository(baseCardsPool),
+      FakeClock,
+      idGen
+  )
 }

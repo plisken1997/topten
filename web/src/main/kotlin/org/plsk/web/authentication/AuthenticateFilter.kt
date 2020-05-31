@@ -23,7 +23,7 @@ class AuthenticateFilter(private val authentication: Authentication<Authenticati
 
     if (shouldAuthenticate(request)) {
       return mono {
-        authentitcate(request)
+        authenticate(request)
       }.flatMap {
         it.bimap(
           this::handleError,
@@ -36,7 +36,7 @@ class AuthenticateFilter(private val authentication: Authentication<Authenticati
     return chain.filter(exchange)
   }
 
-  private suspend fun authentitcate(request: ServerHttpRequest): Either<AuthenticationFailure, Session> =
+  private suspend fun authenticate(request: ServerHttpRequest): Either<AuthenticationFailure, Session> =
     if (request.headers.containsKey("Authorization")) {
       authentication.authenticate(fromAccessToken(request.headers))
     }
