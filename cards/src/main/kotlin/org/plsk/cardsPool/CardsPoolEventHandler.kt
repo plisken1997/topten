@@ -1,6 +1,7 @@
 package org.plsk.cardsPool
 
 import org.plsk.cardsPool.addCard.CardAddedEvent
+import org.plsk.cardsPool.changeCardContent.ChangeCardContentValidated
 import org.plsk.cardsPool.create.CardsPoolCreated
 import org.plsk.cardsPool.promoteCard.CardPositionUpdated
 import org.plsk.cardsPool.promoteCard.PromotedEvent
@@ -29,6 +30,10 @@ class CardsPoolEventHandler(private val writer: CardsPoolRepository): EventHandl
         event
       }
       is CardPositionUpdated -> {
+        writer.update(event.cardsPool)
+        event
+      }
+      is ChangeCardContentValidated -> {
         writer.update(event.cardsPool)
         event
       }

@@ -107,11 +107,17 @@ const loadCards = httpGet => cardsPoolId => dispatch => {
     }))
 }
 
+const mapFieldname = fieldname => fieldname === 'title' ? 'label' : fieldname
+
 export const UPDATE_CARD_START = 'UPDATE_CARD_START'
 export const  UPDATE_CARD_SUCCEEDED = 'UPDATE_CARD_SUCCEEDED'
-const updateCard = httpPatch => (cardsPoolId, cardId, field, value) => dispatch => {
-  const payload = {cardId, field, value}
+const updateCard = httpPatch => (cardsPoolId, cardId, fieldname, value) => dispatch => {
+  const payload = {cardId, field: fieldname, value}
+  
   dispatch({type: UPDATE_CARD_START, payload})
+  
+  const field = mapFieldname(fieldname)
+  
   return httpPatch(
     config.toptenConfig.updateCard.path(cardsPoolId),
     {cardId, field, value}

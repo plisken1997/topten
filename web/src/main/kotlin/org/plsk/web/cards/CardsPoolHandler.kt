@@ -13,6 +13,8 @@ import org.plsk.cardsPool.removeCard.RemoveCardAction
 import kotlinx.coroutines.reactor.mono
 import org.plsk.cardsPool.GetCardsPoolByUser
 import org.plsk.cardsPool.GetCardsQuery
+import org.plsk.cardsPool.changeCardContent.ChangeCardContent
+import org.plsk.cardsPool.changeCardContent.ChangeCardContentAction
 import org.plsk.web.authentication.WithAuthentication
 import org.plsk.web.util.HttpResponse
 
@@ -22,7 +24,8 @@ class CardsPoolHandler(
     private val addCardHandler: AddCardAction,
     private val promoteCardHander: PromoteCardAction,
     private val removeCard: RemoveCardAction,
-    private val getCardsHandler: GetCardsQueryHandler
+    private val getCardsHandler: GetCardsQueryHandler,
+    private val changeCardContent: ChangeCardContentAction
 ) : WithAuthentication, HttpResponse {
 
   fun createCardPool(request: ServerRequest): Mono<ServerResponse> = withSession(request) { session ->
@@ -110,7 +113,14 @@ class CardsPoolHandler(
         .flatMap { payload ->
           val cardpoolId = request.pathVariable("cardpoolId")
           mono {
-            // @todo update service here
+            val command = ChangeCardContent(
+                cardId = UUID.fromString(payload.cardId),
+                cardsPoolId = UUID.fromString(request.pathVariable("cardpoolId")),
+                field = payload.field,
+                value = payload.value,
+                userId = session.user.id
+            )
+            changeCardContent.handle(command)
             UUID.fromString(payload.cardId)
           }
         }.flatMap { jsonResponse(UpdateCardsResult(it)) }

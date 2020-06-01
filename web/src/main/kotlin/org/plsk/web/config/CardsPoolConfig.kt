@@ -7,6 +7,10 @@ import org.plsk.cardsPool.CardsPoolRepository
 import org.plsk.cardsPool.addCard.AddCard
 import org.plsk.cardsPool.addCard.AddCardAction
 import org.plsk.cardsPool.addCard.AddCardValidation
+import org.plsk.cardsPool.changeCardContent.ChangeCardContent
+import org.plsk.cardsPool.changeCardContent.ChangeCardContentAction
+import org.plsk.cardsPool.changeCardContent.ChangeCardContentValidated
+import org.plsk.cardsPool.changeCardContent.ValidateChangeCardContent
 import org.plsk.cardsPool.create.CardsPoolValidation
 import org.plsk.cardsPool.create.CreateCardsPool
 import org.plsk.cardsPool.create.CreateCardsPoolAction
@@ -69,4 +73,12 @@ class CardsPoolConfig {
 
   @Bean
   fun provideGetCardsQueryHandler(cardsPoolRepository: CardsPoolRepository): GetCardsQueryHandler = GetCardsQueryHandler(cardsPoolRepository)
+
+  @Bean
+  fun provideValidateChangeCardContent(cardsPoolRepository: CardsPoolRepository): Validation<ChangeCardContent, ChangeCardContentValidated> =
+      ValidateChangeCardContent(cardsPoolRepository)
+
+  @Bean
+  fun provideChangeCardContent(validation: Validation<ChangeCardContent, ChangeCardContentValidated>, eventBus: EventBus): ChangeCardContentAction =
+      ChangeCardContentAction(validation, eventBus)
 }
